@@ -1,0 +1,601 @@
+#+TITLE: Event-based auto-scaling with Cloud Orchestration
+
+* Brief summary
+
+To configure your web application running on the Rackspace Cloud to
+automatically scale up or down according to load, Rackspace Auto Scale
+can be used in conjunction with Rackspace Cloud Monitoring.  The Cloud
+Monitoring agent monitors various resources on the servers inside the
+scaling group and makes calls to the Auto Scale API when it is time to
+scale up or down.
+
+The process of configuring event-based auto-scaling involves many
+tedious manual steps.  In this tutorial, we will use Rackspace Cloud
+Orchestration to automate this configuration.
+
+* Example template
+
+In the following example template, we will set up a web application
+with a loadbalancer and a scaling group that contains between 2 and 10
+web servers.  For the sake of simplicity, we will not use template
+parameters in this example.
+
+Start by adding the top-level template sections:
+
+#+BEGIN_SRC yaml
+heat_template_version: 2014-10-16
+
+description: |
+  Rackspace Cloud Monitoring and Event-based scaling using Rackspace Cloud Autoscale
+
+resources:
+
+outputs:
+
+#+END_SRC
+
+** Resources section
+
+Add an OS::Nova::KeyPair resource that will generate an SSH keypair
+which you will use to login to your web servers:
+
+#+BEGIN_SRC yaml
+  access_key:
+    type: OS::Nova::KeyPair
+    properties:
+      name: { get_param: "OS::stack_name" }
+      save_private_key: true
+#+END_SRC
+
+Add a Rackspace::Cloud::LoadBalancer resource that will balance
+the load between web servers.
+
+#+BEGIN_SRC yaml
+  scaling_lb:
+    type: Rackspace::Cloud::LoadBalancer
+    properties:
+      name: { get_param: "OS::stack_name" }
+      metadata:
+        rax-heat: { get_param: "OS::stack_id" }
+      protocol: HTTP
+      port: 80
+      algorithm: ROUND_ROBIN
+      nodes: []
+      virtualIps:
+      - type: PUBLIC
+        ipVersion: IPV4
+#+END_SRC
+
+*** Autoscale resources
+
+Add the Rackspace::AutoScale::Group resource which will contain at
+least 2 servers and not more than 10 servers:
+
+#+BEGIN_SRC yaml
+  scaled_servers:
+    type: Rackspace::AutoScale::Group
+    properties:
+      groupConfiguration:
+        name: { get_param: "OS::stack_name" }
+        metadata:
+          rax-heat: { get_param: "OS::stack_id" }
+        maxEntities: 10
+        minEntities: 2
+        cooldown: 120
+      launchConfiguration:
+        type: launch_server
+        args:
+          loadBalancers:
+          - loadBalancerId: { get_resource: scaling_lb }
+            port: 80
+          server:
+            name: { get_param: "OS::stack_name" }
+            flavorRef: performance1-1
+            imageRef: 598a4282-f14b-4e50-af4c-b3e52749d9f9 # Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
+            key_name: { get_resource: access_key }
+            metadata:
+              rax-heat: { get_param: "OS::stack_id" }
+            config_drive: true
+            user_data:
+              str_replace:
+                template: |
+                  #cloud-config
+                  apt_upgrade: true
+                  apt_sources:
+                  - source: deb http://stable.packages.cloudmonitoring.rackspace.com/ubuntu-14.04-x86_64 cloudmonitoring main
+                    key: |
+                      -----BEGIN PGP PUBLIC KEY BLOCK-----
+                      Version: GnuPG v1.4.10 (GNU/Linux)
+
+                      mQENBFAZuVEBCAC8iXu/UEDLdkzRJzBKx14cgAiPHxSCjV4CPWqhOIrN4tl0PVHD
+                      BYSJV7oSu0napBTfAK5/0+8zNnnq8j0PNg2YmPOFkL/rIMHJH8eZ08Ffq9j4GQdM
+                      fSHDa6Zvgz68gJMLQ1IRPguen7p2mIEoOl8NuTwpjnWBZTdptImUoj53ZTKGYYS+
+                      OWs2iZ1IHS8CbmWaTMxiEk8kT5plM3jvbkJAKBAaTfYsddo1JqqMpcbykOLcgSrG
+                      oipyiDo9Ppi+EAOie1r6+zqmWpY+ScANkOpaVSfLjGp8fo4RP7gHhl26nDiqYB1K
+                      7tV1Rl3RMPnGuh4g/8YRkiExKd/XdS2CfO/DABEBAAG0jFJhY2tzcGFjZSBDbG91
+                      ZCBNb25pdG9yaW5nIEFnZW50IFBhY2thZ2UgUmVwbyAoaHR0cDovL3d3dy5yYWNr
+                      c3BhY2UuY29tL2Nsb3VkL2Nsb3VkX2hvc3RpbmdfcHJvZHVjdHMvbW9uaXRvcmlu
+                      Zy8pIDxtb25pdG9yaW5nQHJhY2tzcGFjZS5jb20+iQE4BBMBAgAiBQJQGblRAhsD
+                      BgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRCghvB30Fq5FCo6B/9Oel0Q/cX6
+                      1Lyk+teFywmB2jgn/UC51ioPZBHnHZLIjKH/CA6y7B9jm3+VddH60qDDANzlK/LL
+                      MyUgwLj9+flKeS+H5AL6l3RarWlGm11fJjjW2TnaUCUXQxw6A/QQvpHpl7eknEKJ
+                      m3kWMGAT6y/FbkSye18HUu6dtxvxosiMzi/7yVPJ7MwtUy2Bv1z9yHvt4I0rR8L5
+                      CdFeEcqY4FlGmFBG200BuGzLMrqv6HF6LH3khPoXbGjVmHbHKIzqCx4hPWNRtZIv
+                      fnu/aZcXJOJkB3/jzxaCjabOU+BCkXqVVFnUkbOYKoJ8EVLoepnhuVLUYErRjt7J
+                      qDsI4KPQoEjTuQENBFAZuVEBCACUBBO83pdDYHfKe394Il8MSw7PBhtxFRHjUty2
+                      WZYW12P+lZ3Q0Tqfc5Z8+CxnnkbdfvL13duAXn6goWObPRlQsYg4Ik9wO5TlYxqu
+                      igtPZ+mJ9KlZZ/c2+KV4AeqO+K0L5k96nFkxd/Jh90SLk0ckP24RAYx2WqRrIPyX
+                      xJCZlSWSqITMBcFp+kb0GdMk+Lnq7wPIJ08IKFJORSHgBbfHAmHCMOCUTZPhQHLA
+                      yBDMLcaLP9xlRm72JG6tko2k2/cBV707CfbnR2PyJFqq+zuEyMdBpnxtY3Tpdfdk
+                      MW9ScO40ndpwR72MG+Oy8iM8CTnmzRzMHMPiiPVAit1ZIXtZABEBAAGJAR8EGAEC
+                      AAkFAlAZuVECGwwACgkQoIbwd9BauRSx0QgApV/n2L/Qe5T8aRhoiecs4gH+ubo2
+                      uCQV9W3f56X3obHz9/mNkLTIKF2zHQhEUCCOwptoeyvmHht/QYXu1m3Gvq9X2F85
+                      YU6I2PTEHuI/u6oZF7cEa8z8ofq91AWSOrXXEJiZUQr5DNjO8SiAzPulGM2teSA+
+                      ez1wn9hhG9Kdu4LpaQ3EZHHBUKCLNU7nN/Ie5OeYA8FKbudNz13jTNRG+GYGrpPj
+                      PlhA5RCmTY5N018O51YXEiTh4C7TLskFwRFPbbexh3mZx2s6VlcaCK0lEdQ/+XK3
+                      KW+ZuPEh074b3VujLvuUCXd6T5FT5J6U/6qZgEoEiXwODX+fYIrD5PfjCw==
+                      =S1lE
+                      -----END PGP PUBLIC KEY BLOCK-----
+                  write_files:
+                  - path: /etc/rackspace-monitoring-agent.conf.d/load.yaml
+                    content: |
+                      type: agent.load_average
+                      label: Load Average
+                      period: 60
+                      timeout: 10
+                      alarms:
+                        load_alarm:
+                          label: load average alarm
+                          notification_plan_id: {notification_plan}
+                          criteria: |
+                            :set consecutiveCount=3
+                            if (metric['5m'] > 0.85){
+                                return new AlarmStatus(CRITICAL);
+                            }
+                            if (metric['15m'] < 0.3){
+                                return new AlarmStatus(WARNING);
+                            }
+                            return new AlarmStatus(OK);
+                  - path: /etc/rackspace-monitoring-agent.cfg
+                    content: |
+                      monitoring_token {agent_token}
+                  packages:
+                  - rackspace-monitoring-agent
+                  - apache2
+                params:
+                  "{notification_plan}": { get_resource: scaling_plan }
+                  "{agent_token}": { get_resource: agent_token }
+#+END_SRC
+
+In the resource above, the Cloud Monitoring agent is installed and
+configured via the =user_data= section (using the [[http://cloudinit.readthedocs.org/en/latest/topics/format.html#cloud-config-data][cloud-config
+format]]).  The alarm is configured to trigger a warning state when the
+system load is below 0.3 for 15 minutes and a critical state when the
+system load is above 0.85 for 5 minutes.
+
+The =scaling_plan= and =agent_token= resources referenced in the
+=user_data= section will be defined below.
+
+Next, define a Rackspace::AutoScale::ScalingPolicy resource for
+scaling up:
+
+#+BEGIN_SRC yaml
+  scale_up_policy:
+    type: Rackspace::AutoScale::ScalingPolicy
+    properties:
+      group: { get_resource: scaled_servers }
+      name:
+        str_replace:
+          template: stack scale up policy
+          params:
+            stack: { get_param: "OS::stack_name" }
+      change: 1
+      cooldown: 600
+      type: webhook
+#+END_SRC
+
+Add a Rackspace::AutoScale::WebHook resource that will be used to
+trigger the scale-up policy above:
+
+#+BEGIN_SRC yaml
+  scale_up_webhook:
+    type: Rackspace::AutoScale::WebHook
+    properties:
+      name:
+        str_replace:
+          template: stack scale up hook
+          params:
+            stack: { get_param: "OS::stack_name" }
+      metadata:
+        rax-heat: { get_param: "OS::stack_id" }
+      policy: { get_resource: scale_up_policy }
+#+END_SRC
+
+Similarly to the previous two resources for scaling-up, we will add
+another Rackspace::AutoScale::ScalingPolicy and
+Rackspace::AutoScale::WebHook resource for scaling down:
+
+#+BEGIN_SRC yaml
+  scale_down_policy:
+    type: Rackspace::AutoScale::ScalingPolicy
+    properties:
+      group: { get_resource: scaled_servers }
+      name:
+        str_replace:
+          template: stack scale down policy
+          params:
+            stack: { get_param: "OS::stack_name" }
+      change: -1
+      cooldown: 600
+      type: webhook
+
+  scale_down_webhook:
+    type: Rackspace::AutoScale::WebHook
+    properties:
+      name:
+        str_replace:
+          template: stack scale down hook
+          params:
+            stack: { get_param: "OS::stack_name" }
+      metadata:
+        rax-heat: { get_param: "OS::stack_id" }
+      policy: { get_resource: scale_down_policy }
+#+END_SRC
+
+*** Cloud Monitoring resources
+
+Add a Rackspace::CloudMonitoring::AgentToken resource that will create
+a token used by the monitoring agent to authenticate with the
+monitoring service:
+
+#+BEGIN_SRC yaml
+  agent_token:
+    type: Rackspace::CloudMonitoring::AgentToken
+    properties:
+      label:
+        str_replace:
+          template: stack monitoring agent token
+          params:
+            stack: { get_param: "OS::stack_name" }
+#+END_SRC
+
+Add a Rackspace::CloudMonitoring::Notification resource which will
+call the scale-up webhook created above:
+
+#+BEGIN_SRC yaml
+  scaleup_notification:
+    type: Rackspace::CloudMonitoring::Notification
+    properties:
+      label:
+        str_replace:
+          template: stack scale up notification
+          params:
+            stack: { get_param: "OS::stack_name" }
+      type: webhook
+      details:
+        url: { get_attr: [ scale_up_webhook, executeUrl ] }
+#+END_SRC
+
+Likewise, add another Rackspace::CloudMonitoring::Notification
+resource which will call the scale-down webhook:
+
+#+BEGIN_SRC yaml
+  scaledown_notification:
+    type: Rackspace::CloudMonitoring::Notification
+    properties:
+      label:
+        str_replace:
+          template: stack scale down notification
+          params:
+            stack: { get_param: "OS::stack_name" }
+      type: webhook
+      details:
+        url: { get_attr: [ scale_down_webhook, executeUrl ] }
+#+END_SRC
+
+Finally, create a Rackspace::CloudMonitoring::NotificationPlan
+and Rackspace::CloudMonitoring::PlanNotifications resource.
+
+#+BEGIN_SRC yaml
+  scaling_plan:
+    type: Rackspace::CloudMonitoring::NotificationPlan
+    properties:
+      label:
+        str_replace:
+          template: stack scaling notification plan
+          params:
+            stack: { get_param: "OS::stack_name" }
+
+  plan_notifications:
+    type: Rackspace::CloudMonitoring::PlanNotifications
+    properties:
+      plan: { get_resource: scaling_plan }
+      warning_state: # scale down on warning since this is configured for low load
+      - { get_resource: scaledown_notification }
+      critical_state:
+      - { get_resource: scaleup_notification }
+#+END_SRC
+
+The =scaling_plan= resource was referenced in the Cloud Monitoring
+agent configuration inside of the =user_data= section of the
+Rackspace::AutoScale::Group resource above.  It tells the monitoring
+agent how to respond to certain alarm states.
+
+The Rackspace::CloudMonitoring::PlanNotifications resource is a way to
+update an existing NotificationPlan resource.  This allows us to
+associate the alarm state with the Notification resource while
+avoiding circular dependencies.
+
+** Outputs section
+
+Add the private SSH key to the outputs section.  You will be able to
+log into your scaling group servers using this SSH key.
+
+#+BEGIN_SRC yaml
+  "Access Private Key":
+    value: { get_attr: [ access_key, private_key ] }
+    description: Private key for accessing the scaled server instances if needed
+#+END_SRC
+
+Optionally, add the webhook URLs to the outputs section.  You can use
+them to manually scale your scaling group up or down.
+
+#+BEGIN_SRC yaml
+  "Scale UP servers webhook":
+    value: { get_attr: [ scale_up_webhook, executeUrl ] }
+    description: Scale UP API servers webhook
+
+  "Scale DOWN servers webhook":
+    value: { get_attr: [ scale_down_webhook, executeUrl ] }
+#+END_SRC
+
+You will be able to see these outputs when doing a =heat stack-show=
+on the created stack.
+
+** Full template
+
+#+BEGIN_SRC yaml
+heat_template_version: 2014-10-16
+
+description: |
+  Rackspace Cloud Monitoring and Event-based scaling using Rackspace Cloud Autoscale
+
+resources:
+
+  access_key:
+    type: OS::Nova::KeyPair
+    properties:
+      name: { get_param: "OS::stack_name" }
+      save_private_key: true
+
+  scaling_lb:
+    type: Rackspace::Cloud::LoadBalancer
+    properties:
+      name: { get_param: "OS::stack_name" }
+      metadata:
+        rax-heat: { get_param: "OS::stack_id" }
+      protocol: HTTP
+      port: 80
+      algorithm: ROUND_ROBIN
+      nodes: []
+      virtualIps:
+      - type: PUBLIC
+        ipVersion: IPV4
+
+  scaled_servers:
+    type: Rackspace::AutoScale::Group
+    properties:
+      groupConfiguration:
+        name: { get_param: "OS::stack_name" }
+        metadata:
+          rax-heat: { get_param: "OS::stack_id" }
+        maxEntities: 10
+        minEntities: 2
+        cooldown: 120
+      launchConfiguration:
+        type: launch_server
+        args:
+          loadBalancers:
+          - loadBalancerId: { get_resource: scaling_lb }
+            port: 80
+          server:
+            name: { get_param: "OS::stack_name" }
+            flavorRef: performance1-1
+            imageRef: 598a4282-f14b-4e50-af4c-b3e52749d9f9 # Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
+            key_name: { get_resource: access_key }
+            metadata:
+              rax-heat: { get_param: "OS::stack_id" }
+            config_drive: true
+            user_data:
+              str_replace:
+                template: |
+                  #cloud-config
+                  apt_upgrade: true
+                  apt_sources:
+                  - source: deb http://stable.packages.cloudmonitoring.rackspace.com/ubuntu-14.04-x86_64 cloudmonitoring main
+                    key: |
+                      -----BEGIN PGP PUBLIC KEY BLOCK-----
+                      Version: GnuPG v1.4.10 (GNU/Linux)
+
+                      mQENBFAZuVEBCAC8iXu/UEDLdkzRJzBKx14cgAiPHxSCjV4CPWqhOIrN4tl0PVHD
+                      BYSJV7oSu0napBTfAK5/0+8zNnnq8j0PNg2YmPOFkL/rIMHJH8eZ08Ffq9j4GQdM
+                      fSHDa6Zvgz68gJMLQ1IRPguen7p2mIEoOl8NuTwpjnWBZTdptImUoj53ZTKGYYS+
+                      OWs2iZ1IHS8CbmWaTMxiEk8kT5plM3jvbkJAKBAaTfYsddo1JqqMpcbykOLcgSrG
+                      oipyiDo9Ppi+EAOie1r6+zqmWpY+ScANkOpaVSfLjGp8fo4RP7gHhl26nDiqYB1K
+                      7tV1Rl3RMPnGuh4g/8YRkiExKd/XdS2CfO/DABEBAAG0jFJhY2tzcGFjZSBDbG91
+                      ZCBNb25pdG9yaW5nIEFnZW50IFBhY2thZ2UgUmVwbyAoaHR0cDovL3d3dy5yYWNr
+                      c3BhY2UuY29tL2Nsb3VkL2Nsb3VkX2hvc3RpbmdfcHJvZHVjdHMvbW9uaXRvcmlu
+                      Zy8pIDxtb25pdG9yaW5nQHJhY2tzcGFjZS5jb20+iQE4BBMBAgAiBQJQGblRAhsD
+                      BgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRCghvB30Fq5FCo6B/9Oel0Q/cX6
+                      1Lyk+teFywmB2jgn/UC51ioPZBHnHZLIjKH/CA6y7B9jm3+VddH60qDDANzlK/LL
+                      MyUgwLj9+flKeS+H5AL6l3RarWlGm11fJjjW2TnaUCUXQxw6A/QQvpHpl7eknEKJ
+                      m3kWMGAT6y/FbkSye18HUu6dtxvxosiMzi/7yVPJ7MwtUy2Bv1z9yHvt4I0rR8L5
+                      CdFeEcqY4FlGmFBG200BuGzLMrqv6HF6LH3khPoXbGjVmHbHKIzqCx4hPWNRtZIv
+                      fnu/aZcXJOJkB3/jzxaCjabOU+BCkXqVVFnUkbOYKoJ8EVLoepnhuVLUYErRjt7J
+                      qDsI4KPQoEjTuQENBFAZuVEBCACUBBO83pdDYHfKe394Il8MSw7PBhtxFRHjUty2
+                      WZYW12P+lZ3Q0Tqfc5Z8+CxnnkbdfvL13duAXn6goWObPRlQsYg4Ik9wO5TlYxqu
+                      igtPZ+mJ9KlZZ/c2+KV4AeqO+K0L5k96nFkxd/Jh90SLk0ckP24RAYx2WqRrIPyX
+                      xJCZlSWSqITMBcFp+kb0GdMk+Lnq7wPIJ08IKFJORSHgBbfHAmHCMOCUTZPhQHLA
+                      yBDMLcaLP9xlRm72JG6tko2k2/cBV707CfbnR2PyJFqq+zuEyMdBpnxtY3Tpdfdk
+                      MW9ScO40ndpwR72MG+Oy8iM8CTnmzRzMHMPiiPVAit1ZIXtZABEBAAGJAR8EGAEC
+                      AAkFAlAZuVECGwwACgkQoIbwd9BauRSx0QgApV/n2L/Qe5T8aRhoiecs4gH+ubo2
+                      uCQV9W3f56X3obHz9/mNkLTIKF2zHQhEUCCOwptoeyvmHht/QYXu1m3Gvq9X2F85
+                      YU6I2PTEHuI/u6oZF7cEa8z8ofq91AWSOrXXEJiZUQr5DNjO8SiAzPulGM2teSA+
+                      ez1wn9hhG9Kdu4LpaQ3EZHHBUKCLNU7nN/Ie5OeYA8FKbudNz13jTNRG+GYGrpPj
+                      PlhA5RCmTY5N018O51YXEiTh4C7TLskFwRFPbbexh3mZx2s6VlcaCK0lEdQ/+XK3
+                      KW+ZuPEh074b3VujLvuUCXd6T5FT5J6U/6qZgEoEiXwODX+fYIrD5PfjCw==
+                      =S1lE
+                      -----END PGP PUBLIC KEY BLOCK-----
+                  write_files:
+                  - path: /etc/rackspace-monitoring-agent.conf.d/load.yaml
+                    content: |
+                      type: agent.load_average
+                      label: Load Average
+                      period: 60
+                      timeout: 10
+                      alarms:
+                        load_alarm:
+                          label: load average alarm
+                          notification_plan_id: {notification_plan}
+                          criteria: |
+                            :set consecutiveCount=3
+                            if (metric['5m'] > 0.85){
+                                return new AlarmStatus(CRITICAL);
+                            }
+                            if (metric['15m'] < 0.3){
+                                return new AlarmStatus(WARNING);
+                            }
+                            return new AlarmStatus(OK);
+                  - path: /etc/rackspace-monitoring-agent.cfg
+                    content: |
+                      monitoring_token {agent_token}
+                  packages:
+                  - rackspace-monitoring-agent
+                  - apache2
+                params:
+                  "{notification_plan}": { get_resource: scaling_plan }
+                  "{agent_token}": { get_resource: agent_token }
+
+  scale_up_policy:
+    type: Rackspace::AutoScale::ScalingPolicy
+    properties:
+      group: { get_resource: scaled_servers }
+      name:
+        str_replace:
+          template: stack scale up policy
+          params:
+            stack: { get_param: "OS::stack_name" }
+      change: 1
+      cooldown: 600
+      type: webhook
+
+  scale_up_webhook:
+    type: Rackspace::AutoScale::WebHook
+    properties:
+      name:
+        str_replace:
+          template: stack scale up hook
+          params:
+            stack: { get_param: "OS::stack_name" }
+      metadata:
+        rax-heat: { get_param: "OS::stack_id" }
+      policy: { get_resource: scale_up_policy }
+
+  scale_down_policy:
+    type: Rackspace::AutoScale::ScalingPolicy
+    properties:
+      group: { get_resource: scaled_servers }
+      name:
+        str_replace:
+          template: stack scale down policy
+          params:
+            stack: { get_param: "OS::stack_name" }
+      change: -1
+      cooldown: 600
+      type: webhook
+
+  scale_down_webhook:
+    type: Rackspace::AutoScale::WebHook
+    properties:
+      name:
+        str_replace:
+          template: stack scale down hook
+          params:
+            stack: { get_param: "OS::stack_name" }
+      metadata:
+        rax-heat: { get_param: "OS::stack_id" }
+      policy: { get_resource: scale_down_policy }
+
+  agent_token:
+    type: Rackspace::CloudMonitoring::AgentToken
+    properties:
+      label:
+        str_replace:
+          template: stack monitoring agent token
+          params:
+            stack: { get_param: "OS::stack_name" }
+
+  scaleup_notification:
+    type: Rackspace::CloudMonitoring::Notification
+    properties:
+      label:
+        str_replace:
+          template: stack scale up notification
+          params:
+            stack: { get_param: "OS::stack_name" }
+      type: webhook
+      details:
+        url: { get_attr: [ scale_up_webhook, executeUrl ] }
+
+  scaledown_notification:
+    type: Rackspace::CloudMonitoring::Notification
+    properties:
+      label:
+        str_replace:
+          template: stack scale down notification
+          params:
+            stack: { get_param: "OS::stack_name" }
+      type: webhook
+      details:
+        url: { get_attr: [ scale_down_webhook, executeUrl ] }
+
+  scaling_plan:
+    type: Rackspace::CloudMonitoring::NotificationPlan
+    properties:
+      label:
+        str_replace:
+          template: stack scaling notification plan
+          params:
+            stack: { get_param: "OS::stack_name" }
+
+  plan_notifications:
+    type: Rackspace::CloudMonitoring::PlanNotifications
+    properties:
+      plan: { get_resource: scaling_plan }
+      warning_state: # scale down on warning since this is configured for low load
+      - { get_resource: scaledown_notification }
+      critical_state:
+      - { get_resource: scaleup_notification }
+      
+
+outputs:
+
+  "Access Private Key":
+    value: { get_attr: [ access_key, private_key ] }
+    description: Private key for accessing the scaled server instances if needed
+
+  "Scale UP servers webhook":
+    value: { get_attr: [ scale_up_webhook, executeUrl ] }
+    description: Scale UP API servers webhook
+
+  "Scale DOWN servers webhook":
+    value: { get_attr: [ scale_down_webhook, executeUrl ] }
+#+END_SRC
+
+* Reference
+
+- [[http://docs.rackspace.com/cm/api/v1.0/cm-devguide/content/overview.html][Cloud Monitoring API Developer Guide]]
+- [[http://docs.rackspace.com/cas/api/v1.0/autoscale-devguide/content/Overview.html][Auto Scale API Developer Guide]]
+- [[http://docs.rackspace.com/orchestration/api/v1/orchestration-devguide/content/overview.html][Cloud Orchestration API Developer Guide]]
+- [[http://docs.openstack.org/developer/heat/template_guide/hot_spec.html][Heat Orchestration Template (HOT) Specification]]
+- [[http://cloudinit.readthedocs.org/en/latest/topics/format.html][Cloud-init format documentation]]

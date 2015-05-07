@@ -103,7 +103,7 @@ least 2 servers and not more than 10 servers:
                   apt_upgrade: true
                   apt_sources:
                   - source: deb http://stable.packages.cloudmonitoring.rackspace.com/ubuntu-14.04-x86_64 cloudmonitoring main
-                    key: |
+                    key: |  # This is the apt repo signing key
                       -----BEGIN PGP PUBLIC KEY BLOCK-----
                       Version: GnuPG v1.4.10 (GNU/Linux)
 
@@ -413,7 +413,7 @@ resources:
                   apt_upgrade: true
                   apt_sources:
                   - source: deb http://stable.packages.cloudmonitoring.rackspace.com/ubuntu-14.04-x86_64 cloudmonitoring main
-                    key: |
+                    key: |  # This is the apt repo signing key
                       -----BEGIN PGP PUBLIC KEY BLOCK-----
                       Version: GnuPG v1.4.10 (GNU/Linux)
 

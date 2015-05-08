@@ -37,7 +37,7 @@ outputs:
 ** Resources section
 
 Add an OS::Nova::KeyPair resource that will generate an SSH keypair
-which you will use to login to your web servers:
+which you can use to login to your web servers if you need to:
 
 #+BEGIN_SRC yaml
   access_key:
@@ -171,7 +171,8 @@ In the resource above, the Cloud Monitoring agent is installed and
 configured via the =user_data= section (using the [[http://cloudinit.readthedocs.org/en/latest/topics/format.html#cloud-config-data][cloud-config
 format]]).  The alarm is configured to trigger a warning state when the
 system load is below 0.3 for 15 minutes and a critical state when the
-system load is above 0.85 for 5 minutes.
+system load is above 0.85 for 5 minutes. We use the warning state here
+to trigger scale-down events in leu of an alternative alarm status.
 
 The =scaling_plan= and =agent_token= resources referenced in the
 =user_data= section will be defined below.
@@ -325,6 +326,12 @@ The Rackspace::CloudMonitoring::PlanNotifications resource is a way to
 update an existing NotificationPlan resource.  This allows us to
 associate the alarm state with the Notification resource while
 avoiding circular dependencies.
+
+This notification plan will trigger a scale up event when any of the
+=load_alarm= s configured in the scaling group (via cloud-init) issue a
+=CRITICAL= alarm. This plan also triggers a scale down event when any
+of the =load_alarm=s configured in the scaling group issue a
+=WARNING= alarm.
 
 ** Outputs section
 

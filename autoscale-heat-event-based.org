@@ -172,7 +172,7 @@ configured via the =user_data= section (using the [[http://cloudinit.readthedocs
 format]]).  The alarm is configured to trigger a warning state when the
 system load is below 0.3 for 15 minutes and a critical state when the
 system load is above 0.85 for 5 minutes. We use the warning state here
-to trigger scale-down events in leu of an alternative alarm status.
+to trigger scale-down events in lieu of an alternative alarm status.
 
 The =scaling_plan= and =agent_token= resources referenced in the
 =user_data= section will be defined below.
@@ -328,10 +328,10 @@ associate the alarm state with the Notification resource while
 avoiding circular dependencies.
 
 This notification plan will trigger a scale up event when any of the
-=load_alarm= s configured in the scaling group (via cloud-init) issue a
-=CRITICAL= alarm. This plan also triggers a scale down event when any
-of the =load_alarm=s configured in the scaling group issue a
-=WARNING= alarm.
+=load_alarm= alarms configured in the scaling group (via cloud-init)
+issue a =CRITICAL= alarm state. This plan also triggers a scale down
+event when any of the =load_alarm= alarms configured in the scaling
+group issue a =WARNING= alarm state.
 
 ** Outputs section
 

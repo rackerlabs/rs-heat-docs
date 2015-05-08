@@ -13,6 +13,28 @@ The process of configuring event-based auto-scaling involves many
 tedious manual steps.  In this tutorial, we will use Rackspace Cloud
 Orchestration to automate this configuration.
 
+* Pre-reading
+
+
+
+** Auto Scale
+
+- [[http://www.rackspace.com/blog/easily-scale-your-cloud-with-rackspace-auto-scale/][Easily Scale Your Cloud With Rackspace Auto Scale]] gives a brief
+  overview of the different types of scaling policies for Auto Scale.
+- [[http://docs.rackspace.com/cas/api/v1.0/autoscale-gettingstarted/content/Auto_Scale_Core_Concepts.html][Getting Started Guide: Auto Scale concepts]]
+
+** Cloud Monitoring
+
+- [[http://docs.rackspace.com/cm/api/v1.0/cm-getting-started/content/how-it-works-gsg.html][Getting Started Guide: How Rackspace Cloud Monitoring works]]
+- [[http://docs.rackspace.com/cm/api/v1.0/cm-getting-started/content/how-agent-works-gsg.html][Getting Started Guide: About the monitoring agent]]
+- [[http://docs.rackspace.com/cm/api/v1.0/cm-devguide/content/appendix-check-types.html][Developer Guide: Available check types and fields]]
+- [[http://docs.rackspace.com/cm/api/v1.0/cm-devguide/content/yaml-files.html][Developer Guide: Server-Side agent configuration YAML file examples]]
+
+** Cloud Orchestration
+
+- [[http://docs.rackspace.com/orchestration/api/v1/orchestration-getting-started/content/Orch_Overview.html][Getting Started Guide: Overview]]
+- [[http://docs.rackspace.com/orchestration/api/v1/orchestration-templates-devguide/content/Intro_to_Templates-d1e633.html][Templates Developer Guide: Introduction to templates]]
+
 * Example template
 
 In the following example template, we will set up a web application
@@ -599,7 +621,7 @@ outputs:
     value: { get_attr: [ scale_down_webhook, executeUrl ] }
 #+END_SRC
 
-* Reference
+* Reference documentation
 
 - [[http://docs.rackspace.com/cm/api/v1.0/cm-devguide/content/overview.html][Cloud Monitoring API Developer Guide]]
 - [[http://docs.rackspace.com/cas/api/v1.0/autoscale-devguide/content/Overview.html][Auto Scale API Developer Guide]]

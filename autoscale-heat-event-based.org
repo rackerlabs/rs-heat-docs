@@ -328,10 +328,10 @@ associate the alarm state with the Notification resource while
 avoiding circular dependencies.
 
 This notification plan will trigger a scale up event when any of the
-==load_alarm==s configured in the scaling group (via cloud-init) issue a
-==CRITICAL== alarm. This plan also triggers a scale down event when any
-of the ==load_alarm==s configured in the scaling group issue a
-==WARNING== alarm.
+=load_alarm=s configured in the scaling group (via cloud-init) issue a
+=CRITICAL= alarm. This plan also triggers a scale down event when any
+of the =load_alarm=s configured in the scaling group issue a
+=WARNING= alarm.
 
 ** Outputs section
 

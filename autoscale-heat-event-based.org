@@ -77,8 +77,6 @@ the load between web servers.
     type: Rackspace::Cloud::LoadBalancer
     properties:
       name: { get_param: "OS::stack_name" }
-      metadata:
-        rax-heat: { get_param: "OS::stack_id" }
       protocol: HTTP
       port: 80
       algorithm: ROUND_ROBIN
@@ -99,8 +97,6 @@ least 2 servers and not more than 10 servers:
     properties:
       groupConfiguration:
         name: { get_param: "OS::stack_name" }
-        metadata:
-          rax-heat: { get_param: "OS::stack_id" }
         maxEntities: 10
         minEntities: 2
         cooldown: 120
@@ -115,8 +111,6 @@ least 2 servers and not more than 10 servers:
             flavorRef: performance1-1
             imageRef: 598a4282-f14b-4e50-af4c-b3e52749d9f9 # Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
             key_name: { get_resource: access_key }
-            metadata:
-              rax-heat: { get_param: "OS::stack_id" }
             config_drive: true
             user_data:
               str_replace:
@@ -229,8 +223,6 @@ trigger the scale-up policy above:
           template: stack scale up hook
           params:
             stack: { get_param: "OS::stack_name" }
-      metadata:
-        rax-heat: { get_param: "OS::stack_id" }
       policy: { get_resource: scale_up_policy }
 #+END_SRC
 
@@ -260,8 +252,6 @@ Rackspace::AutoScale::WebHook resource for scaling down:
           template: stack scale down hook
           params:
             stack: { get_param: "OS::stack_name" }
-      metadata:
-        rax-heat: { get_param: "OS::stack_id" }
       policy: { get_resource: scale_down_policy }
 #+END_SRC
 
@@ -401,8 +391,6 @@ resources:
     type: Rackspace::Cloud::LoadBalancer
     properties:
       name: { get_param: "OS::stack_name" }
-      metadata:
-        rax-heat: { get_param: "OS::stack_id" }
       protocol: HTTP
       port: 80
       algorithm: ROUND_ROBIN
@@ -416,8 +404,6 @@ resources:
     properties:
       groupConfiguration:
         name: { get_param: "OS::stack_name" }
-        metadata:
-          rax-heat: { get_param: "OS::stack_id" }
         maxEntities: 10
         minEntities: 2
         cooldown: 120
@@ -432,8 +418,6 @@ resources:
             flavorRef: performance1-1
             imageRef: 598a4282-f14b-4e50-af4c-b3e52749d9f9 # Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
             key_name: { get_resource: access_key }
-            metadata:
-              rax-heat: { get_param: "OS::stack_id" }
             config_drive: true
             user_data:
               str_replace:
@@ -526,8 +510,6 @@ resources:
           template: stack scale up hook
           params:
             stack: { get_param: "OS::stack_name" }
-      metadata:
-        rax-heat: { get_param: "OS::stack_id" }
       policy: { get_resource: scale_up_policy }
 
   scale_down_policy:
@@ -551,8 +533,6 @@ resources:
           template: stack scale down hook
           params:
             stack: { get_param: "OS::stack_name" }
-      metadata:
-        rax-heat: { get_param: "OS::stack_id" }
       policy: { get_resource: scale_down_policy }
 
   agent_token:

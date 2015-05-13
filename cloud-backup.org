@@ -3,17 +3,16 @@
 *** Brief summary
 
 Rackspace cloud backup configuration resource enables you to select and
-backup specific files/folders from a cloud server and schedule backup jobs
-using Cloud Orchestration.
+backup specific files/folders from a cloud server using Cloud Orchestration.
 
 **** Prerequisite(s):
 Cloud backup agent is installed on the server from where you wanted to backup files/folders
 
 ***** Installing cloud backup agent on the server
 ****** Option-1
-If the tenant is a managed operations customer and also the server
-was created as part of Heat stack, then pass the following metadata property to
-OS::Nova::Server or Rackspace::Cloud::WinServer
+If the tenant is a managed operations customer and also server from where you wanted to create backup
+was created as part of Heat stack, then pass '{build_config: backup_agent_only}' as metadata to
+OS::Nova::Server or Rackspace::Cloud::WinServer. For example,
 
 #+BEGIN_SRC yaml
   wordpress_server:
@@ -33,10 +32,9 @@ as part of the Heat stack creation, then follow links given below to install bac
 - [[http://www.rackspace.com/knowledge_center/article/rackspace-cloud-backup-install-the-agent-on-windows][Install cloud backup agent on Windows server]]
 - [[http://www.rackspace.com/knowledge_center/article/rackspace-cloud-backup-install-the-agent-on-windows-by-using-silent-installation][Install cloud backup agent on Windows server (silent installation)]]
 
-*** Example template
-
+**** Example template
 In the following example template, we will set up a single node wordpress
-web application with cloud backup resource.  For the sake of simplicity,
+web application (on a Windows server) with cloud backup resource.  For the sake of simplicity,
 we will not use template parameters in this example.
 
 Start by adding the top-level template sections:
@@ -45,7 +43,7 @@ Start by adding the top-level template sections:
 heat_template_version: 2014-10-16
 
 description: |
-  Wordpress application with cloud backup.
+  Wordpress application on a Windows server with cloud backup enabled.
 
 resources:
 
@@ -53,7 +51,7 @@ outputs:
 
 #+END_SRC
 
-*** Resources section
+**** Resources section
 
 Add a Rackspace::Cloud::WinServer resource that will create a windows server
 and install wordpress web application.
@@ -85,19 +83,22 @@ and install wordpress web application.
             "%dbadminpassword%": { get_param: db_admin_password }
 #+END_SRC
 
+In the above snippet, please note that '{build_config: backup_agent_only}' was passed as metadata to install
+cloud backup agent.
+
 **** cloud backup config resource
-Add a Rackspace::Cloud::BackupConfig resource that will backup
-wordpress application installed at c:\inetpub\wwwroot\wordpress folder.
+Add a Rackspace::Cloud::BackupConfig resource to backup wordpress application
+installed at c:\inetpub\wwwroot\wordpress folder.
 
 #+BEGIN_SRC yaml
   rax_backup_config:
     properties:
-      BackupConfigurationName: wordpressbackup
+      BackupConfigurationName: wordpress-daily-backup
       DayOfWeekId: null
-      Frequency: Hourly
-      StartTimeHour: null
-      StartTimeMinute: null
-      StartTimeAmPm: null
+      Frequency: Daily
+      StartTimeHour: 11
+      StartTimeMinute: 30
+      StartTimeAmPm: PM
       HourInterval: 1
       IsActive: true
       Enabled: true
@@ -109,10 +110,12 @@ wordpress application installed at c:\inetpub\wwwroot\wordpress folder.
       host_ip_address: { get_attr: [rs_windows_server, accessIPv4] }
       Inclusions:
       - {"FilePath": "c:\\inetpub\\wwwroot\\wordpress", "FileItemType": "Folder" }
-      - {"FilePath": "c:\\inetpub\\wwwroot\\wordpress", "FileItemType": "Folder" }
-    
     type: Rackspace::Cloud::BackupConfig
 #+END_SRC
+
+In the above snippet backup service was configured to create a backup of 'c:\inetpub\wwwroot\wordpress'
+folder 'Daily' at '11:30PM' and created backup will be retailed for '60' days. And also, it was
+configured to notify at given email ID if there was any error during the backup creation.
 
 * Reference
 

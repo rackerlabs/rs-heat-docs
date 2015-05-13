@@ -79,8 +79,8 @@ and install wordpress web application.
             Start-Process $wpicmd -ArgumentList "/Install /Application:Wordpress@test.app /MySQLPassword:%dbadminpassword% /AcceptEULA /Log:.\wpi.log"  -NoNewWindow -Wait
             $env:userprofile = $tmpprofile
           params:
-            "%dbpassword%": testpassword
-            "%dbadminpassword%": admintestpassword
+            "%dbpassword%": testpassword_123
+            "%dbadminpassword%": testpassword_123
 #+END_SRC
 
 Above resource creates a Windows server and installs wordpress application. Please note that

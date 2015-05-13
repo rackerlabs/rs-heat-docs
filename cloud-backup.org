@@ -28,13 +28,10 @@ OS::Nova::Server or Rackspace::Cloud::WinServer
 ****** Option-2
 If the tenant is not a managed operations customer or server was not created
 as part of the Heat stack creation, then follow links given below to install backup agent.
-On Linux server
-http://www.rackspace.com/knowledge_center/article/rackspace-cloud-backup-install-the-agent-on-linux
 
-On Windows server
-http://www.rackspace.com/knowledge_center/article/rackspace-cloud-backup-install-the-agent-on-windows
-On Windows (silent installation)
-http://www.rackspace.com/knowledge_center/article/rackspace-cloud-backup-install-the-agent-on-windows-by-using-silent-installation
+- [[http://www.rackspace.com/knowledge_center/article/rackspace-cloud-backup-install-the-agent-on-linux][Install cloud backup agent on Linux server]]
+- [[http://www.rackspace.com/knowledge_center/article/rackspace-cloud-backup-install-the-agent-on-windows][Install cloud backup agent on Windows server]]
+- [[http://www.rackspace.com/knowledge_center/article/rackspace-cloud-backup-install-the-agent-on-windows-by-using-silent-installation][Install cloud backup agent on Windows server (silent installation)]]
 
 *** Example template
 

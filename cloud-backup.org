@@ -104,7 +104,7 @@ installed at c:\inetpub\wwwroot\wordpress folder.
       Enabled: true
       NotifyFailure: true
       NotifyRecipients: your_email@emailprovider.com
-      NotifySuccess: true
+      NotifySuccess: false
       TimeZoneId: Eastern Standard Time
       VersionRetention: 60
       host_ip_address: { get_attr: [wordpress_server, accessIPv4] }
@@ -113,7 +113,7 @@ installed at c:\inetpub\wwwroot\wordpress folder.
     type: Rackspace::Cloud::BackupConfig
 #+END_SRC
 
-In the above snippet backup service was configured to create a backup of 'c:\inetpub\wwwroot\wordpress'
+In the above backup resource, cloud backup service was configured to create a backup of 'c:\inetpub\wwwroot\wordpress'
 folder 'Daily' at '11:30PM' and created backup will be retailed for '60' days. And also, it was
 configured to notify at given email ID if there was any error during the backup creation.
 
@@ -200,8 +200,8 @@ outputs:
 - [[http://docs.rackspace.com/orchestration/api/v1/orchestration-devguide/content/overview.html][Cloud Orchestration API Developer Guide]]
 - [[http://docs.openstack.org/developer/heat/template_guide/hot_spec.html][Heat Orchestration Template (HOT) Specification]]
 - [[http://cloudinit.readthedocs.org/en/latest/topics/format.html][Cloud-init format documentation]]
+- [[http://docs.rackspace.com/rcbu/api/v1.0/rcbu-getting-started/content/Overview-d1e01.html][Cloud backup getting started guide]]
+- [[http://docs.rackspace.com/rcbu/api/v1.0/rcbu-devguide/content/overview.html][Cloud backup API developer guide]]
 - [[http://www.rackspace.com/knowledge_center/article/rackspace-cloud-backup-install-the-agent-on-linux][Install cloud backup agent on Linux server]]
 - [[http://www.rackspace.com/knowledge_center/article/rackspace-cloud-backup-install-the-agent-on-windows][Install cloud backup agent on Windows server]]
 - [[http://www.rackspace.com/knowledge_center/article/rackspace-cloud-backup-install-the-agent-on-windows-by-using-silent-installation][Install cloud backup agent on Windows server (silent installation)]]
-- [[http://docs.rackspace.com/rcbu/api/v1.0/rcbu-getting-started/content/Overview-d1e01.html][Cloud backup getting started guide]]
-- [[http://docs.rackspace.com/rcbu/api/v1.0/rcbu-devguide/content/overview.html][Cloud backup API developer guide]]

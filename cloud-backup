@@ -1,0 +1,62 @@
+#+TITLE: Rackspace cloud backup with Cloud Orchestration(Heat)
+
+* Brief summary
+
+Rackspace cloud backup configuration resource enables you to select and
+backup specific files/folders from a cloud server and schedule backup jobs
+using Cloud Orchestration.
+
+
+* Example template
+
+In the following example template, we will set up a single node wordpress
+web application with cloud backup resource.  For the sake of simplicity,
+we will not use template parameters in this example.
+
+Start by adding the top-level template sections:
+
+#+BEGIN_SRC yaml
+heat_template_version: 2014-10-16
+
+description: |
+  Wordpress application with cloud backup.
+
+resources:
+
+outputs:
+
+#+END_SRC
+
+** Resources section
+
+Add an OS::Nova::KeyPair resource that will generate an SSH keypair
+which you can use to login to your web servers if you need to:
+
+#+BEGIN_SRC yaml
+  access_key:
+    type: OS::Nova::KeyPair
+    properties:
+      name: { get_param: "OS::stack_name" }
+      save_private_key: true
+#+END_SRC
+
+Add a Rackspace::Cloud::LoadBalancer resource that will balance
+the load between web servers.
+
+#+BEGIN_SRC yaml
+  scaling_lb:
+    type: Rackspace::Cloud::LoadBalancer
+    properties:
+      name: { get_param: "OS::stack_name" }
+      metadata:
+        rax-heat: { get_param: "OS::stack_id" }
+      protocol: HTTP
+      port: 80
+      algorithm: ROUND_ROBIN
+      nodes: []
+      virtualIps:
+      - type: PUBLIC
+        ipVersion: IPV4
+#+END_SRC
+
+*** Autoscale resources

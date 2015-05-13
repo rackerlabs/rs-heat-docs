@@ -10,7 +10,8 @@ using Cloud Orchestration.
 Cloud backup agent is installed on the server from where you wanted to backup files/folders
 
 ***** Installing cloud backup agent on the server
-****** Option-1: If the tenant is a managed operations customer and also the server
+****** Option-1:
+If the tenant is a managed operations customer and also the server
 was created as part of Heat stack, then pass the following metadata property to
 OS::Nova::Server or Rackspace::Cloud::WinServer
 
@@ -24,7 +25,8 @@ OS::Nova::Server or Rackspace::Cloud::WinServer
       metadata: {build_config: backup_agent_only}
 #+END_SRC
 
-****** Option-2: If the tenant is not a managed operations customer or server was not created
+****** Option-2:
+If the tenant is not a managed operations customer or server was not created
 as part of the Heat stack creation, then follow links given below to install backup agent.
 On Linux server
 http://www.rackspace.com/knowledge_center/article/rackspace-cloud-backup-install-the-agent-on-linux
@@ -115,4 +117,8 @@ wordpress application installed at c:\inetpub\wwwroot\wordpress folder.
     type: Rackspace::Cloud::BackupConfig
 #+END_SRC
 
-*** Autoscale resources
+* Reference
+
+- [[http://docs.rackspace.com/orchestration/api/v1/orchestration-devguide/content/overview.html][Cloud Orchestration API Developer Guide]]
+- [[http://docs.openstack.org/developer/heat/template_guide/hot_spec.html][Heat Orchestration Template (HOT) Specification]]
+- [[http://cloudinit.readthedocs.org/en/latest/topics/format.html][Cloud-init format documentation]]

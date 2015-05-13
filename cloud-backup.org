@@ -1,4 +1,4 @@
-#+TITLE: Rackspace cloud backup with Cloud Orchestration(Heat)
+#+TITLE: Rackspace cloud backup with Heat
 
 * Brief summary
 
@@ -29,34 +29,61 @@ outputs:
 
 ** Resources section
 
-Add an OS::Nova::KeyPair resource that will generate an SSH keypair
-which you can use to login to your web servers if you need to:
+Add a Rackspace::Cloud::WinServer resource that will create a windows server
+and install wordpress web application.
 
 #+BEGIN_SRC yaml
-  access_key:
-    type: OS::Nova::KeyPair
+  wordpress_server:
+    type: "Rackspace::Cloud::WinServer"
     properties:
-      name: { get_param: "OS::stack_name" }
-      save_private_key: true
+      name: { get_param: server_hostname }
+      flavor: { get_param: flavor }
+      image: { get_param: image }
+      metadata: {build_config: backup_agent_only}
+      user_data:
+        str_replace:
+          template: |
+            $source = "http://download.microsoft.com/download/7/0/4/704CEB4C-9F42-4962-A2B0-5C84B0682C7A/WebPlatformInstaller_amd64_en-US.msi"
+            $destination = "webpi.msi"
+            $wc = New-Object System.Net.WebClient
+            $wc.DownloadFile($source, $destination)
+            Start-Process msiexec -ArgumentList "/i webpi.msi /qn"  -NoNewWindow -Wait
+            echo DBPassword[@]%dbpassword% DBAdminPassword[@]%dbadminpassword% > test.app
+            $tmpprofile = $env:userprofile
+            $env:userprofile = "c:\users\administrator"
+            $wpicmd = "C:\Program Files\Microsoft\Web Platform Installer\WebPICMD.exe"
+            Start-Process $wpicmd -ArgumentList "/Install /Application:Wordpress@test.app /MySQLPassword:%dbadminpassword% /AcceptEULA /Log:.\wpi.log"  -NoNewWindow -Wait
+            $env:userprofile = $tmpprofile
+          params:
+            "%dbpassword%": { get_param: db_password }
+            "%dbadminpassword%": { get_param: db_admin_password }
 #+END_SRC
 
-Add a Rackspace::Cloud::LoadBalancer resource that will balance
-the load between web servers.
+*** cloud backup config resource
+Add a Rackspace::Cloud::BackupConfig resource that will backup
+wordpress application installed at c:\inetpub\wwwroot\wordpress folder.
 
 #+BEGIN_SRC yaml
-  scaling_lb:
-    type: Rackspace::Cloud::LoadBalancer
+  rax_backup_config:
     properties:
-      name: { get_param: "OS::stack_name" }
-      metadata:
-        rax-heat: { get_param: "OS::stack_id" }
-      protocol: HTTP
-      port: 80
-      algorithm: ROUND_ROBIN
-      nodes: []
-      virtualIps:
-      - type: PUBLIC
-        ipVersion: IPV4
+      BackupConfigurationName: wordpressbackup
+      DayOfWeekId: null
+      Frequency: Hourly
+      StartTimeHour: null
+      StartTimeMinute: null
+      StartTimeAmPm: null
+      HourInterval: 1
+      IsActive: true
+      Enabled: true
+      NotifyFailure: true
+      NotifyRecipients: your_email@emailprovider.com
+      NotifySuccess: true
+      TimeZoneId: Eastern Standard Time
+      VersionRetention: 60
+      host_ip_address: { get_attr: [rs_windows_server, accessIPv4] }
+      Inclusions:
+      - {"FilePath": "c:\\inetpub\\wwwroot\\wordpress", "FileItemType": "Folder" }
+    type: Rackspace::Cloud::BackupConfig
 #+END_SRC
 
 *** Autoscale resources

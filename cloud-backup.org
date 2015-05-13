@@ -18,9 +18,9 @@ OS::Nova::Server or Rackspace::Cloud::WinServer. For example,
   wordpress_server:
     type: "Rackspace::Cloud::WinServer"
     properties:
-      name: { get_param: server_hostname }
-      flavor: { get_param: flavor }
-      image: { get_param: image }
+      name: worpress-server
+      flavor: 4GB Standard Instance
+      image: Windows Server 2012
       metadata: {build_config: backup_agent_only}
 #+END_SRC
 
@@ -60,9 +60,9 @@ and install wordpress web application.
   wordpress_server:
     type: "Rackspace::Cloud::WinServer"
     properties:
-      name: { get_param: server_hostname }
-      flavor: { get_param: flavor }
-      image: { get_param: image }
+      name: worpress-server
+      flavor: 4GB Standard Instance
+      image: Windows Server 2012
       metadata: {build_config: backup_agent_only}
       user_data:
         str_replace:
@@ -79,8 +79,8 @@ and install wordpress web application.
             Start-Process $wpicmd -ArgumentList "/Install /Application:Wordpress@test.app /MySQLPassword:%dbadminpassword% /AcceptEULA /Log:.\wpi.log"  -NoNewWindow -Wait
             $env:userprofile = $tmpprofile
           params:
-            "%dbpassword%": { get_param: db_password }
-            "%dbadminpassword%": { get_param: db_admin_password }
+            "%dbpassword%": testpassword
+            "%dbadminpassword%": admintestpassword
 #+END_SRC
 
 Above resource creates a Windows server and installs wordpress application. Please note that
@@ -163,9 +163,9 @@ resources:
   rs_windows_server:
     type: "Rackspace::Cloud::WinServer"
     properties:
-      name: { get_param: server_hostname }
-      flavor: { get_param: flavor }
-      image: { get_param: image }
+      name: worpress-server
+      flavor: 4GB Standard Instance
+      image: Windows Server 2012
       metadata: {build_config: backup_agent_only}
       user_data:
         str_replace:
@@ -182,8 +182,8 @@ resources:
             Start-Process $wpicmd -ArgumentList "/Install /Application:Wordpress@test.app /MySQLPassword:%dbadminpassword% /AcceptEULA /Log:.\wpi.log"  -NoNewWindow -Wait
             $env:userprofile = $tmpprofile
           params:
-            "%dbpassword%": { get_param: db_password }
-            "%dbadminpassword%": { get_param: db_admin_password }
+            "%dbpassword%": testpassword_123
+            "%dbadminpassword%": testpassword_123
 
 outputs:
   website_url:

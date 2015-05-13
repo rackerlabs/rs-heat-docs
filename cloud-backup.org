@@ -1,13 +1,13 @@
 #+TITLE: Rackspace cloud backup with Heat
 
-* Brief summary
+*** Brief summary
 
 Rackspace cloud backup configuration resource enables you to select and
 backup specific files/folders from a cloud server and schedule backup jobs
 using Cloud Orchestration.
 
 
-* Example template
+*** Example template
 
 In the following example template, we will set up a single node wordpress
 web application with cloud backup resource.  For the sake of simplicity,
@@ -27,7 +27,7 @@ outputs:
 
 #+END_SRC
 
-** Resources section
+*** Resources section
 
 Add a Rackspace::Cloud::WinServer resource that will create a windows server
 and install wordpress web application.
@@ -59,7 +59,7 @@ and install wordpress web application.
             "%dbadminpassword%": { get_param: db_admin_password }
 #+END_SRC
 
-*** cloud backup config resource
+**** cloud backup config resource
 Add a Rackspace::Cloud::BackupConfig resource that will backup
 wordpress application installed at c:\inetpub\wwwroot\wordpress folder.
 

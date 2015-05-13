@@ -6,6 +6,33 @@ Rackspace cloud backup configuration resource enables you to select and
 backup specific files/folders from a cloud server and schedule backup jobs
 using Cloud Orchestration.
 
+**** Prerequisite(s):
+Cloud backup agent is installed on the server from where you wanted to backup files/folders
+
+***** Installing cloud backup agent on the server
+****** Option-1: If the tenant is a managed operations customer and also the server
+was created as part of Heat stack, then pass the following metadata property to
+OS::Nova::Server or Rackspace::Cloud::WinServer
+
+#+BEGIN_SRC yaml
+  wordpress_server:
+    type: "Rackspace::Cloud::WinServer"
+    properties:
+      name: { get_param: server_hostname }
+      flavor: { get_param: flavor }
+      image: { get_param: image }
+      metadata: {build_config: backup_agent_only}
+#+END_SRC
+
+****** Option-2: If the tenant is not a managed operations customer or server was not created
+as part of the Heat stack creation, then follow links given below to install backup agent.
+On Linux server
+http://www.rackspace.com/knowledge_center/article/rackspace-cloud-backup-install-the-agent-on-linux
+
+On Windows server
+http://www.rackspace.com/knowledge_center/article/rackspace-cloud-backup-install-the-agent-on-windows
+On Windows (silent installation)
+http://www.rackspace.com/knowledge_center/article/rackspace-cloud-backup-install-the-agent-on-windows-by-using-silent-installation
 
 *** Example template
 
@@ -83,6 +110,8 @@ wordpress application installed at c:\inetpub\wwwroot\wordpress folder.
       host_ip_address: { get_attr: [rs_windows_server, accessIPv4] }
       Inclusions:
       - {"FilePath": "c:\\inetpub\\wwwroot\\wordpress", "FileItemType": "Folder" }
+      - {"FilePath": "c:\\inetpub\\wwwroot\\wordpress", "FileItemType": "Folder" }
+    
     type: Rackspace::Cloud::BackupConfig
 #+END_SRC
 

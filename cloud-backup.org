@@ -1,15 +1,15 @@
 #+TITLE: Rackspace cloud backup using Heat
 
-*** Brief summary
+* Brief summary
 
 Rackspace cloud backup configuration resource enables you to select and
 backup specific files/folders from a cloud server using Cloud Orchestration.
 
-**** Prerequisite(s):
+* Prerequisite(s):
 Cloud backup agent is installed on the server from where you wanted to backup files/folders
 
-***** Installing cloud backup agent on the server
-****** Option-1
+** Installing cloud backup agent on the server
+*** Option-1
 If the tenant is a managed operations customer and also server from where you wanted to create backup
 was created as part of Heat stack, then pass '{build_config: backup_agent_only}' as metadata to
 OS::Nova::Server or Rackspace::Cloud::WinServer. For example,
@@ -24,7 +24,7 @@ OS::Nova::Server or Rackspace::Cloud::WinServer. For example,
       metadata: {build_config: backup_agent_only}
 #+END_SRC
 
-****** Option-2
+*** Option-2
 If the tenant is not a managed operations customer or server was not created
 as part of the Heat stack creation, then follow links given below to install backup agent.
 
@@ -32,7 +32,7 @@ as part of the Heat stack creation, then follow links given below to install bac
 - [[http://www.rackspace.com/knowledge_center/article/rackspace-cloud-backup-install-the-agent-on-windows][Install cloud backup agent on Windows server]]
 - [[http://www.rackspace.com/knowledge_center/article/rackspace-cloud-backup-install-the-agent-on-windows-by-using-silent-installation][Install cloud backup agent on Windows server (silent installation)]]
 
-**** Example template
+* Example template
 In the following example template, we will set up a single node wordpress
 web application (on a Windows server) with cloud backup resource.  For the sake of simplicity,
 we will not use template parameters in this example.
@@ -51,7 +51,7 @@ outputs:
 
 #+END_SRC
 
-**** Resources section
+** Resources section
 
 Add a Rackspace::Cloud::WinServer resource that will create a windows server
 and install wordpress web application.
@@ -86,7 +86,7 @@ and install wordpress web application.
 Above resource creates a Windows server and installs wordpress application. Please note that
 '{build_config: backup_agent_only}' was passed as metadata to install cloud backup agent.
 
-**** cloud backup config resource
+** cloud backup config resource
 Add a Rackspace::Cloud::BackupConfig resource to backup wordpress application
 installed at c:\inetpub\wwwroot\wordpress folder.
 
@@ -121,7 +121,7 @@ Here IP address of the windows server that was created in the earlier resource e
 If the server was created out side of the stack, make sure that backup agent was installed on that server
 and pass the IP address to 'host_ip_address'.
 
-**** Outputs section
+** Outputs section
 Add wordpress website URL to the outputs section.
 
 #+BEGIN_SRC yaml
@@ -134,7 +134,7 @@ Add wordpress website URL to the outputs section.
     description: URL for Wordpress site
 #+END_SRC
 
-**** Full Example Template
+** Full Example Template
 #+BEGIN_SRC yaml
 heat_template_version: 2013-05-23
 
@@ -199,7 +199,7 @@ outputs:
     description: URL for Wordpress site
 #+END_SRC
 
-**** Reference
+* Reference
 
 - [[http://docs.rackspace.com/orchestration/api/v1/orchestration-devguide/content/overview.html][Cloud Orchestration API Developer Guide]]
 - [[http://docs.openstack.org/developer/heat/template_guide/hot_spec.html][Heat Orchestration Template (HOT) Specification]]

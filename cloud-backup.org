@@ -18,7 +18,7 @@ OS::Nova::Server or Rackspace::Cloud::WinServer. For example,
   wordpress_server:
     type: "Rackspace::Cloud::WinServer"
     properties:
-      name: worpress-server
+      name: wordpress-server
       flavor: 4GB Standard Instance
       image: Windows Server 2012
       metadata: {build_config: backup_agent_only}

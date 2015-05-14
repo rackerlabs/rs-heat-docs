@@ -14,7 +14,8 @@ event- and schedule-based auto scaling.
 
 If you are just getting started with Rackspace Auto Scale, Cloud
 Monitoring, or Cloud Orchestration, the following introductory
-material should give you enough background to proceed with 
+material should give you enough background to proceed with this
+tutorial.
 
 ** Auto Scale
 
@@ -88,8 +89,7 @@ the load between web servers.
         ipVersion: IPV4
 #+END_SRC
 
-Add a Rackspace::AutoScale::Group resource which will contain at
-least 1 servers and not more than 5 servers:
+Add a Rackspace::AutoScale::Group resource:
 
 #+BEGIN_SRC yaml
   scaled_servers:
@@ -115,6 +115,11 @@ least 1 servers and not more than 5 servers:
               - uuid: 11111111-1111-1111-1111-111111111111
 #+END_SRC
 
+This resource will be responsible for creating/destroying Cloud
+Servers based on the auto scaling policy.  The maxEntities and
+minEntities properties above ensure that the group will create at
+least 1 server but not more than 5 servers.
+
 Add a Rackspace::AutoScale::ScalingPolicy for scaling up:
 
 #+BEGIN_SRC yaml
@@ -133,6 +138,9 @@ Add a Rackspace::AutoScale::ScalingPolicy for scaling up:
       cooldown: 600
       type: schedule
 #+END_SRC
+
+This resource will create a scaling policy that scales the auto
+scaling group up by one server every Monday at 1:00 AM.
 
 Finally, add a Rackspace::AutoScale::ScalingPolicy for scaling down:
 
@@ -153,6 +161,9 @@ Finally, add a Rackspace::AutoScale::ScalingPolicy for scaling down:
       type: schedule
 #+END_SRC
 
+Likewise, this resource will scale the auto scaling group down by one
+server every Saturday at 1:00 AM.
+
 ** Outputs section
 
 Add the private SSH key to the outputs section.  You will be able to
@@ -164,8 +175,8 @@ log into your scaling group servers using this SSH key.
     description: Private key for accessing the scaled server instances if needed
 #+END_SRC
 
-You will be able to see the stack outputs when doing a =heat
-stack-show= on the created stack.
+To see the stack outputs, issue a =heat stack-show <stack name>= on
+the created stack.
 
 ** Full template
 
@@ -439,8 +450,7 @@ scaling up:
       type: webhook
 #+END_SRC
 
-Add a Rackspace::AutoScale::WebHook resource that will be used to
-trigger the scale-up policy above:
+Add a Rackspace::AutoScale::WebHook resource:
 
 #+BEGIN_SRC yaml
   scale_up_webhook:
@@ -453,6 +463,9 @@ trigger the scale-up policy above:
             stack: { get_param: "OS::stack_name" }
       policy: { get_resource: scale_up_policy }
 #+END_SRC
+
+The webhook resource generates a URL that will be used to trigger the
+scale-up policy above.
 
 Similarly to the previous two resources for scaling-up, we will add
 another Rackspace::AutoScale::ScalingPolicy and
@@ -517,8 +530,11 @@ call the scale-up webhook created above:
         url: { get_attr: [ scale_up_webhook, executeUrl ] }
 #+END_SRC
 
-Likewise, add another Rackspace::CloudMonitoring::Notification
-resource which will call the scale-down webhook:
+Below, the notification resource will be associated with an alarm
+state using a notification plan.
+
+Add another Rackspace::CloudMonitoring::Notification resource which
+will call the scale-down webhook:
 
 #+BEGIN_SRC yaml
   scaledown_notification:
@@ -832,6 +848,8 @@ Rackspace::Autoscale::Group resource and remove the
 Rackspace::CloudMonitoring resources.  Be sure to include the webhooks
 in the output values, as they will be needed when configuring
 monitoring.
+
+Here is an example template for auto scaling with webhooks alone:
 
 #+BEGIN_SRC yaml
 heat_template_version: 2014-10-16

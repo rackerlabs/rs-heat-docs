@@ -116,6 +116,10 @@ installed at c:\inetpub\wwwroot\wordpress folder.
 In the above backup resource, cloud backup service was configured to create a backup of 'c:\inetpub\wwwroot\wordpress'
 folder 'Daily' at '11:30PM' and created backup will be retailed for '60' days. And also, it was
 configured to notify at given email ID if there was any error during the backup creation.
+Please note that, host_ip_address is IP of the cloud server from where files/folders will be backed up.
+Here IP address of the windows server that was created in the earlier resource example was passed.
+If the server was created out side of the stack, make sure that backup agent was installed on that server
+and pass the IP address to 'host_ip_address'.
 
 **** Outputs section
 Add wordpress website URL to the outputs section.

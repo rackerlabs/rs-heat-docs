@@ -1,24 +1,49 @@
-#+TITLE: Event-based auto-scaling with Cloud Orchestration
+#+TITLE: Event and schedule-based auto-scaling with Cloud Orchestration
 
 * Brief summary
 
-To configure your web application running on the Rackspace Cloud to
-automatically scale up or down according to load, Rackspace Auto Scale
-can be used in conjunction with Rackspace Cloud Monitoring.  The Cloud
-Monitoring agent monitors various resources on the servers inside the
-scaling group and makes calls to the Auto Scale API when it is time to
-scale up or down.
+Rackspace Auto Scale supports both schedule-based and event-based auto
+scaling.  Schedule-based auto scaling can be used to scale your
+application up or down at a specific time of the day, whereas
+event-based auto scaling can be used to automatically scale your
+application up or down according to load.  In this tutorial, we will
+use Rackspace Orchestration to automate the configuration of both
+event- and schedule-based auto scaling.
 
-The process of configuring event-based auto-scaling involves many
-tedious manual steps.  In this tutorial, we will use Rackspace Cloud
-Orchestration to automate this configuration.
+* Pre-reading
 
-* Example template
+If you are just getting started with Rackspace Auto Scale, Cloud
+Monitoring, or Cloud Orchestration, the following introductory
+material should give you enough background to proceed with this
+tutorial.
 
-In the following example template, we will set up a web application
-with a loadbalancer and a scaling group that contains between 2 and 10
-web servers.  For the sake of simplicity, we will not use template
-parameters in this example.
+** Auto Scale
+
+- [[http://www.rackspace.com/blog/easily-scale-your-cloud-with-rackspace-auto-scale/][Easily Scale Your Cloud With Rackspace Auto Scale]] gives a brief
+  overview of the different types of scaling policies for Auto Scale.
+- [[http://docs.rackspace.com/cas/api/v1.0/autoscale-gettingstarted/content/Auto_Scale_Core_Concepts.html][Getting Started Guide: Auto Scale concepts]]
+
+** Cloud Monitoring
+
+- [[http://docs.rackspace.com/cm/api/v1.0/cm-getting-started/content/how-it-works-gsg.html][Getting Started Guide: How Rackspace Cloud Monitoring works]]
+- [[http://docs.rackspace.com/cm/api/v1.0/cm-getting-started/content/how-agent-works-gsg.html][Getting Started Guide: About the monitoring agent]]
+- [[http://docs.rackspace.com/cm/api/v1.0/cm-devguide/content/appendix-check-types.html][Developer Guide: Available check types and fields]]
+- [[http://docs.rackspace.com/cm/api/v1.0/cm-devguide/content/yaml-files.html][Developer Guide: Server-Side agent configuration YAML file examples]]
+
+** Cloud Orchestration
+
+- [[http://docs.rackspace.com/orchestration/api/v1/orchestration-getting-started/content/Orch_Overview.html][Getting Started Guide: Overview]]
+- [[http://docs.rackspace.com/orchestration/api/v1/orchestration-templates-devguide/content/Intro_to_Templates-d1e633.html][Templates Developer Guide: Introduction to templates]]
+
+* Schedule-based auto scaling
+
+Schedule-based auto scaling can be useful if there is a particular
+time which your application experiences higher load.  By scheduling a
+scaling event, you will be able to proactively scale your application.
+
+In this example, we will create a scaling group that scales up by one
+node each Monday at 1:00 AM and down by one node each Saturday at 1:00
+AM.
 
 Start by adding the top-level template sections:
 
@@ -55,8 +80,240 @@ the load between web servers.
     type: Rackspace::Cloud::LoadBalancer
     properties:
       name: { get_param: "OS::stack_name" }
-      metadata:
-        rax-heat: { get_param: "OS::stack_id" }
+      protocol: HTTP
+      port: 80
+      algorithm: ROUND_ROBIN
+      nodes: []
+      virtualIps:
+      - type: PUBLIC
+        ipVersion: IPV4
+#+END_SRC
+
+Add a Rackspace::AutoScale::Group resource:
+
+#+BEGIN_SRC yaml
+  scaled_servers:
+    type: Rackspace::AutoScale::Group
+    properties:
+      groupConfiguration:
+        name: { get_param: "OS::stack_name" }
+        maxEntities: 5
+        minEntities: 1
+        cooldown: 120
+      launchConfiguration:
+        type: launch_server
+        args:
+          loadBalancers:
+          - loadBalancerId: { get_resource: scaling_lb }
+            port: 80
+          server:
+            name: { get_param: "OS::stack_name" }
+            flavorRef: performance1-1
+            imageRef: 6f29d6a6-9972-4ae0-aa80-040fa2d6a9cf # Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
+            key_name: { get_resource: access_key }
+            networks:
+              - uuid: 11111111-1111-1111-1111-111111111111
+#+END_SRC
+
+This resource will be responsible for creating/destroying Cloud
+Servers based on the auto scaling policy.  The maxEntities and
+minEntities properties above ensure that the group will create at
+least 1 server but not more than 5 servers.
+
+Add a Rackspace::AutoScale::ScalingPolicy for scaling up:
+
+#+BEGIN_SRC yaml
+  scale_up_policy:
+    type: Rackspace::AutoScale::ScalingPolicy
+    properties:
+      group: { get_resource: scaled_servers }
+      name:
+        str_replace:
+          template: stack scale up policy
+          params:
+            stack: { get_param: "OS::stack_name" }
+      args:
+        cron: "0 1 * * 1"
+      change: 1
+      cooldown: 600
+      type: schedule
+#+END_SRC
+
+This resource will create a scaling policy that scales the auto
+scaling group up by one server every Monday at 1:00 AM.
+
+Finally, add a Rackspace::AutoScale::ScalingPolicy for scaling down:
+
+#+BEGIN_SRC yaml
+  scale_down_policy:
+    type: Rackspace::AutoScale::ScalingPolicy
+    properties:
+      group: { get_resource: scaled_servers }
+      name:
+        str_replace:
+          template: stack scale down policy
+          params:
+            stack: { get_param: "OS::stack_name" }
+      args:
+        cron: "0 1 * * 6"
+      change: -1
+      cooldown: 600
+      type: schedule
+#+END_SRC
+
+Likewise, this resource will scale the auto scaling group down by one
+server every Saturday at 1:00 AM.
+
+** Outputs section
+
+Add the private SSH key to the outputs section.  You will be able to
+log into your scaling group servers using this SSH key.
+
+#+BEGIN_SRC yaml
+  "Access Private Key":
+    value: { get_attr: [ access_key, private_key ] }
+    description: Private key for accessing the scaled server instances if needed
+#+END_SRC
+
+To see the stack outputs, issue a =heat stack-show <stack name>= on
+the created stack.
+
+** Full template
+
+#+BEGIN_SRC yaml
+heat_template_version: 2014-10-16
+  
+description: |
+  Rackspace Cloud Monitoring and schedule-based scaling using Rackspace Cloud Autoscale
+
+resources:
+
+  access_key:
+    type: OS::Nova::KeyPair
+    properties:
+      name: { get_param: "OS::stack_name" }
+      save_private_key: true
+
+  scaling_lb:
+    type: Rackspace::Cloud::LoadBalancer
+    properties:
+      name: { get_param: "OS::stack_name" }
+      protocol: HTTP
+      port: 80
+      algorithm: ROUND_ROBIN
+      nodes: []
+      virtualIps:
+      - type: PUBLIC
+        ipVersion: IPV4
+
+  scaled_servers:
+    type: Rackspace::AutoScale::Group
+    properties:
+      groupConfiguration:
+        name: { get_param: "OS::stack_name" }
+        maxEntities: 10
+        minEntities: 2
+        cooldown: 120
+      launchConfiguration:
+        type: launch_server
+        args:
+          loadBalancers:
+          - loadBalancerId: { get_resource: scaling_lb }
+            port: 80
+          server:
+            name: { get_param: "OS::stack_name" }
+            flavorRef: performance1-1
+            imageRef: 6f29d6a6-9972-4ae0-aa80-040fa2d6a9cf # Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
+            key_name: { get_resource: access_key }
+            networks:
+              - uuid: 11111111-1111-1111-1111-111111111111
+
+  scale_up_policy:
+    type: Rackspace::AutoScale::ScalingPolicy
+    properties:
+      group: { get_resource: scaled_servers }
+      name:
+        str_replace:
+          template: stack scale up policy
+          params:
+            stack: { get_param: "OS::stack_name" }
+      args:
+        cron: "0 1 * * 1"
+      change: 1
+      cooldown: 600
+      type: schedule
+
+  scale_down_policy:
+    type: Rackspace::AutoScale::ScalingPolicy
+    properties:
+      group: { get_resource: scaled_servers }
+      name:
+        str_replace:
+          template: stack scale down policy
+          params:
+            stack: { get_param: "OS::stack_name" }
+      args:
+        cron: "0 1 * * 6"
+      change: -1
+      cooldown: 600
+      type: schedule
+
+outputs:
+
+  "Access Private Key":
+    value: { get_attr: [ access_key, private_key ] }
+    description: Private key for accessing the scaled server instances if needed
+#+END_SRC
+
+* Event-based auto scaling
+
+To configure your web application running on the Rackspace Cloud to
+automatically scale up or down according to load, Rackspace Auto Scale
+can be used in conjunction with Rackspace Cloud Monitoring.  The Cloud
+Monitoring agent monitors various resources on the servers inside the
+scaling group and makes calls to the Auto Scale API when it is time to
+scale up or down.
+
+In the following example template, we will set up a web application
+with a loadbalancer and a scaling group that contains between 2 and 10
+web servers.  For the sake of simplicity, we will not use template
+parameters in this example.
+
+Start by adding the top-level template sections:
+
+#+BEGIN_SRC yaml
+heat_template_version: 2014-10-16
+
+description: |
+  Rackspace Cloud Monitoring and Event-based scaling using Rackspace Cloud Autoscale
+
+resources:
+
+outputs:
+
+#+END_SRC
+
+** Resources section
+
+Add an OS::Nova::KeyPair resource and a Rackspace::Cloud::LoadBalancer
+as in the previous example:
+
+#+BEGIN_SRC yaml
+  access_key:
+    type: OS::Nova::KeyPair
+    properties:
+      name: { get_param: "OS::stack_name" }
+      save_private_key: true
+#+END_SRC
+
+Add a Rackspace::Cloud::LoadBalancer resource that will balance
+the load between web servers.
+
+#+BEGIN_SRC yaml
+  scaling_lb:
+    type: Rackspace::Cloud::LoadBalancer
+    properties:
+      name: { get_param: "OS::stack_name" }
       protocol: HTTP
       port: 80
       algorithm: ROUND_ROBIN
@@ -77,8 +334,6 @@ least 2 servers and not more than 10 servers:
     properties:
       groupConfiguration:
         name: { get_param: "OS::stack_name" }
-        metadata:
-          rax-heat: { get_param: "OS::stack_id" }
         maxEntities: 10
         minEntities: 2
         cooldown: 120
@@ -91,11 +346,11 @@ least 2 servers and not more than 10 servers:
           server:
             name: { get_param: "OS::stack_name" }
             flavorRef: performance1-1
-            imageRef: 598a4282-f14b-4e50-af4c-b3e52749d9f9 # Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
+            imageRef: 6f29d6a6-9972-4ae0-aa80-040fa2d6a9cf # Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
             key_name: { get_resource: access_key }
-            metadata:
-              rax-heat: { get_param: "OS::stack_id" }
             config_drive: true
+            networks:
+              - uuid: 11111111-1111-1111-1111-111111111111
             user_data:
               str_replace:
                 template: |
@@ -172,7 +427,7 @@ configured via the =user_data= section (using the [[http://cloudinit.readthedocs
 format]]).  The alarm is configured to trigger a warning state when the
 system load is below 0.3 for 15 minutes and a critical state when the
 system load is above 0.85 for 5 minutes. We use the warning state here
-to trigger scale-down events in leu of an alternative alarm status.
+to trigger scale-down events in lieu of an alternative alarm status.
 
 The =scaling_plan= and =agent_token= resources referenced in the
 =user_data= section will be defined below.
@@ -195,8 +450,7 @@ scaling up:
       type: webhook
 #+END_SRC
 
-Add a Rackspace::AutoScale::WebHook resource that will be used to
-trigger the scale-up policy above:
+Add a Rackspace::AutoScale::WebHook resource:
 
 #+BEGIN_SRC yaml
   scale_up_webhook:
@@ -207,10 +461,11 @@ trigger the scale-up policy above:
           template: stack scale up hook
           params:
             stack: { get_param: "OS::stack_name" }
-      metadata:
-        rax-heat: { get_param: "OS::stack_id" }
       policy: { get_resource: scale_up_policy }
 #+END_SRC
+
+The webhook resource generates a URL that will be used to trigger the
+scale-up policy above.
 
 Similarly to the previous two resources for scaling-up, we will add
 another Rackspace::AutoScale::ScalingPolicy and
@@ -238,8 +493,6 @@ Rackspace::AutoScale::WebHook resource for scaling down:
           template: stack scale down hook
           params:
             stack: { get_param: "OS::stack_name" }
-      metadata:
-        rax-heat: { get_param: "OS::stack_id" }
       policy: { get_resource: scale_down_policy }
 #+END_SRC
 
@@ -277,8 +530,11 @@ call the scale-up webhook created above:
         url: { get_attr: [ scale_up_webhook, executeUrl ] }
 #+END_SRC
 
-Likewise, add another Rackspace::CloudMonitoring::Notification
-resource which will call the scale-down webhook:
+Below, the notification resource will be associated with an alarm
+state using a notification plan.
+
+Add another Rackspace::CloudMonitoring::Notification resource which
+will call the scale-down webhook:
 
 #+BEGIN_SRC yaml
   scaledown_notification:
@@ -328,26 +584,22 @@ associate the alarm state with the Notification resource while
 avoiding circular dependencies.
 
 This notification plan will trigger a scale up event when any of the
-=load_alarm= s configured in the scaling group (via cloud-init) issue a
-=CRITICAL= alarm. This plan also triggers a scale down event when any
-of the =load_alarm=s configured in the scaling group issue a
-=WARNING= alarm.
+=load_alarm= alarms configured in the scaling group (via cloud-init)
+issue a =CRITICAL= alarm state. This plan also triggers a scale down
+event when any of the =load_alarm= alarms configured in the scaling
+group issue a =WARNING= alarm state.
 
 ** Outputs section
 
-Add the private SSH key to the outputs section.  You will be able to
-log into your scaling group servers using this SSH key.
+Add the private SSH key and, optionally, the webhook URLs to the
+outputs section.  You can use the webhooks to manually scale your
+scaling group up or down.
 
 #+BEGIN_SRC yaml
   "Access Private Key":
     value: { get_attr: [ access_key, private_key ] }
     description: Private key for accessing the scaled server instances if needed
-#+END_SRC
 
-Optionally, add the webhook URLs to the outputs section.  You can use
-them to manually scale your scaling group up or down.
-
-#+BEGIN_SRC yaml
   "Scale UP servers webhook":
     value: { get_attr: [ scale_up_webhook, executeUrl ] }
     description: Scale UP API servers webhook
@@ -355,9 +607,6 @@ them to manually scale your scaling group up or down.
   "Scale DOWN servers webhook":
     value: { get_attr: [ scale_down_webhook, executeUrl ] }
 #+END_SRC
-
-You will be able to see these outputs when doing a =heat stack-show=
-on the created stack.
 
 ** Full template
 
@@ -379,8 +628,6 @@ resources:
     type: Rackspace::Cloud::LoadBalancer
     properties:
       name: { get_param: "OS::stack_name" }
-      metadata:
-        rax-heat: { get_param: "OS::stack_id" }
       protocol: HTTP
       port: 80
       algorithm: ROUND_ROBIN
@@ -394,8 +641,6 @@ resources:
     properties:
       groupConfiguration:
         name: { get_param: "OS::stack_name" }
-        metadata:
-          rax-heat: { get_param: "OS::stack_id" }
         maxEntities: 10
         minEntities: 2
         cooldown: 120
@@ -408,11 +653,11 @@ resources:
           server:
             name: { get_param: "OS::stack_name" }
             flavorRef: performance1-1
-            imageRef: 598a4282-f14b-4e50-af4c-b3e52749d9f9 # Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
+            imageRef: 6f29d6a6-9972-4ae0-aa80-040fa2d6a9cf # Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
             key_name: { get_resource: access_key }
-            metadata:
-              rax-heat: { get_param: "OS::stack_id" }
             config_drive: true
+            networks:
+              - uuid: 11111111-1111-1111-1111-111111111111
             user_data:
               str_replace:
                 template: |
@@ -504,8 +749,6 @@ resources:
           template: stack scale up hook
           params:
             stack: { get_param: "OS::stack_name" }
-      metadata:
-        rax-heat: { get_param: "OS::stack_id" }
       policy: { get_resource: scale_up_policy }
 
   scale_down_policy:
@@ -529,8 +772,6 @@ resources:
           template: stack scale down hook
           params:
             stack: { get_param: "OS::stack_name" }
-      metadata:
-        rax-heat: { get_param: "OS::stack_id" }
       policy: { get_resource: scale_down_policy }
 
   agent_token:
@@ -599,7 +840,127 @@ outputs:
     value: { get_attr: [ scale_down_webhook, executeUrl ] }
 #+END_SRC
 
-* Reference
+* Auto-scaling using webhooks
+
+If you decide to use a monitoring system other than Rackspace Cloud
+Monitoring, you can remove the monitoring agent configuration from the
+Rackspace::Autoscale::Group resource and remove the
+Rackspace::CloudMonitoring resources.  Be sure to include the webhooks
+in the output values, as they will be needed when configuring
+monitoring.
+
+Here is an example template for auto scaling with webhooks alone:
+
+#+BEGIN_SRC yaml
+heat_template_version: 2014-10-16
+
+description: |
+  Rackspace Cloud Monitoring and Event-based scaling using Rackspace Cloud Autoscale
+
+resources:
+
+  access_key:
+    type: OS::Nova::KeyPair
+    properties:
+      name: { get_param: "OS::stack_name" }
+      save_private_key: true
+
+  scaling_lb:
+    type: Rackspace::Cloud::LoadBalancer
+    properties:
+      name: { get_param: "OS::stack_name" }
+      protocol: HTTP
+      port: 80
+      algorithm: ROUND_ROBIN
+      nodes: []
+      virtualIps:
+      - type: PUBLIC
+        ipVersion: IPV4
+
+  scaled_servers:
+    type: Rackspace::AutoScale::Group
+    properties:
+      groupConfiguration:
+        name: { get_param: "OS::stack_name" }
+        maxEntities: 10
+        minEntities: 2
+        cooldown: 120
+      launchConfiguration:
+        type: launch_server
+        args:
+          loadBalancers:
+          - loadBalancerId: { get_resource: scaling_lb }
+            port: 80
+          server:
+            name: { get_param: "OS::stack_name" }
+            flavorRef: performance1-1
+            imageRef: 6f29d6a6-9972-4ae0-aa80-040fa2d6a9cf # Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
+            key_name: { get_resource: access_key }
+            config_drive: true
+            networks:
+              - uuid: 11111111-1111-1111-1111-111111111111
+
+  scale_up_policy:
+    type: Rackspace::AutoScale::ScalingPolicy
+    properties:
+      group: { get_resource: scaled_servers }
+      name:
+        str_replace:
+          template: stack scale up policy
+          params:
+            stack: { get_param: "OS::stack_name" }
+      change: 1
+      cooldown: 600
+      type: webhook
+
+  scale_up_webhook:
+    type: Rackspace::AutoScale::WebHook
+    properties:
+      name:
+        str_replace:
+          template: stack scale up hook
+          params:
+            stack: { get_param: "OS::stack_name" }
+      policy: { get_resource: scale_up_policy }
+
+  scale_down_policy:
+    type: Rackspace::AutoScale::ScalingPolicy
+    properties:
+      group: { get_resource: scaled_servers }
+      name:
+        str_replace:
+          template: stack scale down policy
+          params:
+            stack: { get_param: "OS::stack_name" }
+      change: -1
+      cooldown: 600
+      type: webhook
+
+  scale_down_webhook:
+    type: Rackspace::AutoScale::WebHook
+    properties:
+      name:
+        str_replace:
+          template: stack scale down hook
+          params:
+            stack: { get_param: "OS::stack_name" }
+      policy: { get_resource: scale_down_policy }
+
+outputs:
+
+  "Access Private Key":
+    value: { get_attr: [ access_key, private_key ] }
+    description: Private key for accessing the scaled server instances if needed
+
+  "Scale UP servers webhook":
+    value: { get_attr: [ scale_up_webhook, executeUrl ] }
+    description: Scale UP API servers webhook
+
+  "Scale DOWN servers webhook":
+    value: { get_attr: [ scale_down_webhook, executeUrl ] }
+#+END_SRC
+
+* Reference documentation
 
 - [[http://docs.rackspace.com/cm/api/v1.0/cm-devguide/content/overview.html][Cloud Monitoring API Developer Guide]]
 - [[http://docs.rackspace.com/cas/api/v1.0/autoscale-devguide/content/Overview.html][Auto Scale API Developer Guide]]

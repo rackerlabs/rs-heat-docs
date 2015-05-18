@@ -1,4 +1,4 @@
-#+TITLE: Rackspace cloud backup using Heat
+#+TITLE: Rackspace cloud server
 
 * Brief summary
 

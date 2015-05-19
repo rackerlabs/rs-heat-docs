@@ -61,7 +61,7 @@ does exit or not.
 
 Please note that if there was any error during execution of the script that was provided as user_data,
 then it will be silently ignored and the stack-creation will be succeeded. To handle error scenarios,
-please take a look at SwiftSignal resource documentation<TODO: link from here to SwiftSignal>
+please take a look at [[https://github.com/rackerlabs/rs-heat-docs/blob/master/swift-signal-handle.org][SwiftSignal]] resource documentation
 
 * Example template-3
 In the following example template, we will create a single Linux server providing

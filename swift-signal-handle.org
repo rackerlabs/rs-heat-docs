@@ -5,6 +5,9 @@
 SwiftSingal can be used to coordinate resource creation with notifications/signals that could be coming from 
 sources external or internal to the stack. It is often used in conjunction with SwiftSignalHandle resource.
 
+SwiftSignalHandle is used to create a temporary URL and this URL is used by applications/scripts to send signals.
+SwiftSignal resource waits on this URL for a specified number of signals in given time. 
+
 * Example template
 In the following example template, we will set up a single node linux server that signals success/failure
 of user_data script execution at a given URL. 

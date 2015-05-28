@@ -4,6 +4,17 @@
 
 Rackspace cloud servers can be created, updated and deleted using Cloud Orchestration.
 
+* Known behaviors/issues
+1. Rackconnected customer must provide Rackconnected network ID in networks property to create a server
+in Rackconnected region
+2. Rackconnected managed operaetions customer must provide ServiceNet id in networks property if server
+is created in Rackconnected region
+[[http://www.rackspace.com/knowledge_center/article/rackconnect-v30-compatibility][(Rackconnect compatibility information)]]
+3. If shell script is provided in user_data property, user_data_format property must be set to 'RAW'
+4. To inject data into the file system of the cloud server instance, provide file name and contents
+in personality property
+5. Provide key_name to authenticate via key based authentication instead of password based authentication 
+
 * Example template-1
 In the following example template, we will create a single Linux server using orchestration service.
 For the sake of simplicity, we will not use template parameters in this example.

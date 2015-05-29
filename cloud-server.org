@@ -1,8 +1,100 @@
 #+TITLE: Rackspace cloud server
+Note: This document assumes that the reader is familiar with HOT specification. If that
+is not the case, please go to 'References' section given at the end of this document for HOT
+specification link.
 
 * Brief summary
 
 Rackspace cloud servers can be created, updated and deleted using Cloud Orchestration.
+
+A basic template to create a server is shown below
+#+BEGIN_SRC yaml
+heat_template_version: 2014-10-16
+resources:
+  test_server:
+    type: "OS::Nova::Server"
+    properties:
+      name: test-server
+      flavor: 2 GB General Purpose v1
+      image: Debian 7 (Wheezy) (PVHVM)
+#+END_SRC
+
+* OS::Nova::Server properties
+Below given is the complete list of properties that can be provided to a Server resource.
+
+#+BEGIN_SRC yaml
+  admin_pass: {Description: The administrator password for the server., Type: String}
+  admin_user: {Description: 'Name of the administrative user to use on the server.
+      The default cloud-init user set up for each image (e.g. "ubuntu" for Ubuntu
+      12.04+, "fedora" for Fedora 19+ and "cloud-user" for CentOS/RHEL 6.5).', Type: String}
+  availability_zone: {Description: Name of the availability zone for server placement.,
+    Type: String}
+  block_device_mapping: {Description: Block device mappings for this server., Type: CommaDelimitedList}
+  block_device_mapping_v2: {Description: Block device mappings v2 for this server.,
+    Type: CommaDelimitedList}
+  config_drive:
+    AllowedValues: ['True', 'true', 'False', 'false']
+    Description: If True, enable config drive on the server.
+    Type: Boolean
+  diskConfig:
+    AllowedValues: [AUTO, MANUAL]
+    Description: Control how the disk is partitioned when the server is created.
+    Type: String
+  flavor: {Description: The ID or name of the flavor to boot onto., Type: String}
+  flavor_update_policy:
+    AllowedValues: [RESIZE, REPLACE]
+    Default: RESIZE
+    Description: Policy on how to apply a flavor update; either by requesting a server
+      resize or by replacing the entire server.
+    Type: String
+  image: {Description: The ID or name of the image to boot with., Type: String}
+  image_update_policy:
+    AllowedValues: [REBUILD, REPLACE, REBUILD_PRESERVE_EPHEMERAL]
+    Default: REBUILD
+    Description: Policy on how to apply an image-id update; either by requesting a
+      server rebuild or by replacing the entire server
+    Type: String
+  key_name: {Description: Name of keypair to inject into the server., Type: String}
+  metadata: {Description: Arbitrary key/value metadata to store for this server. Both
+      keys and values must be 255 characters or less.  Non-string values will be serialized
+      to JSON (and the serialized string must be 255 characters or less)., Type: Json}
+  name: {Description: Server name., Type: String}
+  networks: {Description: 'An ordered list of nics to be added to this server, with
+      information about connected networks, fixed ips, port etc.', Type: CommaDelimitedList}
+  personality:
+    Default: {}
+    Description: A map of files to create/overwrite on the server upon boot. Keys
+      are file names and values are the file contents.
+    Type: Json
+  reservation_id: {Description: A UUID for the set of servers being requested., Type: String}
+  scheduler_hints: {Description: Arbitrary key-value pairs specified by the client
+      to help boot a server., Type: Json}
+  security_groups:
+    Default: []
+    Description: List of security group names or IDs. Cannot be used if neutron ports
+      are associated with this server; assign security groups to the ports instead.
+    Type: CommaDelimitedList
+  software_config_transport:
+    AllowedValues: [POLL_SERVER_CFN, POLL_SERVER_HEAT, POLL_TEMP_URL]
+    Default: POLL_TEMP_URL
+    Description: How the server should receive the metadata required for software
+      configuration. POLL_SERVER_CFN will allow calls to the cfn API action DescribeStackResource
+      authenticated with the provided keypair. POLL_SERVER_HEAT will allow calls to
+      the Heat API resource-show using the provided keystone credentials. POLL_TEMP_URL
+      will create and populate a Swift TempURL with metadata for polling.
+    Type: String
+  user_data: {Default: '', Description: User data script to be executed by cloud-init.,
+    Type: String}
+  user_data_format:
+    AllowedValues: [HEAT_CFNTOOLS, RAW, SOFTWARE_CONFIG]
+    Default: HEAT_CFNTOOLS
+    Description: How the user_data should be formatted for the server. For HEAT_CFNTOOLS,
+      the user_data is bundled as part of the heat-cfntools cloud-init boot configuration
+      data. For RAW the user_data is passed to Nova unmodified. For SOFTWARE_CONFIG
+      user_data is bundled as part of the software config data, and metadata is derived
+      from any associated SoftwareDeployment resources.
+    Type: String
+#+END_SRC
 
 * Known behaviors/issues
 1. Rackconnected customer must provide Rackconnected network ID in networks property to create a server in Rackconnected region

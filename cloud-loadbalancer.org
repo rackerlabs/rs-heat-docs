@@ -32,7 +32,7 @@ resources:
 #+END_SRC
 
 * Loadbalancer properties
-Below given is the complete list of loadbalancer properties.
+Below given is the complete list of loadbalancer properties that can be provided to the resource.
 #+BEGIN_SRC yaml
   accessList: {Type: CommaDelimitedList}
   algorithm:
@@ -77,9 +77,10 @@ Below given is the complete list of loadbalancer properties.
 #+END_SRC
 
 * Example template with loadbalancer
-In the following example template, we will create a two node Linux server and provide user_data that can be
-used by server when booting an image.
+In the following example template, we will create a multi node wordpress application with 
+two Linux serves, one trove (DBaaS) instance and one Loadbalancer.
 
+First add a database instance resource to the template.
 #+BEGIN_SRC yaml
 heat_template_version: 2014-10-16
 
@@ -87,78 +88,30 @@ description: |
   Creating Rackspace cloud server with user_data.
 
 resources:
-  test_server:
-    type: "OS::Nova::Server"
+  db:
+    type: OS::Trove::Instance
     properties:
-      name: test-server
-      flavor: 2 GB General Purpose v1
-      image: Debian 7 (Wheezy) (PVHVM)
-      user_data: |
-          #!/bin/bash -x
-          echo "hello world" > /root/hello-world.txt      
-outputs:
-  server_ip:
-    value:
-      get_attr: [test_server, accessIPv4]
+      name: wordpress
+      flavor: 1GB Instance
+      size: 30
+      users:
+      - name: admin
+        password: admin
+        databases:
+        - wordpress
+      databases:
+      - name: wordpress      
 #+END_SRC
 
-This template creates a server in the Rackspace cloud and during the server boot time script provided
-in the user_data property will be executed. Here user_data script is creating a hello-world.txt file
-with 'hell world' as contents. You can login to the cloud server and verify that 'hello-world.txt' file
-does exit or not.
+This template creates a database instance with name 'wordpress' and 'admin' as the username and password.
 
-Please note that if there was any error during execution of the script that was provided as user_data,
-then it will be silently ignored and the stack-creation will be succeeded. To handle error scenarios,
-please take a look at [[https://github.com/rackerlabs/rs-heat-docs/blob/master/swift-signal-handle.org][SwiftSignal]] resource documentation
-
-* Example template-3
-In the following example template, we will create a single Linux server providing
-private key for SSH access.
+Now add two server resoruces and install wordpress application.
 
 #+BEGIN_SRC yaml
 heat_template_version: 2014-10-16
 
 description: |
   Creating Rackspace cloud server with SSH access private key.
-
-resources:
-  ssh_key:
-    type: OS::Nova::KeyPair
-    properties:
-      name: private_access_key
-      save_private_key: true
-      
-  test_server:
-    type: "OS::Nova::Server"
-    properties:
-      name: test-server
-      flavor: 2 GB General Purpose v1
-      image: Debian 7 (Wheezy) (PVHVM)
-      key_name: { get_resource: ssh_key }
-outputs:
-  server_ip:
-    value:
-      get_attr: [test_server, accessIPv4]
-  private_key:
-    value:
-      get_attr: [ssh_key, private_key]
-#+END_SRC
-
-This template first creates a Nova server key pair. Instead of using username/password,
-private_key can be used to access the server.
-
-Please note that if there was any error during execution of the script that was provided as user_data,
-then it will be silently ignored and the stack-creation will be succeeded. To handle error scenarios,
-please take a look at SwiftSignal resource documentation<TODO: link from here to SwiftSignal>
-
-* Example template
-Below template creates a loadbalanced wordpress application.
-
-#+BEGIN_SRC yaml
-heat_template_version: 2014-10-16
-
-description: |
-  Create a loadbalanced two node wordpress application.
 
 resources:
   web_nodes:
@@ -209,8 +162,23 @@ resources:
         databases:
         - wordpress
       databases:
-      - name: wordpress
+      - name: wordpress  
+#+END_SRC
 
+Here a ResourceGroup of type 'OS::Nova::Server' added to the template. user_data property contains
+a script to install wordpress application. Please node that database instance hostname information
+is passed to the script. 
+
+Finally add the loadbalancer resource and provide the server addresses to the loadbalancer. Below given
+is the complete template that can be used to create a loadbalanced multi node wordpress application.
+
+#+BEGIN_SRC yaml
+heat_template_version: 2014-10-16
+
+description: |
+  Create a loadbalanced two node wordpress application.
+
+resources:
   lb:
     type: "Rackspace::Cloud::LoadBalancer"
     properties:
@@ -242,6 +210,57 @@ resources:
         statusRegex: "."
         bodyRegex: "."
       contentCaching: ENABLED
+      
+  web_nodes:
+    type: OS::Heat::ResourceGroup
+    properties:
+      count: 2
+      resource_def:
+        type: "OS::Nova::Server"
+        properties:
+          name: test-server
+          flavor: 2 GB General Purpose v1
+          image: Debian 7 (Wheezy) (PVHVM)
+          user_data:
+            str_replace:
+              template: |
+                #!/bin/bash -v
+                yum -y install mysql-server httpd wordpress
+                sed -i "/Deny from All/d" /etc/httpd/conf.d/wordpress.conf
+                sed -i "s/Require local/Require all granted/" /etc/httpd/conf.d/wordpress.conf
+                sed --in-place --e "s/localhost/%dbhost%/" --e "s/database_name_here/%dbname%/" --e "s/username_here/%dbuser%/" --e "s/password_here/%dbpass%/" /usr/share/wordpress/wp-config.php
+                /etc/init.d/httpd start
+                chkconfig httpd on
+                /etc/init.d/mysqld start
+                chkconfig mysqld on
+                cat << EOF | mysql
+                CREATE DATABASE %dbname%;
+                GRANT ALL PRIVILEGES ON %dbname%.* TO "%dbuser%"@"localhost"
+                IDENTIFIED BY "%dbpass%";
+                FLUSH PRIVILEGES;
+                EXIT
+                EOF
+                iptables -I INPUT -p tcp --dport 80 -j ACCEPT
+                iptables-save > /etc/sysconfig/iptables
+              params:
+                "%dbhost%": { get_attr: [ db, hostname ] }
+                "%dbname%": wordpress
+                "%dbuser%": admin
+                "%dbpass%": admin
+  db:
+    type: OS::Trove::Instance
+    properties:
+      name: wordpress
+      flavor: 1GB Instance
+      size: 30
+      users:
+      - name: admin
+        password: admin
+        databases:
+        - wordpress
+      databases:
+      - name: wordpress
+
 outputs:
   wordpress_url:
     value: 

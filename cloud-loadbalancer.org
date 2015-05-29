@@ -65,18 +65,26 @@ Below given is the complete list of loadbalancer properties that can be provided
     Type: Boolean
   metadata: {Type: Json}
   name: {Type: String}
-  nodes: {Type: CommaDelimitedList}
-  port: {Type: Number}
+  nodes: 
+    Type: CommaDelimitedList
+    Required: True
+  port: 
+    Type: Number
+    Required: True
   protocol:
     AllowedValues: [DNS_TCP, DNS_UDP, FTP, HTTP, HTTPS, IMAPS, IMAPv4, LDAP, LDAPS,
       MYSQL, POP3, POP3S, SMTP, TCP, TCP_CLIENT_FIRST, UDP, UDP_STREAM, SFTP]
     Type: String
+    Required: True
   sessionPersistence:
     AllowedValues: [HTTP_COOKIE, SOURCE_IP]
     Type: String
   sslTermination: {Type: Json}
   timeout: {MaxValue: 120, MinValue: 1, Type: Number}
-  virtualIps: {MinLength: 1, Type: CommaDelimitedList}
+  virtualIps: 
+    MinLength: 1
+    Type: CommaDelimitedList
+    Required: True
 #+END_SRC
 
 * Example template with loadbalancer

@@ -1,4 +1,7 @@
 #+TITLE: Rackspace cloud server
+Note: This document assumes that the reader is familior with HOT specification. If that
+is not the case, please go to 'References' section given at the end of this document for HOT
+specification link.
 
 * Brief summary
 

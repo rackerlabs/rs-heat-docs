@@ -89,7 +89,7 @@ Below given is the complete list of loadbalancer properties that can be provided
 
 * Example template with loadbalancer
 In the following example template, we will create a multi node wordpress application with 
-two Linux serves, one trove (DBaaS) instance and one Loadbalancer.
+two Linux servers, one Trove (DBaaS) instance and one Loadbalancer.
 
 First add a database instance resource to the template.
 #+BEGIN_SRC yaml
@@ -176,11 +176,11 @@ resources:
       - name: wordpress  
 #+END_SRC
 
-Here a ResourceGroup of type 'OS::Nova::Server' added to the template. user_data property contains
-a script to install wordpress application. Please node that database instance hostname information
+Here a ResourceGroup of type 'OS::Nova::Server' is added to the template. The user_data property contains
+a script to install the wordpress application. Please note that database instance hostname information
 is passed to the script. 
 
-Finally add the loadbalancer resource and provide the server addresses to the loadbalancer. Below given
+Finally, add the loadbalancer resource and provide the server addresses to the loadbalancer. Given below 
 is the complete template that can be used to create a loadbalanced multi node wordpress application.
 
 #+BEGIN_SRC yaml
@@ -282,7 +282,7 @@ outputs:
     description: Public URL for the wordpress blog      
 #+END_SRC
 
-Please note that, to keep the template simple all the values were hard coded in the above template. 
+Please note that, to keep the template simple, all the values were hard coded in the above template. 
 
 
 
@@ -290,5 +290,5 @@ Please note that, to keep the template simple all the values were hard coded in 
 
 - [[http://docs.rackspace.com/orchestration/api/v1/orchestration-devguide/content/overview.html][Cloud Orchestration API Developer Guide]]
 - [[http://docs.openstack.org/developer/heat/template_guide/hot_spec.html][Heat Orchestration Template (HOT) Specification]]
-- [[http://http://docs.rackspace.com/loadbalancers/api/v1.0/clb-getting-started/content/LB_Overview.html][Cloud load balancer getting started guide]]
+- [[http://docs.rackspace.com/loadbalancers/api/v1.0/clb-getting-started/content/LB_Overview.html][Cloud load balancer getting started guide]]
 - [[http://docs.rackspace.com/loadbalancers/api/v1.0/clb-devguide/content/Overview-d1e82.html][Cloud load balancer API developer guide]]

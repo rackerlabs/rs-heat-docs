@@ -179,7 +179,7 @@ resource.
 
 #+BEGIN_SRC yaml
 heat_template_version: 2014-10-16
-description: >
+description: |
   A template which demonstrates doing boot-time installation of the required
   files for script based software deployments.
   This template expects to be created with an environment which defines

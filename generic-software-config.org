@@ -1,4 +1,4 @@
-#+TITLE: 
+#+TITLE: Generic software config
 
 * Brief summary
 
@@ -35,7 +35,11 @@ Start by adding the top-level template sections:
 heat_template_version: 2014-10-16
 
 description: |
-  Rackspace Cloud Monitoring and Event-based scaling using Rackspace Cloud Autoscale
+  A template which demonstrates doing boot-time installation of the required
+  files for script based software deployments.
+  This template expects to be created with an environment which defines
+  the resource type Heat::InstallConfigAgent such as
+  ../boot-config/fedora_pip_env.yaml
 
 resources:
 

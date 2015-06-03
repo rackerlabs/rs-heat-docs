@@ -198,10 +198,6 @@ outputs:
 This template first creates a Nova server key pair. Instead of using username/password,
 private_key can be used to access the server.
 
-Please note that if there was any error during execution of the script that was provided as user_data,
-then it will be silently ignored and the stack-creation will be succeeded. To handle error scenarios,
-please take a look at SwiftSignal resource documentation<TODO: link from here to SwiftSignal>
-
 * Example template-4
 This template creates a single Linux server and installs the wordpress application on the server.
 

@@ -1,4 +1,4 @@
-#+TITLE: 
+#+TITLE: Generic Software Config
 
 * Brief summary
 

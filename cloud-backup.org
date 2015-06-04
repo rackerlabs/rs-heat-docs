@@ -10,8 +10,8 @@ Cloud backup agent is installed on the server from where you wanted to backup fi
 
 ** Installing cloud backup agent on the server
 *** Option-1
-If the tenant is a managed operations customer and also server from where you wanted to create backup
-was created as part of Heat stack, then pass '{build_config: backup_agent_only}' as metadata to
+If the tenant is a managed operations customer, and the server from where you want to create backup
+was created as part of a Heat stack, then pass '{build_config: backup_agent_only}' as metadata to
 OS::Nova::Server or Rackspace::Cloud::WinServer. For example,
 
 #+BEGIN_SRC yaml
@@ -25,8 +25,8 @@ OS::Nova::Server or Rackspace::Cloud::WinServer. For example,
 #+END_SRC
 
 *** Option-2
-If the tenant is not a managed operations customer or server was not created
-as part of the Heat stack creation, then follow links given below to install backup agent.
+If the tenant is not a managed operations customer or the server was not created
+as part of a Heat stack, then follow the links given below to install backup agent.
 
 - [[http://www.rackspace.com/knowledge_center/article/rackspace-cloud-backup-install-the-agent-on-linux][Install cloud backup agent on Linux server]]
 - [[http://www.rackspace.com/knowledge_center/article/rackspace-cloud-backup-install-the-agent-on-windows][Install cloud backup agent on Windows server]]
@@ -83,11 +83,11 @@ and install wordpress web application.
             "%dbadminpassword%": testpassword_123
 #+END_SRC
 
-Above resource creates a Windows server and installs wordpress application. Please note that
-'{build_config: backup_agent_only}' was passed as metadata to install cloud backup agent.
+The above resource creates a Windows server and installs the wordpress application. Please note that
+'{build_config: backup_agent_only}' was passed as metadata to install a cloud backup agent.
 
 ** cloud backup config resource
-Add a Rackspace::Cloud::BackupConfig resource to backup wordpress application
+Add a Rackspace::Cloud::BackupConfig resource to backup the wordpress application
 installed at c:\inetpub\wwwroot\wordpress folder.
 
 #+BEGIN_SRC yaml
@@ -113,16 +113,16 @@ installed at c:\inetpub\wwwroot\wordpress folder.
     type: Rackspace::Cloud::BackupConfig
 #+END_SRC
 
-In the above backup resource, cloud backup service was configured to create a backup of 'c:\inetpub\wwwroot\wordpress'
-folder 'Daily' at '11:30PM' and created backup will be retailed for '60' days. And also, it was
-configured to notify at given email ID if there was any error during the backup creation.
-Please note that, host_ip_address is IP of the cloud server from where files/folders will be backed up.
-Here IP address of the windows server that was created in the earlier resource example was passed.
-If the server was created out side of the stack, make sure that backup agent was installed on that server
+In the above backup resource, the cloud backup service was configured to create a backup of the 'c:\inetpub\wwwroot\wordpress'
+folder 'Daily' at '11:30PM' and to retain the created backup for '60' days. Also, it was
+configured to notify at the given email ID upon any error during the backup creation.
+Please note that host_ip_address is the IP of the cloud server from where files/folders will be backed up.
+Here the IP address of the windows server that was created in the earlier resource example was passed.
+If the server was created outside of the stack, make sure that a backup agent was installed on that server
 and pass the IP address to 'host_ip_address'.
 
 ** Outputs section
-Add wordpress website URL to the outputs section.
+Add the wordpress website URL to the outputs section.
 
 #+BEGIN_SRC yaml
   website_url:

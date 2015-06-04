@@ -62,8 +62,8 @@ success/failure message to the temporary URL created by the above SwiftSignalHan
 
 
 *** Add SwiftSignal resource
-SwiftSignal resource waits for specified number of signals(number is provided as 'count' property)
-on the given URL('handle' property). The stack will be marked as failure if specificed number of 
+The SwiftSignal resource waits for specified number of signals (number is provided as 'count' property)
+on the given URL ('handle' property). The stack will be marked as failure if specificed number of 
 signals are not received in given timeout.
 
 #+BEGIN_SRC yaml

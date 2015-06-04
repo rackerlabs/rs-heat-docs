@@ -275,7 +275,7 @@ First, clone the heat-templates repository:
 
 The environment file we will use is located under
 =heat-templates/hot/software-config/boot-config/ubuntu_pip_env.yaml=.
-A ready-made InstallConfigAgent resource for Fedora also exists the
+A ready-made InstallConfigAgent resource for Fedora also exists in the
 heat-templates repository.
 
 Then, issue the stack-create command with the template and environment

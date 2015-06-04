@@ -38,7 +38,7 @@ tutorial.
 * Schedule-based auto scaling
 
 Schedule-based auto scaling can be useful if there is a particular
-time which your application experiences higher load.  By scheduling a
+time which your application experiences a higher load.  By scheduling a
 scaling event, you will be able to proactively scale your application.
 
 In this example, we will create a scaling group that scales up by one

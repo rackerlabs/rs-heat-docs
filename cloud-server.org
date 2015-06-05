@@ -144,6 +144,7 @@ resources:
       name: test-server
       flavor: 2 GB General Purpose v1
       image: Debian 7 (Wheezy) (PVHVM)
+      user_data_format: RAW
       user_data: |
           #!/bin/bash -x
           echo "hello world" > /root/hello-world.txt      
@@ -214,6 +215,7 @@ resources:
       name: test-server
       flavor: 2 GB General Purpose v1
       image: Debian 7 (Wheezy) (PVHVM)
+      user_data_format: RAW
       user_data:
         str_replace:
           template: |

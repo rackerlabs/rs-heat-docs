@@ -118,7 +118,7 @@ resources:
             wc_notify --data-binary '{"status": "SUCCESS"}'
 
           params:
-            wc_notify: { get_attr: ['signal_handle', 'curl_cli'] 
+            wc_notify: { get_attr: ['signal_handle', 'curl_cli'] } 
             
   wait_on_server:
     type: OS::Heat::SwiftSignal
@@ -133,7 +133,7 @@ outputs:
     description: Swift signal URL
   
   server_public_ip:
-    value:{ get_attr: [ linux_server, accessIPv4 ] }
+    value: { get_attr: [ linux_server, accessIPv4 ] }
     description: Linux server public IP
 #+END_SRC
 

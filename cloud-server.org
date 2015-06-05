@@ -142,6 +142,7 @@ resources:
     type: "OS::Nova::Server"
     properties:
       name: test-server
+      admin_pass: password1
       flavor: 2 GB General Purpose v1
       image: Debian 7 (Wheezy) (PVHVM)
       user_data_format: RAW
@@ -156,7 +157,7 @@ outputs:
 
 This template creates a server in the Rackspace cloud and during the server boot time the script provided
 in the user_data property will be executed. Here the user_data script is creating a hello-world.txt file
-with 'hello world' as contents. You can login to the cloud server and verify that 'hello-world.txt' file
+with 'hello world' as contents. You can login to the cloud server using admin_pass and verify that 'hello-world.txt' file
 does exist or not.
 
 Please note that if there was any error during execution of the script that was provided as user_data,

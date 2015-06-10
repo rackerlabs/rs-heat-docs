@@ -41,10 +41,21 @@ description: |
   the resource type Heat::InstallConfigAgent such as
   ../boot-config/fedora_pip_env.yaml
 
+parameters:
+
 resources:
 
 outputs:
 
+#+END_SRC
+
+** Parameters section
+
+Add a template parameter for the server image:
+
+#+BEGIN_SRC yaml
+  image:
+    type: string
 #+END_SRC
 
 ** Resources section
@@ -186,6 +197,11 @@ description: |
   the resource type Heat::InstallConfigAgent such as
   ../boot-config/fedora_pip_env.yaml
 
+parameters:
+
+  image:
+    type: string
+
 resources:
   
   config:
@@ -279,8 +295,9 @@ First, clone the heat-templates repository:
 
 The environment file we will use is located under
 =heat-templates/hot/software-config/boot-config/ubuntu_pip_env.yaml=.
-A ready-made InstallConfigAgent resource for Fedora also exists in the
-heat-templates repository.
+It will supply the image parameter to the template.  A ready-made
+InstallConfigAgent resource for Fedora also exists in the
+heat-templates repository in case you want to use Fedora.
 
 Then, issue the stack-create command with the template and environment
 file just created using python-heatclient:

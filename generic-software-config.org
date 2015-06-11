@@ -147,7 +147,17 @@ section that will be used to install the config agent on the Server
 resource below.  See the the [[id:11e46462-76dd-40e5-8b71-1efa125d9124][Usage]] section below for more information
 on using this resource.
 
-Finally, add an OS::Nova::Server resource and reference the
+Add a Nova server key pair resource as a way to access the server to confirm deployment results:
+
+#+BEGIN_SRC yaml
+  ssh_key:
+    type: OS::Nova::KeyPair
+    properties:
+      name: private_access_key
+      save_private_key: true
+#+END_SRC
+
+Finally, add the OS::Nova::Server resource and reference the
 boot_config resource in the user_data section:
 
 #+BEGIN_SRC yaml
@@ -156,6 +166,7 @@ boot_config resource in the user_data section:
     properties:
       image: 6f29d6a6-9972-4ae0-aa80-040fa2d6a9cf  # Ubuntu 14.04
       flavor: 2 GB Performance
+      key_name: { get_resource: ssh_key }
       software_config_transport: POLL_TEMP_URL
       user_data_format: SOFTWARE_CONFIG
       user_data: {get_attr: [boot_config, config]}
@@ -181,6 +192,12 @@ Add the following to your outputs section:
   other_result:
     value:
       get_attr: [other_deployment, result]
+  server_ip:
+    value:
+      get_attr: [server, accessIPv4]
+  private_key:
+    value:
+      get_attr: [ssh_key, private_key]
 #+END_SRC
 
 This will show the actual script output from the SoftwareConfig
@@ -253,11 +270,18 @@ resources:
   boot_config:
     type: Heat::InstallConfigAgent
 
+  ssh_key:
+    type: OS::Nova::KeyPair
+    properties:
+      name: private_access_key
+      save_private_key: true
+
   server:
     type: OS::Nova::Server
     properties:
       image: 6f29d6a6-9972-4ae0-aa80-040fa2d6a9cf  # Ubuntu Ubuntu 14.04
       flavor: 2 GB Performance
+      key_name: { get_resource: ssh_key }
       software_config_transport: POLL_TEMP_URL
       user_data_format: SOFTWARE_CONFIG
       user_data: {get_attr: [boot_config, config]}
@@ -278,6 +302,12 @@ outputs:
   other_result:
     value:
       get_attr: [other_deployment, result]
+  server_ip:
+    value:
+      get_attr: [server, accessIPv4]
+  private_key:
+    value:
+      get_attr: [ssh_key, private_key]
 #+END_SRC
 
 * Usage

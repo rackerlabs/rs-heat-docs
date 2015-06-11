@@ -337,7 +337,7 @@ file just created using python-heatclient:
 Next, we will edit the template and perform a stack-update.  Edit the
 SoftwareDeployment parameters in the template:
 
-: sed -i.bak -e 's/fu/fu1/' -e 's/barmy/barmy1/' -e 's/fooooo/fooooo1/' -e 's/baaaaa/baaaaa1/' pristine.yaml
+: sed -i.bak -e 's/fu/fu1/' -e 's/barmy/barmy1/' -e 's/fooooo/fooooo1/' -e 's/baaaaa/baaaaa1/' generic-software-config.yaml 
 
 Issue the stack-update command:
 

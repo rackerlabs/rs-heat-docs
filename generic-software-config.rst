@@ -2,10 +2,10 @@ Brief summary
 =============
 
 If you have ever needed to configure a server with Heat, chances are you
-have written a user\ :sub:`data` script inside of a OS::Nova::Server
+have written a user_data script inside of a OS::Nova::Server
 resource. The OS::Heat::SoftwareConfig resource is another way to
 configure a server. It provides several advantages over defining a
-user\ :sub:`data` script.
+user_data script.
 
 One SoftwareConfig resource can be associated with many servers. Each
 time it is triggered, it can be run with different parameters. In
@@ -31,7 +31,8 @@ proceed with this tutorial.
 -  `Software Config example
    templates <https://github.com/openstack/heat-templates/tree/master/hot/software-config/example-templates>`__
 
--  Example template
+Example template
+================
 
 Start by adding the top-level template sections:
 
@@ -87,10 +88,11 @@ software configuration.
             echo "Written to /tmp/$bar"
             echo "Output to stderr" 1>&2
 
-The "group" property is used to specify the type of SoftwareConfig hook
-that will be used to deploy the configuration. Other SoftwareConfig
-hooks are available in the `openstack/heat-templates
-repository <https://github.com/openstack/heat-templates/tree/master/hot/software-config/elements>`__
+The "group" property is used to specify the type of SoftwareConfig
+hook that will be used to deploy the configuration. Other
+SoftwareConfig hooks are available in the `openstack/heat-templates
+repository
+<https://github.com/openstack/heat-templates/tree/master/hot/software-config/elements>`__
 on GitHub.
 
 Add an OS::Heat::SoftwareDeployment resource, which will be used to
@@ -111,9 +113,9 @@ server to which it will be deployed.
             foo: fooooo
             bar: baaaaa
 
-It's important to specify a "signal:sub:`transport`" of
-"TEMP:sub:`URLSIGNAL`", because Rackspace's deployment of Heat does not
-support the default "CFN:sub:`SIGNAL`" transport.
+It's important to specify a "signal_transport" of "TEMP_URLSIGNAL",
+because Rackspace's deployment of Heat does not support the default
+"CFN_SIGNAL" transport.
 
 Add a second SoftwareDeployment resource with a slightly different set
 of input values:
@@ -141,19 +143,19 @@ The above SoftwareDeployment resource will only be triggered during a
 stack-create, stack-update, stack-suspend, or stack-resume.
 
 Add a InstallConfigAgent resource, which will be mapped via the
-environment to a `"provider"
-resource <http://hardysteven.blogspot.com/2013/10/heat-providersenvironments-101-ive.html>`__:
+environment to a `"provider" resource
+<http://hardysteven.blogspot.com/2013/10/heat-providersenvironments-101-ive.html>`__:
 
 .. code:: yaml
 
       boot_config:
         type: Heat::InstallConfigAgent
 
-The purpose of this resource is to provide output for the
-user\ :sub:`data` section that will be used to install the config agent
-on the Server resource below. See the the
-`Usage <id:11e46462-76dd-40e5-8b71-1efa125d9124>`__ section below for
-more information on using this resource.
+The purpose of this resource is to provide output for the user_data
+section that will be used to install the config agent on the Server
+resource below. See the `Usage
+<id:11e46462-76dd-40e5-8b71-1efa125d9124>`__ section below for more
+information on using this resource.
 
 Add a Nova server key pair resource as a way to access the server to
 confirm deployment results:
@@ -167,7 +169,7 @@ confirm deployment results:
           save_private_key: true
 
 Finally, add the OS::Nova::Server resource and reference the
-boot\ :sub:`config` resource in the user\ :sub:`data` section:
+boot_config resource in the user_data section:
 
 .. code:: yaml
 

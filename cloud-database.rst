@@ -32,6 +32,7 @@ Add an OS::Trove::Instance resource with a list of databases and
 users:
 
 .. code:: yaml
+
       db:
         type: OS::Trove::Instance
         properties:
@@ -51,6 +52,7 @@ Add another OS::Trove::Instance, but this time leave out the databases
 and users and specify a replica_of property:
 
 .. code:: yaml
+
       db_replica:
         type: OS::Trove::Instance
         properties:
@@ -70,6 +72,7 @@ Outputs section
 Add the following to your outputs section:
 
 .. code:: yaml
+
       "DB ID":
         value: { get_resource: db }
         description: Database instance ID.

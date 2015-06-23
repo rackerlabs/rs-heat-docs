@@ -73,7 +73,7 @@ temporary URL created by the above SwiftSignalHandle resource.
                 wc_notify --data-binary '{"status": "SUCCESS"}'
 
               params:
-                wc_notify: { get_attr: ['signal_handle', 'curl_cli'] 
+                wc_notify: { get_attr: ['signal_handle', 'curl_cli'] }
 
 Add SwiftSignal resource
 ~~~~~~~~~~~~~~~~~~~~~~~~

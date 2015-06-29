@@ -50,7 +50,7 @@ following resources were removed from the template:
 We revised the `outputs` section so that we can easily access the server's ip and root
 credentials (we'll explain a little more in the next section):
 
-..code:: yaml
+.. code:: yaml
 
     outputs:
     
@@ -72,7 +72,7 @@ instance so that we can log into the instance after the stack is complete. This 
 we can make some small modifications later if we want to create an image we can reuse
 the next time we want to apply software config to a server.
 
-..code:: yaml
+.. code:: yaml
 
   admin_password:
     type: OS::Heat::RandomString
@@ -82,7 +82,7 @@ cloud-init to do our installation. To do this, we'll clean up some of this from 
 resource by removing the `software_config_transport` property and changing the
 `user_data_format` to `RAW`. We'll also pass in the generated password to the instance:
 
-..code:: yaml
+.. code:: yaml
 
   server:
     type: OS::Nova::Server
@@ -95,7 +95,7 @@ resource by removing the `software_config_transport` property and changing the
 
 Your template should now look like:
 
-..code:: yaml
+.. code:: yaml
 
 heat_template_version: 2014-10-16
 description: |
@@ -172,7 +172,7 @@ we'll break down the actual cloud-config rather than the resource wrapping it.
 
 First, we install the supporting software packages:
 
-..code:: yaml
+.. code:: yaml
 
         apt_upgrade: true
         apt-sources:
@@ -220,7 +220,7 @@ sections of the cloud-config if you add additional handlers.
 The final section installs puppet for the puppet group handler and the runs the commands
 that bootstrap the generic OpenStack agents.
 
-..code:: yaml
+.. code:: yaml
 
         runcmd:
         - wget https://apt.puppetlabs.com/puppetlabs-release-trusty.deb
@@ -237,7 +237,7 @@ Install the Generic Agents
 The actual generic OpenStack agents are installed using Python pip since there aren't any
 reliable packages for them on Ubuntu.
 
-..code:: yaml
+.. code:: yaml
 
   install_agents:
     type: "OS::Heat::SoftwareConfig"
@@ -254,7 +254,7 @@ Configure the Agents Service
 Next, we declare a config resource to create the service configuration (upstart or
 systemd) that will start the collection agent and ensure that it runs on boot:
 
-..code:: yaml
+.. code:: yaml
 
   start:
     type: "OS::Heat::SoftwareConfig"
@@ -317,7 +317,7 @@ Combine and expose the Configs
 Finally, the configurations are all combined into a single multi-part-mime so that they 
 can be output as a single file for use in user-data:
 
-..code:: yaml
+.. code:: yaml
 
   install_config_agent:
     type: "OS::Heat::MultipartMime"
@@ -327,7 +327,7 @@ can be output as a single file for use in user-data:
       - config: { get_resource: install_agents }
       - config: { get_resource: start }
 
-..code:: yaml
+.. code:: yaml
 
 outputs:
   config:
@@ -338,7 +338,7 @@ The Environment File
 
 The environment file that we'll send as part of our `stack-create` call is quite simple:
 
-..code:: yaml
+.. code:: yaml
 
 # Installs software-config agents for ubuntu with pip install
 
@@ -358,7 +358,7 @@ Deploy the Bootstrapped Instance
 
 All that's left to do is deploy the template:
 
-..code:: example
+.. code:: example
 
  heat stack-create -f templates/software_config_custom_image.yaml -e templates/bootconfig.all.env.yaml sw_config_base
 
@@ -381,13 +381,13 @@ In order for cloud-init to run on machines booted from our new image, we'll need
 remove some artifacts from the current vm left over from our initial bootstrapping. First,
 retrieve the root password from the stack:
 
-..code: example
+.. code: example
 
 heat output-show sw_config_base admin_password
 
 Now, log into the server via ssh by issuing the following command:
 
-..code: example
+.. code: example
 
 ssh root@$(heat output-show sw_config_base server_ip)
 

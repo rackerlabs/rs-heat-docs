@@ -97,45 +97,45 @@ Your template should now look like:
 
 .. code:: yaml
 
-heat_template_version: 2014-10-16
-description: |
-  A template that creates a server bootstrapped for use
-  with Heat Software Config
+  heat_template_version: 2014-10-16
+  description: |
+    A template that creates a server bootstrapped for use
+    with Heat Software Config
 
-parameters:
+  parameters:
 
-  image:
-    type: string
+    image:
+      type: string
 
-resources:
+  resources:
 
-  boot_config:
-    type: Heat::InstallConfigAgent
+    boot_config:
+      type: Heat::InstallConfigAgent
 
-  admin_password:
-    type: OS::Heat::RandomString
+    admin_password:
+      type: OS::Heat::RandomString
 
-  server:
-    type: OS::Nova::Server
-    properties:
-      name: { get_param: "OS::stack_name" }
-      admin_pass: { get_attr: [ admin_password, value ] }
-      image: { get_param: image }
-      flavor: 2 GB Performance
-      user_data_format: RAW
+    server:
+      type: OS::Nova::Server
+      properties:
+        name: { get_param: "OS::stack_name" }
+        admin_pass: { get_attr: [ admin_password, value ] }
+        image: { get_param: image }
+        flavor: 2 GB Performance
+        user_data_format: RAW
       user_data: {get_attr: [boot_config, config]}
 
-outputs:
+  outputs:
 
-  server_ip:
-    value: { get_attr: [ server, addresses, public, 0, addr ] }
-    description: IP address of the server
+    server_ip:
+      value: { get_attr: [ server, addresses, public, 0, addr ] }
+      description: IP address of the server
 
-  admin_password:
-    value: { get_attr: [ admin_password, value ] }
-    description: Root password to the server
+    admin_password:
+      value: { get_attr: [ admin_password, value ] }
+      description: Root password to the server
 
-The Heat::InstallConfigAgent Resource
+The `Heat::InstallConfigAgent` Resource
 =====================================
 
 You will notice that this resource has no real properties or other configuration. That's

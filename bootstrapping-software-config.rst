@@ -25,7 +25,8 @@ basic understanding of Heat template composition and Environments.
 - `Previous Tutorial <generic-software-config.rst>`_
 - `Template Composition Guide
   <http://docs.openstack.org/developer/heat/template_guide/composition.html>`_
-- `Environments Guide <http://docs.openstack.org/developer/heat/template_guide/environment.html>`_
+- `Environments Guide
+  <http://docs.openstack.org/developer/heat/template_guide/environment.html>`_
 
 Following Along
 ===============
@@ -424,10 +425,10 @@ it should just work!
 Reference documentation
 =======================
 
-- `<http://docs.openstack.org/developer/heat/template_guide/openstack.html#OS::Heat::SoftwareConfig][OS::Heat::SoftwareConfig>`_
-- `<http://docs.openstack.org/developer/heat/template_guide/openstack.html#OS::Heat::SoftwareDeployment][OS::Heat::SoftwareDeployment>`_
-- `<http://docs.openstack.org/developer/heat/template_guide/composition.html>`_
-- `<http://docs.openstack.org/developer/heat/template_guide/environment.html>`_
-- `<https://github.com/openstack/os-collect-config>`_
-- `<https://github.com/openstack/os-refresh-config>`_
-- `<https://github.com/openstack/os-apply-config>`_
+- `OS::Heat::SoftwareConfig <http://docs.openstack.org/developer/heat/template_guide/openstack.html#OS::Heat::SoftwareConfig>`_
+- `OS::Heat::SoftwareDeployment <http://docs.openstack.org/developer/heat/template_guide/openstack.html#OS::Heat::SoftwareDeployment>`_
+- `Template Composition <http://docs.openstack.org/developer/heat/template_guide/composition.html>`_
+- `Environment Guide <http://docs.openstack.org/developer/heat/template_guide/environment.html>`_
+- `os-collect-config <https://github.com/openstack/os-collect-config>`_
+- `os-refresh-config <https://github.com/openstack/os-refresh-config>`_
+- `os-apply-config <https://github.com/openstack/os-apply-config>`_

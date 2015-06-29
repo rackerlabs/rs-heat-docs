@@ -340,13 +340,13 @@ The environment file that we'll send as part of our `stack-create` call is quite
 
 .. code:: yaml
 
-# Installs software-config agents for ubuntu with pip install
+  # Installs software-config agents for ubuntu with pip install
 
-parameters:
-  image: Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
+  parameters:
+    image: Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
 
-resource_registry:
-  "Heat::InstallConfigAgent": bootconfig_all.yaml
+  resource_registry:
+    "Heat::InstallConfigAgent": bootconfig_all.yaml
 
 This sets the `image` parameter value to "Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)" and maps
 the resource namespace `Heat::InstallConfigAgent` to the template resource we created in
@@ -360,7 +360,7 @@ All that's left to do is deploy the template:
 
 .. code:: example
 
- heat stack-create -f templates/software_config_custom_image.yaml -e templates/bootconfig.all.env.yaml sw_config_base
+  heat stack-create -f templates/software_config_custom_image.yaml -e templates/bootconfig.all.env.yaml sw_config_base
 
 Wait for the stack to be `CREATE_COMPLETE` an you have a basic vm configured for use
 with Heat software config. You can stop here and modify this template to actually deploy
@@ -383,13 +383,13 @@ retrieve the root password from the stack:
 
 .. code: example
 
-heat output-show sw_config_base admin_password
+  heat output-show sw_config_base admin_password
 
 Now, log into the server via ssh by issuing the following command:
 
 .. code: example
 
-ssh root@$(heat output-show sw_config_base server_ip)
+  ssh root@$(heat output-show sw_config_base server_ip)
 
 Enter the password you retrieved previously.
 

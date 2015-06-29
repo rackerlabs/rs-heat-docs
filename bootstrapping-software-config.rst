@@ -8,7 +8,7 @@ Bootstrapping Software Config
 Brief summary
 =============
 
-In the :doc:`generic_software_config`, we learned how to use Heat's generic software
+In the *Generic Software Config* tutorial, we learned how to use Heat's generic software
 configuration mechanism to treat the configuration of compute instances the same way we
 treat any other resource in your template. This lesson will go into more detail about
 bootstrapping a pristine image for use with software config as well as show how we can
@@ -18,11 +18,11 @@ future stacks.
 Pre-reading
 ===========
 
-You will want to go over the previous tutorial, _Generic Software Config_ first as we'll
+You will want to go over the previous tutorial, *Generic Software Config* first as we'll
 be using that example template as a basis for this tutorial. You will also need a very
 basic understanding of Heat template composition and Environments.
 
-- :doc:`Previous Tutorial <generic_software_config>`
+- `Previous Tutorial <generic_software_config.rst>`_
 - `Template Composition Guide
   <http://docs.openstack.org/developer/heat/template_guide/composition.html>_`
 - `Environments Guide <http://docs.openstack.org/developer/heat/template_guide/environment.html>`_

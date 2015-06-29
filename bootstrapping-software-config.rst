@@ -319,19 +319,19 @@ can be output as a single file for use in user-data:
 
 .. code:: yaml
 
-  install_config_agent:
-    type: "OS::Heat::MultipartMime"
-    properties:
-      parts:
-      - config: { get_resource: configure }
-      - config: { get_resource: install_agents }
-      - config: { get_resource: start }
+    install_config_agent:
+      type: "OS::Heat::MultipartMime"
+      properties:
+        parts:
+        - config: { get_resource: configure }
+        - config: { get_resource: install_agents }
+        - config: { get_resource: start }
 
 .. code:: yaml
 
-outputs:
-  config:
-    value: { get_resource: install_config_agent }
+  outputs:
+    config:
+      value: { get_resource: install_config_agent }
 
 The Environment File
 --------------------

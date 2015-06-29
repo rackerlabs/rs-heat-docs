@@ -151,7 +151,7 @@ the `boot_config` resource. Since this template is a bit large, it won't be incl
 its entirety here, but can always be found in the `templates` directory of this
 repository as `bootconfig_all.yaml`.
 
-In _Generic Software Config_, we used the same mechanism to bootstrap our clean instance
+In *Generic Software Config*, we used the same mechanism to bootstrap our clean instance
 using a template provided by the OpenStack Heat project. While that works well, the
 repository used is laid out for maximum reusability, so it can be hard to follow what's
 actually going on in the template. For this tutorial, we've "de-normalized" the bootstrap

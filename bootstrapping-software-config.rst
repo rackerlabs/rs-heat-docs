@@ -22,9 +22,9 @@ You will want to go over the previous tutorial, *Generic Software Config* first 
 be using that example template as a basis for this tutorial. You will also need a very
 basic understanding of Heat template composition and Environments.
 
-- `Previous Tutorial <generic_software_config.rst>`_
+- `Previous Tutorial <generic-software-config.rst>`_
 - `Template Composition Guide
-  <http://docs.openstack.org/developer/heat/template_guide/composition.html>_`
+  <http://docs.openstack.org/developer/heat/template_guide/composition.html>`_
 - `Environments Guide <http://docs.openstack.org/developer/heat/template_guide/environment.html>`_
 
 Following Along

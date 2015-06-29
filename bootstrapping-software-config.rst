@@ -52,15 +52,15 @@ credentials (we'll explain a little more in the next section):
 
 ..code:: yaml
 
-outputs:
-
-  server_ip:
-    value: { get_attr: [ server, addresses, public, 0, addr ] }
-    description: IP address of the server
-
-  admin_password:
-    value: { get_attr: [ admin_password, value ] }
-    description: Root password to the server
+    outputs:
+    
+      server_ip:
+        value: { get_attr: [ server, addresses, public, 0, addr ] }
+        description: IP address of the server
+    
+      admin_password:
+        value: { get_attr: [ admin_password, value ] }
+        description: Root password to the server
 
 We left the `parameters`, `description`, and `heat_template_version` sections as-is.
 

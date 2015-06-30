@@ -36,7 +36,7 @@
     - Reload Nginx
 
 - name: Install Content
-  when: webrootinstalled
+  when: webrootinstalled|success
   file: src=index.j2 dest=/var/www/{{ '{{' }} domain {{ '}}' }}/public/index.html mode=755 owner=www-data group=www-data
 
 - name: Web Root Permissions

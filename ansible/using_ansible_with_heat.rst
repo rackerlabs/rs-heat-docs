@@ -87,7 +87,7 @@ Next, we specify the playbook that will install Nginx:
 We then use an ``OS::Heat::SoftwareDeployment`` to tell Heat we want to run the playbook
 on our server (which we will define in a bit):
 
-.. code::
+.. code:: yaml
 
   deploy_nginx:
     type: OS::Heat::SoftwareDeployment
@@ -100,7 +100,7 @@ on our server (which we will define in a bit):
 
 Finally, we'll define the server the playbook will run on:
 
-.. code::
+.. code:: yaml
 
   server:
     type: OS::Nova::Server

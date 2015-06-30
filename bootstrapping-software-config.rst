@@ -418,7 +418,7 @@ Using Your New Image
 
 We will make use of this new image in our future tutorials on using Heat software config,
 but in short, you can omit using the `Heat::InstallConfigAgent` resource once you have
-this image. Instad, set the `image` property of any servers you want to configure this way
+this image. Instead, set the `image` property of any servers you want to configure this way
 to "Ubuntu 14.04 LTS (HEAT)" and the `user_data_format` property to "SOFTWARE_CONFIG" and
 it should just work!
 

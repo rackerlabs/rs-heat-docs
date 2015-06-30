@@ -31,7 +31,7 @@
 - name: Create Web root
   when: nginxinstalled|success
   file: dest=/var/www/{{ '{{' }} domain {{ '}}'  }}/public mode=775 state=directory owner=www-data group=www-data
-  register webrootinstalled
+  register: webrootinstalled
   notify:
     - Reload Nginx
 

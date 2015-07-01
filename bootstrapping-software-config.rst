@@ -382,13 +382,13 @@ In order for cloud-init to run on machines booted from our new image, we'll need
 remove some artifacts from the current vm left over from our initial bootstrapping. First,
 retrieve the root password from the stack:
 
-.. code: example
+.. code:: example
 
   heat output-show sw_config_base admin_password
 
 Now, log into the server via ssh by issuing the following command:
 
-.. code: example
+.. code:: example
 
   ssh root@$(heat output-show sw_config_base server_ip)
 

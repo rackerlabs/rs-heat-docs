@@ -87,7 +87,7 @@ resource by removing the `software_config_transport` property and changing the
   server:
     type: OS::Nova::Server
     properties:
-      image: 6f29d6a6-9972-4ae0-aa80-040fa2d6a9cf  # Ubuntu Ubuntu 14.04
+      image: { get_param: image }
       flavor: 2 GB Performance
       admin_pass: { get_attr: [ admin_password, value ] }
       user_data_format: RAW

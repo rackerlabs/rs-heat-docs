@@ -87,9 +87,10 @@ resource by removing the `software_config_transport` property and changing the
   server:
     type: OS::Nova::Server
     properties:
+      name: { get_param: "OS::stack_name" }
+      admin_pass: { get_attr: [ admin_password, value ] }
       image: { get_param: image }
       flavor: 2 GB Performance
-      admin_pass: { get_attr: [ admin_password, value ] }
       user_data_format: RAW
       user_data: {get_attr: [boot_config, config]}
 
@@ -123,7 +124,7 @@ Your template should now look like:
         image: { get_param: image }
         flavor: 2 GB Performance
         user_data_format: RAW
-      user_data: {get_attr: [boot_config, config]}
+        user_data: {get_attr: [boot_config, config]}
 
   outputs:
 

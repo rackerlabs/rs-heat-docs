@@ -19,7 +19,7 @@ resources:
       config: |
         #!/bin/bash
         git clone https://github.com/rackerlabs/rs-heat-docs.git
-        cp -r rs-heat-docs/ansible/roles/nginx /etc/ansible/roles/
+        cp -r rs-heat-docs/ansible/roles /etc/ansible/roles
 
   deploy_role:
     type: OS::Heat::SoftwareDeployment

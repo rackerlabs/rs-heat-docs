@@ -117,9 +117,14 @@ server to which it will be deployed.
             foo: fooooo
             bar: baaaaa
 
-It's important to specify a "signal_transport" of "TEMP_URLSIGNAL",
-because Rackspace's deployment of Heat does not support the default
-"CFN_SIGNAL" transport.
+It's advisable to specify a "signal_transport" of "TEMP_URLSIGNAL",
+because Rackspace's deployment of Heat does not support the other
+transports at this time. However, since this is the default
+transport on the Rackspace Cloud, it should be safe to omit.
+
+Note that we do not specify the ``action`` property here. If this
+isn't specified, this deployment will be run on all stack actions
+(including DELETE).
 
 Add a second SoftwareDeployment resource with a slightly different set
 of input values:

@@ -200,7 +200,7 @@ Ansible can get to it:
   pull_role_config:
     type: OS::Heat::SoftwareConfig
     properties:
-      group: ungrouped
+      group: script
       config: |
         #!/bin/bash
         git clone https://github.com/rackerlabs/rs-heat-docs.git

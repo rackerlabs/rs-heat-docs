@@ -205,9 +205,11 @@ Ansible can get to it:
         #!/bin/bash
         git clone https://github.com/rackerlabs/rs-heat-docs.git
         cp -r rs-heat-docs/ansible/roles /etc/ansible/roles
+        # needed dependency by one of the Ansible modules
+        apt-get install -y python-pycurl
 
 This is a simple script that clones this repository and copies the role to the right
-place.
+place. It also installs a dependency needed by one of the modules used in the role.
 
 We'll also deploy that script to the server:
 
@@ -236,7 +238,9 @@ resource to simply apply the role:
       group: ansible
       config: |
         ---
-        - hosts: localhost
+        - name: Apply Nginx Role
+          hosts: localhost
+          connection: local
           roles:
           - nginx
 

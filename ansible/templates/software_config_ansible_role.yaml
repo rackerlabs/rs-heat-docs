@@ -20,6 +20,8 @@ resources:
         #!/bin/bash
         git clone https://github.com/rackerlabs/rs-heat-docs.git
         cp -r rs-heat-docs/ansible/roles /etc/ansible/roles
+        # needed dependency by one of the Ansible modules
+        apt-get install -y python-pycurl
 
   deploy_role:
     type: OS::Heat::SoftwareDeployment
@@ -36,7 +38,9 @@ resources:
       group: ansible
       config: |
         ---
-        - hosts: localhost
+        - name: Apply Nginx Role
+          hosts: localhost
+          connection: local
           roles:
           - nginx
 

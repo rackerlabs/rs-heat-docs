@@ -204,7 +204,7 @@ Ansible can get to it:
       config: |
         #!/bin/bash
         git clone https://github.com/rackerlabs/rs-heat-docs.git
-        cp -r rs-heat-docs/ansible/roles/nginx /etc/ansible/roles/
+        cp -r rs-heat-docs/ansible/roles /etc/ansible/roles
 
 This is a simple script that clones this repository and copies the role to the right
 place.

@@ -27,10 +27,6 @@
   when: sfhconfig|success
   file: "src=/etc/nginx/sites-available/{{ domain }}.conf dest=/etc/nginx/sites-enabled/{{ domain }}.conf state=link"
 
-- name: Make Site Default
-  when: sfhconfig|success
-  file: "src=/etc/nginx/sites-available/default dest=/etc/nginx/sites-enabled/{{ domain }}.conf state=link"
-
 - name: Create Web root
   when: nginxinstalled|success
   file: "dest=/var/www/{{ domain }}/public mode=775 state=directory owner=www-data group=www-data"

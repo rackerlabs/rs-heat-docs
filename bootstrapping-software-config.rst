@@ -89,7 +89,7 @@ resource by removing the `software_config_transport` property and changing the
     properties:
       image: 6f29d6a6-9972-4ae0-aa80-040fa2d6a9cf  # Ubuntu Ubuntu 14.04
       flavor: 2 GB Performance
-      key_name: { get_resource: ssh_key }
+      admin_pass: { get_attr: [ admin_password, value ] }
       user_data_format: RAW
       user_data: {get_attr: [boot_config, config]}
 

@@ -408,7 +408,7 @@ Snapshot Your Bootstrapped Server
 ---------------------------------
 
 Now we can create an image of our server. First, log into the Reach control panel and
-under Orchestration, find the 'sw_config_base` stack. Viewing the details, you should see
+under Orchestration, find the ``sw_config_base`` stack. Viewing the details, you should see
 the server listed in the `Infrastructure` section. Select that server to view its details.
 Under the `Actions` button, select `Create an Image` and name it "Ubuntu 14.04 LTS (HEAT)".
 

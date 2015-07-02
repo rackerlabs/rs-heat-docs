@@ -41,7 +41,8 @@ Add a SwiftSignalHandle resource
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 SwiftSignalHandle is a resource to create temporary URL to receive
-notification/signals.
+notification/signals. Note that the temporary URL is created using Rackspace
+Cloud Files.
 
 .. code:: yaml
 
@@ -69,11 +70,16 @@ temporary URL created by the above SwiftSignalHandle resource.
                 # assume you are doing a long running operation here
                 sleep 300
 
-                # Assuming long running operation completed successfully, notify success signal
+                # Assuming long running operation completed successfully,
+                # notify success signal
                 wc_notify --data-binary '{"status": "SUCCESS"}'
 
               params:
-                wc_notify: { get_attr: ['signal_handle', 'curl_cli'] }
+                # Replace all occurances of "wc_notify" in the script with an
+                # appropriate curl PUT request using the "curl_cli" attribute
+                # of the SwiftSignalHandle resource
+                wc_notify: { get_attr: ['signal_handle', 'curl_cli']
+
 
 Add SwiftSignal resource
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -140,7 +146,7 @@ Full Example Template
                 wc_notify --data-binary '{"status": "SUCCESS"}'
 
               params:
-                wc_notify: { get_attr: ['signal_handle', 'curl_cli'] } 
+                wc_notify: { get_attr: ['signal_handle', 'curl_cli'] }
 
       wait_on_server:
         type: OS::Heat::SwiftSignal
@@ -169,4 +175,3 @@ Reference
    documentation <http://cloudinit.readthedocs.org/en/latest/topics/format.html>`__
 -  `Swift
    TempURL <http://docs.rackspace.com/files/api/v1/cf-devguide/content/TempURL-d1a4450.html>`__
-

@@ -200,6 +200,9 @@ Finally, add the loadbalancer resource and provide the server addresses
 to the loadbalancer. Given below is the complete template that can be
 used to create a loadbalanced multi node wordpress application.
 
+Full Template
+---------------------
+
 .. code:: yaml
 
     heat_template_version: 2014-10-16

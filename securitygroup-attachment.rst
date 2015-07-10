@@ -7,9 +7,11 @@ Brief summary
 
 SecurityGroupAttachment is used to attach a security group to a port.
 
-This resource is used in following cases;
-1. If the user wanted to attach a security group to an operator created port
-2. User created a port out side of a template and wanted to attach a
+SecurityGroupAttachment resource is used in following cases;
+
+(1)If the user wanted to attach a security group to an operator created port
+
+(2)User created a port out side of a template and wanted to attach a
 security group to port as part of a template
 
 Example template

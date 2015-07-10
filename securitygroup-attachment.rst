@@ -1,5 +1,5 @@
 ===================================
- SecurityGroupAttachment
+ SecurityGroup and SecurityGroupAttachment
 ===================================
 
 Brief summary
@@ -37,9 +37,7 @@ Resources section
 Add a Server resource
 ~~~~~~~~~~~~~~~~~~~~~
 
-Add a linux server with a bash script in user_data property. At
-the end of the script execution send a success/failure message to the
-temporary URL created by the above SwiftSignalHandle resource.
+Add a linux server to the template.
 
 .. code:: yaml
 
@@ -79,7 +77,7 @@ Here adding a rule for SSH traffic to the security group.
 Add SecurityGroupAttachment resource
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Attach security group to public network port.
+Now attach security group to public network port of the server instance.
 
 .. code:: yaml
 

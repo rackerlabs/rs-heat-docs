@@ -49,6 +49,8 @@ Add a linux server to the template.
           image: 4b14a92e-84c8-4770-9245-91ecb8501cc2
           flavor: 1 GB Performance
 
+This creates a server with given image and flavor and also by default attaches public and
+service net to the server instance created.
 
 Add SecurityGroup resource
 ~~~~~~~~~~~~~~~~~~~~~~~~

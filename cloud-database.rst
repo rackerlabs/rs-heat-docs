@@ -102,7 +102,7 @@ Full template
 
 .. code:: yaml
 
-    heat_template_version: 2013-05-23
+    heat_template_version: 2014-10-16
     
     description: |
       Test template using Trove with replication

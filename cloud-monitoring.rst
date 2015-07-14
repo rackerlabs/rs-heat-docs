@@ -205,6 +205,8 @@ seconds, and the OK state otherwise:
 Full template
 -------------
 
+The following template is a combination of all of the snippets above.  It will create a web server that is monitored with website check and a CPU check.
+
 .. code:: yaml
 
     heat_template_version: 2013-05-23

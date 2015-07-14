@@ -122,35 +122,6 @@ because Rackspace's deployment of Heat does not support the other
 transports at this time. However, since this is the default
 transport on the Rackspace Cloud, it should be safe to omit.
 
-Note that we do not specify the ``action`` property here. If this
-isn't specified, this deployment will be run on all stack actions
-(including DELETE).
-
-Add a second SoftwareDeployment resource with a slightly different set
-of input values:
-
-.. code:: yaml
-
-      other_deployment:
-        type: OS::Heat::SoftwareDeployment
-        properties:
-          signal_transport: TEMP_URL_SIGNAL
-          config:
-            get_resource: config
-          server:
-            get_resource: server
-          input_values:
-            foo: fu
-            bar: barmy
-          actions:
-          - CREATE
-          - UPDATE
-          - SUSPEND
-          - RESUME
-
-The above SoftwareDeployment resource will only be triggered during a
-stack-create, stack-update, stack-suspend, or stack-resume.
-
 Add a InstallConfigAgent resource, which will be mapped via the
 environment to a `"provider" resource
 <http://hardysteven.blogspot.com/2013/10/heat-providersenvironments-101-ive.html>`__:
@@ -211,9 +182,6 @@ Add the following to your outputs section:
       status_code:
         value:
           get_attr: [deployment, deploy_status_code]
-      other_result:
-        value:
-          get_attr: [other_deployment, result]
       server_ip:
         value:
           get_attr: [server, accessIPv4]
@@ -273,23 +241,6 @@ Full template
             foo: fooooo
             bar: baaaaa
 
-      other_deployment:
-        type: OS::Heat::SoftwareDeployment
-        properties:
-          signal_transport: TEMP_URL_SIGNAL
-          config:
-            get_resource: config
-          server:
-            get_resource: server
-          input_values:
-            foo: fu
-            bar: barmy
-          actions:
-          - CREATE
-          - UPDATE
-          - SUSPEND
-          - RESUME
-
       boot_config:
         type: Heat::InstallConfigAgent
 
@@ -322,9 +273,6 @@ Full template
       status_code:
         value:
           get_attr: [deployment, deploy_status_code]
-      other_result:
-        value:
-          get_attr: [other_deployment, result]
       server_ip:
         value:
           get_attr: [server, accessIPv4]
@@ -363,7 +311,7 @@ SoftwareDeployment parameters in the template:
 
 .. code:: example
 
-    sed -i.bak -e 's/fu/fu1/' -e 's/barmy/barmy1/' -e 's/fooooo/fooooo1/' -e 's/baaaaa/baaaaa1/' generic-software-config.yaml 
+    sed -i.bak -e 's/fooooo/fooooo1/' -e 's/baaaaa/baaaaa1/' generic-software-config.yaml 
 
 Issue the stack-update command:
 
@@ -372,8 +320,8 @@ Issue the stack-update command:
     heat --heat-url=https://dfw.orchestration.api.rackspacecloud.com/v1/$RS_ACCOUNT_NUMBER --os-username $RS_USER_NAME --os-password $RS_PASSWORD --os-tenant-id $RS_ACCOUNT_NUMBER --os-auth-url https://identity.api.rackspacecloud.com/v2.0/ stack-update -f generic-software-config.yaml -e heat-templates/hot/software-config/boot-config/ubuntu_pip_env.yaml generic-software-config1
 
 Notice that the config agent re-runs the script without rebuilding the
-server. In a couple of minutes, two new files should exist alongside the
-original two: ``/tmp/fu1`` and ``/tmp/fooooo1``.
+server. In a couple of minutes, a new file should exist alongside the
+original one: ``/tmp/fooooo1`` with the content ``baaaaa1``.
 
 Reference documentation
 =======================

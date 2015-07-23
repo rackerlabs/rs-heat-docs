@@ -49,6 +49,26 @@ Cloud Files.
       signal_handle:
         type: "OS::Heat::SwiftSignalHandle"
 
+Add SwiftSignal resource
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+The SwiftSignal resource waits for specified number of "SUCCESS" signals (number
+is provided as 'count' property) on the given URL ('handle' property).
+The stack will be marked as failure if specificed number of signals are
+not received in given timeout or if a non "SUCCESS" signal is received such as a "FAILURE".
+
+.. code:: yaml
+
+      wait_on_server:
+        type: OS::Heat::SwiftSignal
+        properties:
+          handle: {get_resource: signal_handle}
+          count: 1
+          timeout: 600
+
+Here SwiftSignal resource would wait for 600 seconds to receive 1 signal
+on the handle.
+
 Add a Server resource
 ~~~~~~~~~~~~~~~~~~~~~
 
@@ -74,32 +94,15 @@ temporary URL created by the above SwiftSignalHandle resource.
                 # notify success signal
                 wc_notify --data-binary '{"status": "SUCCESS"}'
 
+                # Alternatively if operation fails a FAILURE with reason may be sent,
+                # notify failure signal example below (commented out)
+                # wc_notify --data-binary '{"status": "FAILURE", "reason":"Operation failed due to xyz error"}'
+
               params:
                 # Replace all occurances of "wc_notify" in the script with an
                 # appropriate curl PUT request using the "curl_cli" attribute
                 # of the SwiftSignalHandle resource
                 wc_notify: { get_attr: ['signal_handle', 'curl_cli']
-
-
-Add SwiftSignal resource
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-The SwiftSignal resource waits for specified number of signals (number
-is provided as 'count' property) on the given URL ('handle' property).
-The stack will be marked as failure if specificed number of signals are
-not received in given timeout.
-
-.. code:: yaml
-
-      wait_on_server:
-        type: OS::Heat::SwiftSignal
-        properties:
-          handle: {get_resource: signal_handle}
-          count: 1
-          timeout: 600
-
-Here SwiftSignal resource would wait for 600 seconds to receive 1 signal
-on the handle.
 
 Outputs section
 ---------------
@@ -128,16 +131,16 @@ Full Example Template
 
     resources:
 
+      signal_handle:
+        type: "OS::Heat::SwiftSignalHandle"
+        
       wait_on_server:
         type: OS::Heat::SwiftSignal
         properties:
           handle: {get_resource: signal_handle}
           count: 1
           timeout: 600
-
-      signal_handle:
-        type: "OS::Heat::SwiftSignalHandle"
-
+          
       linux_server:
         type: OS::Nova::Server
         properties:
@@ -152,6 +155,10 @@ Full Example Template
 
                 # Assuming long running operation completed successfully, notify success signal
                 wc_notify --data-binary '{"status": "SUCCESS"}'
+                
+                # Alternatively if operation fails a FAILURE with reason may be sent and output to user,
+                # notify failure signal example below (commented out)
+                # wc_notify --data-binary '{"status": "FAILURE", "reason":"Operation failed due to xyz error"}'
 
               params:
                 wc_notify: { get_attr: ['signal_handle', 'curl_cli'] }

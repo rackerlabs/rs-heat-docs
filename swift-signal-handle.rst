@@ -127,6 +127,14 @@ Full Example Template
       Single node linux server with swift signaling.
 
     resources:
+
+      wait_on_server:
+        type: OS::Heat::SwiftSignal
+        properties:
+          handle: {get_resource: signal_handle}
+          count: 1
+          timeout: 600
+
       signal_handle:
         type: "OS::Heat::SwiftSignalHandle"
 
@@ -147,13 +155,6 @@ Full Example Template
 
               params:
                 wc_notify: { get_attr: ['signal_handle', 'curl_cli'] }
-
-      wait_on_server:
-        type: OS::Heat::SwiftSignal
-        properties:
-          handle: {get_resource: signal_handle}
-          count: 1
-          timeout: 600
 
     outputs:
       signal_url:

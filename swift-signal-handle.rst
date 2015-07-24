@@ -154,11 +154,11 @@ Full Example Template
                 sleep 300
 
                 # Assuming long running operation completed successfully, notify success signal
-                wc_notify --data-binary '{"status": "SUCCESS"}'
+                wc_notify --data-binary '{"status": "SUCCESS", "data": "Script execution succeeded"}'
                 
-                # Alternatively if operation fails a FAILURE with reason may be sent,
+                # Alternatively if operation fails a FAILURE with reason and data may be sent,
                 # notify failure signal example below
-                # wc_notify --data-binary '{"status": "FAILURE", "reason":"Operation failed due to xyz error"}'
+                # wc_notify --data-binary '{"status": "FAILURE", "reason":"Operation failed due to xyz error", "data":"Script execution failed"}'
 
               params:
                 wc_notify: { get_attr: ['signal_handle', 'curl_cli'] }
@@ -169,10 +169,10 @@ Full Example Template
         value: { get_attr: ['signal_handle', 'curl_cli'] }
         description: Swift signal URL
       
-      #Optionally, obtain the reason for failure directly. If nothing is passed, this value will be NULL 
-      #signal_reason:
-      #  value: { get_attr: ['wait_on_server', 'reason'] }
-      #  description: Reason for script failure
+      #Obtain data describing script results. If nothing is passed, this value will be NULL 
+      signal_data:
+        value: { get_attr: ['wait_on_server', 'data'] }
+        description: Data describing script results
 
       server_public_ip:
         value: { get_attr: [ linux_server, accessIPv4 ] }

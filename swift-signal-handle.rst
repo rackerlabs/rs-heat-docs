@@ -55,7 +55,7 @@ Add SwiftSignal resource
 The SwiftSignal resource waits for specified number of "SUCCESS" signals (number
 is provided as 'count' property) on the given URL ('handle' property).
 The stack will be marked as failure if specificed number of signals are
-not received in given timeout or if a non "SUCCESS" signal is received such as a "FAILURE".
+not received in given timeout or if a non "SUCCESS" signal is received such as a "FAILURE". A data string and a reason string may be attached alongwith the success or failure notification. The data string is an attribute that can be pulled as template output. 
 
 .. code:: yaml
 
@@ -90,14 +90,13 @@ temporary URL created by the above SwiftSignalHandle resource.
                 # assume you are doing a long running operation here
                 sleep 300
 
-                # Assuming long running operation completed successfully,
-                # notify success signal
-                wc_notify --data-binary '{"status": "SUCCESS"}'
-
-                # Alternatively if operation fails a FAILURE with reason may be sent,
-                # notify failure signal example below (commented out)
-                # wc_notify --data-binary '{"status": "FAILURE", "reason":"Operation failed due to xyz error"}'
-
+                # Assuming long running operation completed successfully, notify success signal
+                wc_notify --data-binary '{"status": "SUCCESS", "data": "Script execution succeeded"}'
+                
+                # Alternatively if operation fails a FAILURE with reason and data may be sent,
+                # notify failure signal example below
+                # wc_notify --data-binary '{"status": "FAILURE", "reason":"Operation failed due to xyz error", "data":"Script execution failed"}'
+                
               params:
                 # Replace all occurances of "wc_notify" in the script with an
                 # appropriate curl PUT request using the "curl_cli" attribute
@@ -111,10 +110,16 @@ Add swift signal URL to the outputs section.
 
 .. code:: yaml
 
+      #Get the signal URL which contains all information passed to the signal handle
       signal_url:
-        value: { get_attr: ['wait_handle', 'curl_cli'] }
+        value: { get_attr: ['signal_handle', 'curl_cli'] }
         description: Swift signal URL
-
+      
+      #Obtain data describing script results. If nothing is passed, this value will be NULL 
+      signal_data:
+        value: { get_attr: ['wait_on_server', 'data'] }
+        description: Data describing script results
+        
       server_public_ip:
         value:{ get_attr: [ linux_server, accessIPv4 ] }
         description: Linux server public IP

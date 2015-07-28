@@ -5,7 +5,7 @@
 Brief summary
 =============
 
-SwiftSingal can be used to coordinate resource creation with
+SwiftSignal can be used to coordinate resource creation with
 notifications/signals that could be coming from sources external or
 internal to the stack. It is often used in conjunction with
 SwiftSignalHandle resource.

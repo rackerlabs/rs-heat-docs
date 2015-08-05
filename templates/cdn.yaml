@@ -1,0 +1,34 @@
+heat_template_version: 2015-10-15
+
+description: |
+  Test Cloud Files CDN
+
+resources:
+
+  container:
+    type: OS::Swift::Container
+    properties:
+      name: { get_param: "OS::stack_name" }
+
+  container_cdn:
+    type: Rackspace::Cloud::CloudFilesCDN
+    properties:
+      container: { get_resource: container }
+      ttl: 3600
+
+outputs:
+
+  show:
+    value: { get_attr: [ container_cdn, show ] }
+
+  cdn_url:
+    value: { get_resource: container_cdn }
+
+  ssl_url:
+    value: { get_attr: [ container_cdn, ssl_uri ] }
+
+  streaming_url:
+    value: { get_attr: [ container_cdn, streaming_uri ] }
+
+  ios_url:
+    value: { get_attr: [ container_cdn, ios_uri ] }

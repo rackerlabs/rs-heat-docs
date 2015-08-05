@@ -12,8 +12,8 @@ However, uploading content into a CDN-enabled container is a secure operation
 and does require a valid authentication token. (Private containers are not
 CDN-enabled and the files in a private container are not publicly accessible.)
 
-You can download the full template for this example from this repository's
-`templates` directory.
+You can download the full template for this example from `this repository's
+templates directory <https://github.com/rackerlabs/rs-heat-docs/blob/master/templates/cdn.yaml>`_.
 
 Prerequisite(s):
 ================

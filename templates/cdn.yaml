@@ -20,15 +20,24 @@ outputs:
 
   show:
     value: { get_attr: [ container_cdn, show ] }
+    description: Show all attributes of the CDN configuration for the container
 
   cdn_url:
     value: { get_resource: container_cdn }
+    description: The URI for downloading container objects over HTTP.
 
   ssl_url:
     value: { get_attr: [ container_cdn, ssl_uri ] }
+    description: The URI for downloading container objects over HTTPS, using SSL.
 
   streaming_url:
     value: { get_attr: [ container_cdn, streaming_uri ] }
+    description: |
+      The URI for video streaming container objects that uses HTTP Dynamic
+      Streaming from Adobe.
 
   ios_url:
     value: { get_attr: [ container_cdn, ios_uri ] }
+    description: |
+      The URI for video streaming container objects that uses HTTP Live
+      Streaming from Apple.

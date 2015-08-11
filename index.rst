@@ -3,8 +3,8 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Rackspace Cloud Orchestration Guide's documentation!
-===============================================================
+Welcome to the Rackspace Cloud Orchestration User Guide
+=======================================================
 
 Contents:
 
@@ -12,15 +12,17 @@ Contents:
    :maxdepth: 1
 
    bootstrapping-software-config
-   generic software-config
+   generic-software-config
+   cloud-files-cdn
    swift-signal-handle
    cloud-server
+   securitygroup-attachment
    cloud-loadbalancer
    cloud-monitoring
    cloud-backup
    cloud-database
    autoscale-heat-event-schedule-based
-   ansible/using-ansible-with-heat.rst
+   ansible/using-ansible-with-heat
  
 Indices and tables
 ==================

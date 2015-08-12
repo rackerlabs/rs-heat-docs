@@ -50,7 +50,7 @@ server instead of public IP
 5. Inside the template, if any of the rackconnected server is connecting/communicating with other rackconnected
 server, then use rackconnected IP instead of servicenet or public IP.
 
-Customized template example
+Example (customized template)
 ===========================
 For example consider customizing mongodb template.
 
@@ -60,7 +60,7 @@ at `<https://github.com/rackspace-orchestration-templates/mongodb-replset>`__
 2. Cloned and customized template repository is available 
 at `<https://github.com/vikomall/mongodb-replset>`__
 
-3. And list of changes can be seen at https://github.com/rackspace-orchestration-templates/mongodb-replset/compare/master...vikomall:master
+3. List of changes made to the original template can be seen at https://github.com/rackspace-orchestration-templates/mongodb-replset/compare/master...vikomall:master
 
 
 Reference

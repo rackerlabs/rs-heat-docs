@@ -100,7 +100,7 @@ Now attach security group to public network port of the server instance.
 .. code:: yaml
 
       security_group_attachment:
-        type: OS::Neutron::SecurityGroupAttachment
+        type: Rackspace::Neutron::SecurityGroupAttachment
         properties:
           port: { get_attr: [ server, addresses, public, 0, port ] }
           security_group: {get_resource: security_group}
@@ -140,7 +140,7 @@ Full Example Template
             port_range_max: 5000
 
       security_group_attachment:
-        type: OS::Neutron::SecurityGroupAttachment
+        type: Rackspace::Neutron::SecurityGroupAttachment
         properties:
           port: { get_attr: [ server, addresses, public, 0, port ] }
           security_group: {get_resource: security_group}

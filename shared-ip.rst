@@ -40,6 +40,9 @@ Start by adding the top-level template sections:
     outputs:
 
 Resources section
+=================
+
+SharedIP resource
 -----------------
 
 Add a Rackspace::Cloud::SharedIP resource to create a shared IP address.

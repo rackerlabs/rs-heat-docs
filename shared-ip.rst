@@ -98,25 +98,37 @@ Full Example Template
 .. code:: yaml
 
     heat_template_version: 2014-10-16
-
+    
     description: |
       Shared IP example template.
-
+    
     outputs:
         shared_ip_address:
             value:
                 get_attr: [shared_ip, shared_ip_address]
     resources:
+        server1:
+            type: OS::Nova::Server
+            properties:
+                image: Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
+                flavor: 2 GB Performance
+    
+        server2:
+            type: OS::Nova::Server
+            properties:
+                image: Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
+                flavor: 2 GB Performance
+    
         shared_ip:
             properties:
                 network_id: 00000000-0000-0000-0000-000000000000
-                ports: [5534f616-c337-4a6b-8023-3c9fd120be0d, 177df6ca-e972-4cee-b157-91ccf6391bb2]
+                ports: [{ get_attr: [ server1, addresses, public, 0, port ] }, { get_attr: [ server2, addresses, public, 0, port ] }]
             type: Rackspace::Cloud::SharedIP
     
         associate_shared_ip:
             properties:
                 shared_ip: {get_attr: [shared_ip, shared_ip_address, ip_address, id]}
-                servers: [62cdb03b-ab07-47eb-bf6b-f1a4614370b4, 6e8f610f-1412-4469-9b5c-b552c735e463]
+                servers: [{get_resource: server1}, {get_resource: server2}]
             type: Rackspace::Cloud::AssociateSharedIP
 
 Reference

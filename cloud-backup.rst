@@ -21,9 +21,8 @@ Installing cloud backup agent on the server
 Option-1
 ~~~~~~~~
 
-If the tenant is a managed operations customer, and the server from
-where you want to create backup was created as part of a Heat stack,
-then pass '{build_config: backup_agentonly}' as metadata
+If the server from where you want to create backup was created as part of
+a Heat stack, then pass '{build_config: backup_agentonly}' as metadata
 to OS::Nova::Server or Rackspace::Cloud::WinServer. For example,
 
 .. code:: yaml
@@ -39,9 +38,8 @@ to OS::Nova::Server or Rackspace::Cloud::WinServer. For example,
 Option-2
 ~~~~~~~~
 
-If the tenant is not a managed operations customer or the server was not
-created as part of a Heat stack, then follow the links given below to
-install backup agent.
+If the server was not created as part of a Heat stack, then follow
+the links given below to install backup agent manually.
 
 -  `Install cloud backup agent on Linux
    server <http://www.rackspace.com/knowledge_center/article/rackspace-cloud-backup-install-the-agent-on-linux>`__
@@ -50,7 +48,8 @@ install backup agent.
 -  `Install cloud backup agent on Windows server (silent
    installation) <http://www.rackspace.com/knowledge_center/article/rackspace-cloud-backup-install-the-agent-on-windows-by-using-silent-installation>`__
 
--  Example template
+Example template
+================
 
 In the following example template, we will set up a single node
 wordpress web application (on a Windows server) with cloud backup

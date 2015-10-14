@@ -4,7 +4,7 @@
   * :ref:`generic software-config`
   * :ref:`swift-signal-handle`
 
-* Using Orchestation
+* Creating Orchestation templates
 
   * :ref:`cloud-server`
   * :ref:`cloud-loadbalancer`

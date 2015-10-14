@@ -1,6 +1,6 @@
-========================
- Customizing Rackspace supported templates for Rackconnect V3 customers
-========================
+======================================================================
+Customizing Rackspace supported templates for Rackconnect V3 customers
+======================================================================
 
 Note: This document assumes that the reader is familiar with HOT
 specification. If that is not the case, please go to 'References'
@@ -9,19 +9,19 @@ section given at the end of this document for HOT specification link.
 Brief summary
 =============
 
-`Rackspace supported tempaltes <https://github.com/rackspace-orchestration-templates>`__
+`Rackspace supported templates <https://github.com/rackspace-orchestration-templates>`__
 are not currently supported for Rackconnect V3 customers. This document outlines the steps needed to
 make a template work in Rackconnected V3 account.
 
 Prerequisite
-===========================
+============
 Some of the rackspace supported templates use ChefSolo resource. If you are customizing
 a template that cotains ChefSolo resource, make sure that rack connected servers can access the internet.
 This is required because ChefSolo resource downloads chef from internet. Please contact the Rackconnect customer service
 to update outbound NAT for your rackconnect account.
 
 Customizing a template
-===========================
+======================
 
 1. Clone the template repository you wanted to customize into your public personal github account. This
 repository must be accessible to public without any authentication
@@ -51,7 +51,7 @@ server instead of public IP
 server, then use rackconnected IP instead of servicenet or public IP.
 
 Example (customized template)
-===========================
+=============================
 For example consider customizing mongodb template.
 
 1. Rackspace supported mongodb template which doesn't work for Rackconnect V3 customers is available

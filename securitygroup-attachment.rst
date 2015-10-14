@@ -1,6 +1,6 @@
-===================================
+==========================================
  SecurityGroup and SecurityGroupAttachment
-===================================
+==========================================
 
 Brief summary
 =============
@@ -16,7 +16,7 @@ security group to port as part of a template
 
 
 Limitations / Known Issues
-===========================
+==========================
 
 (1) In Rackspace cloud you cannot apply security groups to a port at boot time.
 
@@ -67,7 +67,7 @@ This creates a server with given image and flavor and also by default attaches p
 service net to the server instance created.
 
 Add SecurityGroup resource
-~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 A security group is a named container for security group rules, which provide
 Rackspace Public Cloud users the ability to specify the types of traffic that
@@ -93,7 +93,7 @@ a Cloud server instance.
 Here adding a rule for SSH traffic to the security group.
 
 Add SecurityGroupAttachment resource
-~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Now attach security group to public network port of the server instance.
 

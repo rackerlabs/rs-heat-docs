@@ -6,13 +6,23 @@
 Welcome to the Rackspace Cloud Orchestration User Guide
 =======================================================
 
+This guide provides examples of writing Orchstration
+templates for the Rackspace Cloud Orchestration service,
+built on OpenStack's heat project.
+
+Read more about bootstrapping software configuration,
+such as using Ansible, as well as information about
+interacting with Rackspace Cloud services that have
+resources provided through Orchstration templates.
+
 Contents:
 
-.. toctree::
-   :maxdepth: 1
+.. toctree:: :hidden:
+   :maxdepth: 2
 
    bootstrapping-software-config
    generic-software-config
+   customizing-template-for-rackconnectv3
    cloud-files-cdn
    swift-signal-handle
    cloud-server
@@ -20,14 +30,9 @@ Contents:
    cloud-loadbalancer
    cloud-monitoring
    cloud-backup
+   cloud-bigdata
    cloud-database
    autoscale-heat-event-schedule-based
    ansible/using-ansible-with-heat
- 
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+   shared-ip
 

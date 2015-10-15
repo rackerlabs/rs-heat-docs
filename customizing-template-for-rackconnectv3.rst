@@ -27,7 +27,7 @@ Customizing a template
 repository must be accessible to public without any authentication
 
 2. Template repository may have multiple template files(Template can have multiple child templates). Find
-all the template files ending with *.yaml (except rackspace.yaml)
+all the template files ending with .yaml (except rackspace.yaml)
 
 3. In the template files, find all the places where 'OS::Nova::Server' resource is being used and provide servicenet
 and rackconnect networks to that server resource

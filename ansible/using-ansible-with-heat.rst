@@ -11,8 +11,7 @@ bootstrap an instance with a fully configured Nginx server.
 Pre-reading
 ===========
 
-- You should prepare a bootstrapped image according to the `Bootstrapping Software Config
-  <../boostrapping_software_config.rst>`_ tutorial as we will be making use of the image
+- You should prepare a bootstrapped image according to the `Bootstrapping Software Config <../boostrapping_software_config.rst>`_ tutorial as we will be making use of the image
   pre-configured with all the required agents for software config
 - This tutorial borrows heavily from `An Ansible Tutorial <https://serversforhackers.com/an-ansible-tutorial>`_.
   Reading this guide will give you a good idea of what we'll be installing/configuring so

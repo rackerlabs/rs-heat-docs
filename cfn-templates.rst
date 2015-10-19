@@ -6,12 +6,26 @@ Overview
 ========
 
 Rackspace Orchestration supports templates written in `AWS'
-CloudFormation format
-<http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-guide.html>`__.
-In addition, the following three CFN resources are supported:
-AWS::EC2::Instance, AWS::ElasticLoadBalancing::LoadBalancer,
-AWS::CloudFormation::WaitCondition, and
-AWS::CloudFormation::WaitConditionHandle.
+CloudFormation (CFN) format
+<http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-guide.html>`_.
+`CFN-compatible functions
+<http://docs.openstack.org/developer/heat/template_guide/functions.html>`_
+exist for most of the CFN functions (condition functions are not
+supported).
+
+In addition, the following four CFN resources are supported:
+
+* `AWS::EC2::Instance <http://docs.openstack.org/developer/heat/template_guide/cfn.html#AWS::EC2::Instance>`_
+* `AWS::ElasticLoadBalancing::LoadBalancer <http://docs.openstack.org/developer/heat/template_guide/cfn.html#AWS::ElasticLoadBalancing::LoadBalancer>`_
+* `AWS::CloudFormation::WaitCondition <http://docs.openstack.org/developer/heat/template_guide/cfn.html#AWS::CloudFormation::WaitCondition>`_
+* `AWS::CloudFormation::WaitConditionHandle <http://docs.openstack.org/developer/heat/template_guide/cfn.html#AWS::CloudFormation::WaitConditionHandle>`_
+
+An AWS::EC2::Instance resource will result in a Rackspace Cloud Server
+being created, and a AWS::ElasticLoadBalancing::LoadBalancer resource
+will result in a Rackspace Cloud Loadbalancer being created.  The wait
+condition resources are used internally as a signaling mechanism and
+do not map to any cloud resources.
+
 
 Writing a CFN template
 ======================
@@ -54,12 +68,18 @@ template that creates a server and executes a bash script on it:
       }
     }
 
+Notice that the "InstanceType" must be a valid Cloud Server flavor
+("m1.small", for example, is not).  Also, the "ImageId" property must
+be a valid Cloud Server image ID or image name.
 
 Using the CFN resources
 =======================
 
-It's possible to use the CFN resources in a HOT template.  In this
-example, we're 
+It's possible to use a CFN resource in a HOT template.  In this
+example, we will create an AWS::EC2::Instance, keep track of the
+user_data script's progress using AWS::CloudFormation::WaitCondition
+and AWS::CloudFormation::WaitConditionHandle, and add the server to
+an AWS::ElasticLoadBalancing::LoadBalancer.
 
 .. code:: yaml
 
@@ -68,13 +88,8 @@ example, we're
     description: |
       Test template for AWS supported resources 
     
-    parameters:
-    
     resources:
     
-      # This needs an image with heat_cfntools on it to use Metadata; basic
-      # test here to make sure we can actually pop the server and do simple
-      # user data and a signal
       aws_server1:
         type: AWS::EC2::Instance
         properties:
@@ -100,7 +115,7 @@ example, we're
           Handle: { get_resource: aws_handle }
           Timeout: 600
     
-      ElasticLoadBalancer:
+      elastic_load_balancer:
             type: AWS::ElasticLoadBalancing::LoadBalancer
             properties:
                 AvailabilityZones: []
@@ -148,20 +163,19 @@ example, we're
         description: AWS Cloud Formation Wait Condition data 
     
       "AWS ElasticLoadBalancer CanonicalHostedZoneName":
-        value: { get_attr: [ ElasticLoadBalancer, CanonicalHostedZoneName ] }
+        value: { get_attr: [ elastic_load_balancer, CanonicalHostedZoneName ] }
         description: details the CanonicalHostedZoneName 
     
       "AWS ElasticLoadBalancer CanonicalHostedZoneNameID":
-        value: { get_attr: [ ElasticLoadBalancer, CanonicalHostedZoneNameID ] }
+        value: { get_attr: [ elastic_load_balancer, CanonicalHostedZoneNameID ] }
         description: details the CanonicalHostedZoneNameID 
     
       "AWS ElasticLoadBalancer DNSName":
-        value: { get_attr: [ ElasticLoadBalancer, DNSName ] }
+        value: { get_attr: [ elastic_load_balancer, DNSName ] }
         description: details the DNSName 
 
-
 Likewise, you can use HOT resources in a CFN template.  In this
-example, 
+example, an OS::Nova::Server resource is embedded in a CFN template.
 
 .. code:: json
 

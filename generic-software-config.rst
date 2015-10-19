@@ -289,7 +289,7 @@ config agent on Ubuntu 14.04.
 
 First, clone the heat-templates repository:
 
-.. code:: example
+.. code::
 
     git clone https://github.com/openstack/heat-templates.git
 
@@ -302,20 +302,20 @@ repository in case you want to use Fedora.
 Then, issue the stack-create command with the template and environment
 file just created using python-heatclient:
 
-.. code:: example
+.. code::
 
     heat --heat-url=https://dfw.orchestration.api.rackspacecloud.com/v1/$RS_ACCOUNT_NUMBER --os-username $RS_USER_NAME --os-password $RS_PASSWORD --os-tenant-id $RS_ACCOUNT_NUMBER --os-auth-url https://identity.api.rackspacecloud.com/v2.0/ stack-create -f generic-software-config.yaml -e heat-templates/hot/software-config/boot-config/ubuntu_pip_env.yaml generic-software-config1
 
 Next, we will edit the template and perform a stack-update. Edit the
 SoftwareDeployment parameters in the template:
 
-.. code:: example
+.. code::
 
     sed -i.bak -e 's/fooooo/fooooo1/' -e 's/baaaaa/baaaaa1/' generic-software-config.yaml 
 
 Issue the stack-update command:
 
-.. code:: example
+.. code::
 
     heat --heat-url=https://dfw.orchestration.api.rackspacecloud.com/v1/$RS_ACCOUNT_NUMBER --os-username $RS_USER_NAME --os-password $RS_PASSWORD --os-tenant-id $RS_ACCOUNT_NUMBER --os-auth-url https://identity.api.rackspacecloud.com/v2.0/ stack-update -f generic-software-config.yaml -e heat-templates/hot/software-config/boot-config/ubuntu_pip_env.yaml generic-software-config1
 

@@ -1,7 +1,7 @@
 .. toctree::
    :includehidden:
    :maxdepth: 99
-   
+
    bootstrapping-software-config
    generic-software-config
    cloud-files-cdn

@@ -28,7 +28,7 @@ basic understanding of Heat template composition and Environments.
 - `Environments Guide
   <http://docs.openstack.org/developer/heat/template_guide/environment.html>`_
 
-Following Along
+Following along
 ===============
 You will probably want to clone this repository in order to easily follow along.
 Otherwise, you may need to modify some of the commands to point to the correct locations
@@ -137,14 +137,14 @@ Your template should now look like:
       description: Root password to the server
 
 The `Heat::InstallConfigAgent` Resource
-=====================================
+=======================================
 
 You will notice that this resource has no real properties or other configuration. That's
 because we use the Environment and Template Resource features of Heat so that we can
 create several bootstrap configurations and use them for different base images as
 required.
 
-The Configuration Template
+The configuration template
 --------------------------
 
 First, lets look at the template that we'll use to provide the underlying definition for
@@ -164,7 +164,7 @@ of your application architecture. Having said that, we won't talk at all about b
 things like descriptions or versions but rather go over the resources and how they
 prepare the instance for use with Heat Software Config.
 
-Install the Basics
+Install the basics
 ++++++++++++++++++
 
 The first resource is the most complex and uses cloud-init to lay down the needed
@@ -232,7 +232,7 @@ that bootstrap the generic OpenStack agents.
         - cat /etc/os-collect-config.conf
         - os-collect-config --one-time --debug
 
-Install the Generic Agents
+Install the generic agents
 ++++++++++++++++++++++++++
 
 The actual generic OpenStack agents are installed using Python pip since there aren't any
@@ -249,7 +249,7 @@ reliable packages for them on Ubuntu.
         set -eux
         pip install os-collect-config os-apply-config os-refresh-config dib-utils
 
-Configure the Agents Service
+Configure the agents service
 ++++++++++++++++++++++++++++
 
 Next, we declare a config resource to create the service configuration (upstart or
@@ -312,7 +312,7 @@ systemd) that will start the collection agent and ensure that it runs on boot:
             exit 1
         fi
 
-Combine and expose the Configs
+Combine and expose the configs
 ++++++++++++++++++++++++++++++
 
 Finally, the configurations are all combined into a single multi-part-mime so that they 
@@ -334,7 +334,7 @@ can be output as a single file for use in user-data:
     config:
       value: { get_resource: install_config_agent }
 
-The Environment File
+The environment file
 --------------------
 
 The environment file that we'll send as part of our `stack-create` call is quite simple:
@@ -354,12 +354,12 @@ the resource namespace `Heat::InstallConfigAgent` to the template resource we cr
 the previous section. If you've used another file name or want to use the one included in
 this repository, be sure to change this mapping to point to the appropriate location.
 
-Deploy the Bootstrapped Instance
+Deploy the bootstrapped instance
 ================================
 
 All that's left to do is deploy the template:
 
-.. code:: example
+.. code::
 
   heat stack-create -f templates/software_config_custom_image.yaml -e templates/bootconfig.all.env.yaml sw_config_base
 
@@ -375,20 +375,20 @@ the next section anyway.
 Custom Image
 ============
 
-Remove Cloud-Init Artifacts
+Remove cloud-init artifacts
 ---------------------------
 
 In order for cloud-init to run on machines booted from our new image, we'll need to
 remove some artifacts from the current vm left over from our initial bootstrapping. First,
 retrieve the root password from the stack:
 
-.. code:: example
+.. code::
 
   heat output-show sw_config_base admin_password
 
 Now, log into the server via ssh by issuing the following command:
 
-.. code:: example
+.. code::
 
   ssh root@$(heat output-show sw_config_base server_ip)
 
@@ -404,7 +404,7 @@ cloud-init when it bootstrapped this server:
 - :bash:`rm /var/log/cloud-init.log`
 - :bash:`rm /var/log/cloud-init-output.log`
 
-Snapshot Your Bootstrapped Server
+Snapshot your bootstrapped server
 ---------------------------------
 
 Now we can create an image of our server. First, log into the Reach control panel and
@@ -414,7 +414,7 @@ Under the `Actions` button, select `Create an Image` and name it "Ubuntu 14.04 L
 
 Once this process is complete, you're all done!
 
-Using Your New Image
+Using your new image
 --------------------
 
 We will make use of this new image in our future tutorials on using Heat software config,

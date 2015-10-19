@@ -11,15 +11,14 @@ bootstrap an instance with a fully configured Nginx server.
 Pre-reading
 ===========
 
-- You should prepare a bootstrapped image according to the `Bootstrapping Software Config
-  <../boostrapping_software_config.rst>`_ tutorial as we will be making use of the image
+- You should prepare a bootstrapped image according to the `Bootstrapping Software Config <../boostrapping_software_config.rst>`_ tutorial as we will be making use of the image
   pre-configured with all the required agents for software config
 - This tutorial borrows heavily from `An Ansible Tutorial <https://serversforhackers.com/an-ansible-tutorial>`_.
   Reading this guide will give you a good idea of what we'll be installing/configuring so
   you can focus on how we use Heat to integrate with Ansible rather than using Ansible
   itself.
 
-Following Along
+Following along
 ===============
 
 You will probably want to clone this repository in order to easily follow along. Once
@@ -29,7 +28,7 @@ Otherwise, you may need to modify some of the commands to point to the correct l
 of various templates and/or environments. Full templates can always be found in the
 ``templates`` directory.
 
-Basic Template
+Basic template
 ==============
 
 As with all Heat templates, we start with the basic version and description sections:
@@ -150,7 +149,7 @@ outputs tell you what each represents.
       value:
         get_attr: [ server_pw, value ]
 
-Deploy the Basic Template
+Deploy the basic template
 =========================
 
 Before you deploy, you'll need to have created an image that already has the needed
@@ -161,20 +160,20 @@ template.
 
 To deploy this template, simply issue the standard command:
 
-.. code:: example
+.. code::
 
   heat stack-create -f templates/software_config_ansible.yaml -P "image=Ubuntu 14.04 LTS (HEAT)" my_nginx_simple
 
 Once the stack is ``CREATE_COMPLETE``, you can visit your new Nginx homepage by checking
 the stack output for the ip and entering that into your web browser:
 
-.. code:: example
+.. code::
 
   heat output-show my_nginx_simple server_ip
   
 You can also check the results of the playbook by checking the other outputs:
 
-.. code:: example
+.. code::
 
   heat output-show my_nginx_simple status_code  # Ansible return code
   heat output-show my_nginx_simple stdout       # Ansible output
@@ -189,7 +188,7 @@ template a bit, so lets make a copy and call it "software_config_ansible_role.ya
 
 The role and its components can be found in this repository under the ``roles`` directory.
 
-New Resources
+New resources
 -------------
 
 We'll add two new resources to pull down the role we want to use and put it in a place
@@ -224,7 +223,7 @@ We'll also deploy that script to the server:
       server:
         get_resource: server
 
-Modify Playbook
+Modify playbook
 ---------------
 
 Since we're using roles to do all of the heavy lifting, we'll modify our ``nginx_config``
@@ -259,7 +258,7 @@ resource since we'll need the role installed before we can apply it:
       server:
         get_resource: server
 
-Modify Outputs
+Modify outputs
 --------------
 
 Our script for pulling the role definition isn't terribly sophisticated. We aren't
@@ -273,18 +272,18 @@ that to the ``outputs`` section so we can check it if we need to:
     value:
       get_attr: [ deploy_role, deploy_status_code ]
 
-Deploy the Advanced Template
+Deploy the advanced template
 ============================
 
 Deploying the new template is the same as above, we just change the template name:
 
-.. code:: example
+.. code::
 
   heat stack-create -f templates/software_config_ansible_role.yaml -P "image=Ubuntu 14.04 LTS (HEAT)" my_nginx_role
 
 We can also check outputs the same way by simply changing the stack name:
 
-.. code:: example
+.. code::
 
   heat output-show my_nginx_role status_code      # Ansible return code
   heat output-show my_nginx_role stdout           # Ansible output

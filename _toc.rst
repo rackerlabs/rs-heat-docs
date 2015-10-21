@@ -14,5 +14,6 @@
    cloud-database
    autoscale-heat-event-schedule-based
    ansible/using-ansible-with-heat
+   shared-ip
    stack-update
    cfn-templates

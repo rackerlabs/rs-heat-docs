@@ -8,6 +8,8 @@ Brief summary
 The Rackspace Cloud Monitoring resources allow you to configure
 monitoring on resources that you create with Heat.
 
+In this tutorial, you create a web server that is monitored with a web site check and a CPU check.
+
 Pre-reading
 ===========
 
@@ -15,14 +17,15 @@ The following introductory material should give you enough background to
 proceed with this tutorial.
 
 -  `Rackspace Cloud Monitoring Getting Started
-   Guide <http://docs.rackspace.com/cm/api/v1.0/cm-getting-started/cm-getting-started-20150316.pdf>`__
-   (especially "How Rackspace Cloud Monitoring works" on page 8)
+   Guide <http://docs.rackspace.com/cm/api/v1.0/cm-getting-started/content/how-it-works-gsg.html>`__
+   (especially "How Rackspace Cloud Monitoring works")
 -  `Getting Started With Rackspace Monitoring
    CLI <http://www.rackspace.com/knowledge_center/article/getting-started-with-rackspace-monitoring-cli>`__
 -  `Rackspace Cloud Monitoring Checks and
    Alarms <http://www.rackspace.com/knowledge_center/article/rackspace-cloud-monitoring-checks-and-alarms>`__
 
--  Example template
+Example template
+================
 
 Start by adding the top-level template sections:
 
@@ -69,7 +72,7 @@ Monitoring agent:
 
 It is possible to monitor one or more servers by creating a
 Rackspace::CloudMonitoring::Entity resource [1]_. Entities are
-automatically created for Cloud Servers, so we will refer to the server
+automatically created for cloud servers, so we will refer to the server
 resource above as our Cloud Monitoring entity.
 
 Add a Rackspace::CloudMonitoring::AgentToken resource that will create a
@@ -159,9 +162,9 @@ will send an email to allclear@example.com whenever it is triggered:
             address: "allclear@example.com"
 
 Add a Rackspace::CloudMonitoring::NotificationPlan resource to
-configure Cloud Monitoring to trigger the email_notification1
+configure Cloud Monitoring to trigger the ``email_notification1``
 notification whenever an alarm enters the WARNING or CRITICAL state
-and email_notification2 whenever an alarm enters the OK state:
+and ``email_notification2`` whenever an alarm enters the OK state:
 
 .. code:: yaml
 
@@ -205,7 +208,7 @@ seconds, and the OK state otherwise:
 Full template
 -------------
 
-The following template is a combination of all of the snippets above.  It will create a web server that is monitored with website check and a CPU check.
+The following template is a combination of all of the snippets above.  It will create a web server that is monitored with a web site check and a CPU check.
 
 .. code:: yaml
 
@@ -331,7 +334,7 @@ Reference documentation
 =======================
 
 -  `Rackspace Cloud Monitoring Developer
-   Guide <http://docs.rackspace.com/cm/api/v1.0/cm-devguide/content/index.html>`__
+   Guide <https://developer.rackspace.com/docs/cloud-monitoring/v1/developer-guide/>`__
 
 .. [1]
    The following is an example of a Rackspace::CloudMonitoring::Entity

@@ -1,22 +1,22 @@
 ==============================
- Rackspace Cloud Loadbalancer
+ Rackspace Cloud Load Balancer
 ==============================
 
 Note: This document assumes that the reader is familiar with HOT
-specification. If that is not the case, please go to 'References'
-section given at the end of this document for HOT specification link.
+specification. If that is not the case, please go to the References
+section listed at the end of this tutorial for HOT specification link.
 
 Brief summary
 =============
 
-A loadbalancer is used to distribute workloads between multiple back-end
-systems or services based on the criteria defined as part of its's
+A load balancer is used to distribute workloads between multiple back-end
+systems or services based on the criteria defined as part of its
 configuration.
 
-Example loadbalancer template
-=============================
+Example load balancer template
+==============================
 
-Simple loadbalancer template is given below.
+A simple load balancer template is listed below.
 
 .. code:: yaml
 
@@ -40,11 +40,11 @@ Simple loadbalancer template is given below.
           - type: SERVICENET
             ipVersion: IPV4
 
-Loadbalancer properties
-=======================
+Load balancer properties
+========================
 
-Below given is the complete list of loadbalancer properties that can be
-provided to the resource.
+The complete list of load balancer properties that can be
+provided to the resource follows.
 
 .. code:: yaml
 
@@ -97,14 +97,14 @@ provided to the resource.
         Type: CommaDelimitedList
         Required: True
 
-Example template with loadbalancer
-==================================
+Example template with load balancer
+===================================
 
-In the following example template, we will create a multi node wordpress
-application with two Linux servers, one Trove (DBaaS) instance and one
-Loadbalancer.
+In the following example template, we will create a multi node WordPress
+application with two Linux servers, one Trove (DBaaS) instance, and one
+load balancer.
 
-First add a database instance resource to the template.
+First add a database instance resource (OS::Trove::Instance) to the template.
 
 .. code:: yaml
 
@@ -128,10 +128,10 @@ First add a database instance resource to the template.
           databases:
           - name: wordpress      
 
-This template creates a database instance with name 'wordpress' and
-'admin' as the username and password.
+This template creates a database instance with the name ``wordpress`` and
+``admin`` as the username and password.
 
-Now add two server resoruces and install wordpress application.
+Now add two server resources and install WordPress application.
 
 .. code:: yaml
 
@@ -192,13 +192,13 @@ Now add two server resoruces and install wordpress application.
           - name: wordpress  
 
 Here a ResourceGroup of type 'OS::Nova::Server' is added to the
-template. The user_data property contains a script to install the
-wordpress application. Please note that database instance hostname
+template. The ``user_data`` property contains a script to install the
+WordPress application. Please note that database instance hostname
 information is passed to the script.
 
-Finally, add the loadbalancer resource and provide the server addresses
-to the loadbalancer. Given below is the complete template that can be
-used to create a loadbalanced multi node wordpress application.
+Finally, add the load balancer resource and provide the server addresses
+to the load balancer. Given below is the complete template that can be
+used to create a load balanced multi node WordPress application.
 
 Full Template
 ---------------------
@@ -302,18 +302,18 @@ Full Template
               "%ip%": { get_attr: [ lb, PublicIp ] }
         description: Public URL for the wordpress blog      
 
-Please note that, to keep the template simple, all the values were hard
+Please note that to keep the template simple, all the values were hard
 coded in the above template.
 
 Reference
 =========
 
 -  `Cloud Orchestration API Developer
-   Guide <http://docs.rackspace.com/orchestration/api/v1/orchestration-devguide/content/overview.html>`__
+   Guide <https://developer.rackspace.com/docs/cloud-orchestration/v1/developer-guide/>`__
 -  `Heat Orchestration Template (HOT)
    Specification <http://docs.openstack.org/developer/heat/template_guide/hot_spec.html>`__
--  `Cloud load balancer getting started
+-  `Cloud Load Balancer Getting Started
    guide <http://docs.rackspace.com/loadbalancers/api/v1.0/clb-getting-started/content/LB_Overview.html>`__
--  `Cloud load balancer API developer
-   guide <http://docs.rackspace.com/loadbalancers/api/v1.0/clb-devguide/content/Overview-d1e82.html>`__
+-  `Cloud Load Balancer API Developer
+   Guide <https://developer.rackspace.com/docs/cloud-load-balancers/v1/developer-guide/>`__
 

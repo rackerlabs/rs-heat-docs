@@ -1,3 +1,5 @@
+.. _generic-software-config:
+
 =========================
  Generic software config
 =========================
@@ -13,10 +15,10 @@ user_data script.
 
 One SoftwareConfig resource can be associated with many servers. Each
 time it is triggered, it can be run with different parameters. In
-addition, a SoftwareConfig resource can be updated and re-run without
+addition, a SoftwareConfig resource can be updated and rerun without
 causing the server to be rebuilt.
 
-SoftwareConfig can also be used to configure your server using a
+SoftwareConfig can also be used to configure your server using 
 configuration management software, such as Ansible or Puppet. In this
 tutorial, we will configure the server with a simple shell script.
 
@@ -31,7 +33,7 @@ proceed with this tutorial.
 -  `Application software configuration using
    Heat <https://www.openstack.org/assets/presentation-media/heat-software-config.pdf>`__
 -  `HOT guide - Software
-   configuration <http://docs.openstack.org/user-guide/hot-guide/hot_software_deployment.html>`__
+   configuration <http://docs.openstack.org/developer/heat/template_guide/software_deployment.html>`__
 -  `Software Config example
    templates <https://github.com/openstack/heat-templates/tree/master/hot/software-config/example-templates>`__
 
@@ -70,7 +72,7 @@ Add a template parameter for the server image:
 Resources section
 -----------------
 
-Add an OS::Heat::SoftwareConfig resource which will be used to define a
+Add an OS::Heat::SoftwareConfig resource, which will be used to define a
 software configuration.
 
 .. code:: yaml
@@ -117,12 +119,12 @@ server to which it will be deployed.
             foo: fooooo
             bar: baaaaa
 
-It's advisable to specify a "signal_transport" of "TEMP_URLSIGNAL",
+It is advisable to specify a "signal_transport" of "TEMP_URLSIGNAL",
 because Rackspace's deployment of Heat does not support the other
 transports at this time. However, since this is the default
 transport on the Rackspace Cloud, it should be safe to omit.
 
-Add a InstallConfigAgent resource, which will be mapped via the
+Add an InstallConfigAgent resource, which will be mapped via the
 environment to a `"provider" resource
 <http://hardysteven.blogspot.com/2013/10/heat-providersenvironments-101-ive.html>`__:
 
@@ -133,8 +135,7 @@ environment to a `"provider" resource
 
 The purpose of this resource is to provide output for the user_data
 section that will be used to install the config agent on the Server
-resource below. See the `Usage
-<id:11e46462-76dd-40e5-8b71-1efa125d9124>`__ section below for more
+resource below. See the :ref:`Usage <generic-sw-config-usage>` section below for more
 information on using this resource.
 
 Add a Nova server key pair resource as a way to access the server to
@@ -280,10 +281,12 @@ Full template
         value:
           get_attr: [ssh_key, private_key]
 
+.. _generic-sw-config-usage:
+
 Usage
 =====
 
-Before we create the stack, we need an environment file that will define
+Before you create the stack, you need an environment file that will define
 a Heat::InstallConfigAgent resource to tell Heat how to install the
 config agent on Ubuntu 14.04.
 
@@ -293,27 +296,27 @@ First, clone the heat-templates repository:
 
     git clone https://github.com/openstack/heat-templates.git
 
-The environment file we will use is located under
+The environment file you will use is located under
 ``heat-templates/hot/software-config/boot-config/ubuntu_pip_env.yaml``.
 It will supply the image parameter to the template. A ready-made
 InstallConfigAgent resource for Fedora also exists in the heat-templates
 repository in case you want to use Fedora.
 
-Then, issue the stack-create command with the template and environment
+Then, issue the ``stack-create`` command with the template and environment
 file just created using python-heatclient:
 
 .. code::
 
     heat --heat-url=https://dfw.orchestration.api.rackspacecloud.com/v1/$RS_ACCOUNT_NUMBER --os-username $RS_USER_NAME --os-password $RS_PASSWORD --os-tenant-id $RS_ACCOUNT_NUMBER --os-auth-url https://identity.api.rackspacecloud.com/v2.0/ stack-create -f generic-software-config.yaml -e heat-templates/hot/software-config/boot-config/ubuntu_pip_env.yaml generic-software-config1
 
-Next, we will edit the template and perform a stack-update. Edit the
+Next, edit the template and perform a ``stack-update``. Edit the
 SoftwareDeployment parameters in the template:
 
 .. code::
 
     sed -i.bak -e 's/fooooo/fooooo1/' -e 's/baaaaa/baaaaa1/' generic-software-config.yaml 
 
-Issue the stack-update command:
+Issue the ``stack-update`` command:
 
 .. code::
 

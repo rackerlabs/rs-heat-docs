@@ -1,5 +1,5 @@
 ===================================
- Rackspace cloud backup using Heat
+ Rackspace Cloud Backup
 ===================================
 
 Brief summary
@@ -12,8 +12,8 @@ Orchestration.
 Prerequisite(s):
 ================
 
-Cloud backup agent is installed on the server from where you wanted to
-backup files/folders
+Cloud backup agent is installed on the server from where you want to
+backup files/folders.
 
 Installing cloud backup agent on the server
 -------------------------------------------
@@ -21,7 +21,7 @@ Installing cloud backup agent on the server
 Option-1
 ~~~~~~~~
 
-If the server from where you want to create backup was created as part of
+If the server from which you want to create a backup was created as part of
 a Heat stack, then pass '{build_config: backup_agentonly}' as metadata
 to OS::Nova::Server or Rackspace::Cloud::WinServer. For example,
 
@@ -52,7 +52,7 @@ Example template
 ================
 
 In the following example template, we will set up a single node
-wordpress web application (on a Windows server) with cloud backup
+WordPress web application (on a Windows server) with a cloud backup
 resource. For the sake of simplicity, we will not use template
 parameters in this example.
 
@@ -72,8 +72,8 @@ Start by adding the top-level template sections:
 Resources section
 -----------------
 
-Add a Rackspace::Cloud::WinServer resource that will create a windows
-server and install wordpress web application.
+Add a Rackspace::Cloud::WinServer resource that will create a Windows
+server and install the WordPress web application.
 
 .. code:: yaml
 
@@ -102,14 +102,14 @@ server and install wordpress web application.
                 "%dbpassword%": testpassword_123
                 "%dbadminpassword%": testpassword_123
 
-The above resource creates a Windows server and installs the wordpress
+The above resource creates a Windows server and installs the WordPress
 application. Please note that '{build_config: backup_agentonly}' was
 passed as metadata to install a cloud backup agent.
 
-cloud backup config resource
+Cloud backup config resource
 ----------------------------
 
-Add a Rackspace::Cloud::BackupConfig resource to backup the wordpress
+Add a Rackspace::Cloud::BackupConfig resource to back up the WordPress
 application installed at c:\\inetpub\\wwwroot\\wordpress folder.
 
 .. code:: yaml
@@ -139,17 +139,17 @@ In the above backup resource, the cloud backup service was configured
 to create a backup of the 'c:\\inetpub\\wwwroot\\wordpress' folder
 'Daily' at '11:30PM' and to retain the created backup for '60'
 days. Also, it was configured to notify at the given email ID upon any
-error during the backup creation. Please note that host_ipaddress is
-the IP of the cloud server from where files/folders will be backed
-up. Here the IP address of the windows server that was created in the
+error during the backup creation. Please note that ``host_ip_address`` is
+the IP address of the cloud server from where files/folders will be backed
+up. Here the IP address of the Windows server that was created in the
 earlier resource example was passed. If the server was created outside
 of the stack, make sure that a backup agent was installed on that
-server and pass the IP address to host_ipaddress.
+server and pass the IP address to ``host_ip_address``.
 
 Outputs section
 ---------------
 
-Add the wordpress website URL to the outputs section.
+Add the WordPress website URL to the outputs section.
 
 .. code:: yaml
 
@@ -232,7 +232,7 @@ Reference
 =========
 
 -  `Cloud Orchestration API Developer
-   Guide <http://docs.rackspace.com/orchestration/api/v1/orchestration-devguide/content/overview.html>`__
+   Guide <https://developer.rackspace.com/docs/cloud-orchestration/v1/developer-guide/>`__
 -  `Heat Orchestration Template (HOT)
    Specification <http://docs.openstack.org/developer/heat/template_guide/hot_spec.html>`__
 -  `Cloud-init format
@@ -240,7 +240,7 @@ Reference
 -  `Cloud backup getting started
    guide <http://docs.rackspace.com/rcbu/api/v1.0/rcbu-getting-started/content/Overview-d1e01.html>`__
 -  `Cloud backup API developer
-   guide <http://docs.rackspace.com/rcbu/api/v1.0/rcbu-devguide/content/overview.html>`__
+   guide <https://developer.rackspace.com/docs/cloud-backup/v1/developer-guide/>`__
 -  `Install cloud backup agent on Linux
    server <http://www.rackspace.com/knowledge_center/article/rackspace-cloud-backup-install-the-agent-on-linux>`__
 -  `Install cloud backup agent on Windows

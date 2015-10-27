@@ -1,3 +1,5 @@
+.. _swift-signal-handle:
+
 ===================================
  SwiftSignal and SwiftSignalHandle
 ===================================
@@ -12,12 +14,12 @@ SwiftSignalHandle resource.
 
 SwiftSignalHandle is used to create a temporary URL and this URL is used
 by applications/scripts to send signals. SwiftSignal resource waits on
-this URL for a specified number of signals in given time.
+this URL for a specified number of signals in a given time.
 
 Example template
 ================
 
-In the following example template, we will set up a single node linux
+In the following example template, we will set up a single node Linux
 server that signals success/failure of user_data script
 execution at a given URL.
 
@@ -40,7 +42,7 @@ Resources section
 Add a SwiftSignalHandle resource
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-SwiftSignalHandle is a resource to create temporary URL to receive
+SwiftSignalHandle is a resource to create a temporary URL to receive
 notification/signals. Note that the temporary URL is created using Rackspace
 Cloud Files.
 
@@ -52,10 +54,12 @@ Cloud Files.
 Add SwiftSignal resource
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-The SwiftSignal resource waits for specified number of "SUCCESS" signals (number
-is provided as 'count' property) on the given URL ('handle' property).
-The stack will be marked as failure if specificed number of signals are
-not received in given timeout or if a non "SUCCESS" signal is received such as a "FAILURE". A data string and a reason string may be attached alongwith the success or failure notification. The data string is an attribute that can be pulled as template output. 
+The SwiftSignal resource waits for a specified number of "SUCCESS" signals (number
+is provided by the ``count`` property) on the given URL (``handle`` property).
+The stack will be marked as a failure if the specified number of signals are
+not received in the given ``timeout`` or if a non "SUCCESS" signal is received such as a "FAILURE". 
+A data string and a reason string may be attached along with the success or failure notification. 
+The data string is an attribute that can be pulled as template output. 
 
 .. code:: yaml
 
@@ -72,8 +76,8 @@ on the handle.
 Add a Server resource
 ~~~~~~~~~~~~~~~~~~~~~
 
-Add a linux server with a bash script in user_data property. At
-the end of the script execution send a success/failure message to the
+Add a Linux server with a bash script in the ``user_data`` property. At
+the end of the script execution, send a success/failure message to the
 temporary URL created by the above SwiftSignalHandle resource.
 
 .. code:: yaml
@@ -106,7 +110,7 @@ temporary URL created by the above SwiftSignalHandle resource.
 Outputs section
 ---------------
 
-Add swift signal URL to the outputs section.
+Add swift signal URL to the ``outputs`` section.
 
 .. code:: yaml
 
@@ -124,7 +128,7 @@ Add swift signal URL to the outputs section.
         value:{ get_attr: [ linux_server, accessIPv4 ] }
         description: Linux server public IP
 
-Full Example Template
+Full example template
 ---------------------
 
 .. code:: yaml
@@ -187,10 +191,10 @@ Reference
 =========
 
 -  `Cloud Orchestration API Developer
-   Guide <http://docs.rackspace.com/orchestration/api/v1/orchestration-devguide/content/overview.html>`__
+   Guide <https://developer.rackspace.com/docs/cloud-orchestration/v1/developer-guide/>`__
 -  `Heat Orchestration Template (HOT)
    Specification <http://docs.openstack.org/developer/heat/template_guide/hot_spec.html>`__
 -  `Cloud-init format
    documentation <http://cloudinit.readthedocs.org/en/latest/topics/format.html>`__
 -  `Swift
-   TempURL <http://docs.rackspace.com/files/api/v1/cf-devguide/content/TempURL-d1a4450.html>`__
+   TempURL <https://developer.rackspace.com/docs/cloud-files/v1/developer-guide/#document-public-access-to-your-cloud-files-account/tempurl>`__

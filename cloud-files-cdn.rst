@@ -8,7 +8,7 @@ Brief summary
 A CDN-enabled container is a public container that is served by the Akamai
 content delivery network. The files in a CDN-enabled container are publicly
 accessible and do not require an authentication token for read access.
-However, uploading content into a CDN-enabled container is a secure operation
+However uploading content into a CDN-enabled container is a secure operation
 and does require a valid authentication token. (Private containers are not
 CDN-enabled and the files in a private container are not publicly accessible.)
 
@@ -60,15 +60,15 @@ We only need two simple resources for this template:
         container: { get_resource: container }
         ttl: 3600
 
-The `container` resource simply creates a new Cloud Files container while the
-`container_cdn` resource activates CDN functionality for that container. The
-`container` property defines the container to enable while the `ttl` property tells
+The ``container`` resource simply creates a new Cloud Files container while the
+``container_cdn`` resource activates CDN functionality for that container. The
+``container`` property defines the container to enable while the ``ttl`` property tells
 the CDN service how long to cache objects.
 
 Outputs section
 ---------------
 
-We'll use the outputs section to get relavent information from the CDN configuration:
+We will use the ``outputs`` section to get relevant information from the CDN configuration:
 
 .. code:: yaml
 
@@ -102,7 +102,7 @@ We'll use the outputs section to get relavent information from the CDN configura
         The URI for video streaming that uses HTTP Live Streaming from Apple.
 
 
-Full Example Template
+Full example template
 ---------------------
 
 .. code:: yaml
@@ -158,6 +158,6 @@ Reference
 =========
 
 - `Cloud Files CDN API Documentation
-  <http://docs.rackspace.com/files/api/v1/cf-devguide/content/API_Operations_for_CDN_Services-d1e2386.html>`_
+  <https://developer.rackspace.com/docs/cloud-files/v1/developer-guide/#document-cdn-api-operations/api-operations-for-cdn-services>`_
 - `Rackspace::Cloud::CloudFilesCDN Resource Documentation
   <http://orchestration.rackspace.com/raxdox/rackspace.html#Rackspace::Cloud::CloudFilesCDN>`_

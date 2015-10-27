@@ -75,7 +75,7 @@ be a valid Cloud Server image ID or image name.
 Using the CFN resources
 =======================
 
-It's possible to use a CFN resource in a HOT template.  In this
+It is possible to use a CFN resource in a HOT template.  In this
 example, we will create an AWS::EC2::Instance, keep track of the
 user_data script's progress using AWS::CloudFormation::WaitCondition
 and AWS::CloudFormation::WaitConditionHandle, and add the server to

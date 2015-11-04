@@ -1,28 +1,30 @@
+.. _bootstrapping_sw_config:
+
 .. role:: bash(code)
    :language: bash
 
 =============================
-Bootstrapping Software Config
+Bootstrapping software config
 =============================
 
 Brief summary
 =============
 
-In the *Generic Software Config* tutorial, we learned how to use Heat's generic software
-configuration mechanism to treat the configuration of compute instances the same way we
-treat any other resource in your template. This lesson will go into more detail about
-bootstrapping a pristine image for use with software config as well as show how we can
-then create our own image with the necessary tools pre-installed for easier use in
+In the *Generic software config* tutorial, you learned how to use Heat's generic software
+configuration mechanism to treat the configuration of compute instances the same way you
+treat any other resource in your template. This tutorial will go into more detail about
+bootstrapping a pristine image for use with software config as well as show how you can
+then create your own image with the necessary tools pre-installed for easier use in
 future stacks.
 
 Pre-reading
 ===========
 
-You will want to go over the previous tutorial, *Generic Software Config* first as we'll
+Make sure you completed the previous tutorial, *Generic software config* first as we will
 be using that example template as a basis for this tutorial. You will also need a very
 basic understanding of Heat template composition and Environments.
 
-- `Previous Tutorial <generic-software-config.rst>`_
+-  :ref:`Previous Tutorial, Generic software config <generic-software-config>`
 - `Template Composition Guide
   <http://docs.openstack.org/developer/heat/template_guide/composition.html>`_
 - `Environments Guide
@@ -30,25 +32,25 @@ basic understanding of Heat template composition and Environments.
 
 Following along
 ===============
-You will probably want to clone this repository in order to easily follow along.
+You will probably want to clone this repository (https://github.com/rackerlabs/rs-heat-docs/) in order to easily follow along.
 Otherwise, you may need to modify some of the commands to point to the correct locations
 of various templates and environments. You may also have to modify the environment file
-to point to the correct `bootconfig_all.yaml`.
+to point to the correct ``bootconfig_all.yaml``.
 
-Modifying the Example template
+Modifying the example template
 ==============================
 
-We've started by making a copy of the original example template and saving it as
-`software_config_custom_image.yaml`. We'll then removed resources from the resource
+We have started by making a copy of the original example template and saving it as
+``software_config_custom_image.yaml``. We then removed resources from the resource
 section except for the parts that bootstrap the instance as well as the server itself. The
 following resources were removed from the template:
 
-- `config`
-- `deployment`
-- `other_deployment`
+- ``config``
+- ``deployment``
+- ``other_deployment``
 
-We revised the `outputs` section so that we can easily access the server's ip and root
-credentials (we'll explain a little more in the next section):
+We revised the ``outputs`` section so that we can easily access the server's IP address and root
+credentials (we will explain a little more in the next section):
 
 .. code:: yaml
 
@@ -62,12 +64,12 @@ credentials (we'll explain a little more in the next section):
         value: { get_attr: [ admin_password, value ] }
         description: Root password to the server
 
-We left the `parameters`, `description`, and `heat_template_version` sections as-is.
+We left the ``parameters``, ``description``, and ``heat_template_version`` sections as-is.
 
-Modify the Server
+Modify the server
 -----------------
 
-We added a `OS::Heat::RandomString` resource to generate a random root password for the
+We added an OS::Heat::RandomString resource to generate a random root password for the
 instance so that we can log into the instance after the stack is complete. This is so that
 we can make some small modifications later if we want to create an image we can reuse
 the next time we want to apply software config to a server.
@@ -77,10 +79,10 @@ the next time we want to apply software config to a server.
   admin_password:
     type: OS::Heat::RandomString
 
-Since we're not actually deploying any software config to the instance, we can just use
-cloud-init to do our installation. To do this, we'll clean up some of this from the server
-resource by removing the `software_config_transport` property and changing the
-`user_data_format` to `RAW`. We'll also pass in the generated password to the instance:
+Since we are not actually deploying any software config to the instance, we can just use
+cloud-init to do our installation. To do this, we will clean up some of this from the server
+resource by removing the ``software_config_transport`` property and changing the
+``user_data_format`` to ``RAW``. We will also pass in the generated password to the instance:
 
 .. code:: yaml
 
@@ -136,10 +138,10 @@ Your template should now look like:
       value: { get_attr: [ admin_password, value ] }
       description: Root password to the server
 
-The `Heat::InstallConfigAgent` Resource
+The Heat::InstallConfigAgent resource
 =======================================
 
-You will notice that this resource has no real properties or other configuration. That's
+You will notice that this resource has no real properties or other configuration. That is
 because we use the Environment and Template Resource features of Heat so that we can
 create several bootstrap configurations and use them for different base images as
 required.
@@ -147,29 +149,29 @@ required.
 The configuration template
 --------------------------
 
-First, lets look at the template that we'll use to provide the underlying definition for
-the `boot_config` resource. Since this template is a bit large, it won't be included in
-its entirety here, but can always be found in the `templates` directory of this
-repository as `bootconfig_all.yaml`.
+First, look at the template that we will use to provide the underlying definition for
+the ``boot_config`` resource. Since this template is a bit large, it will not be included in
+its entirety here, but it can always be found in the ``templates`` directory of this
+repository as ``bootconfig_all.yaml``.
 
 In *Generic Software Config*, we used the same mechanism to bootstrap our clean instance
 using a template provided by the OpenStack Heat project. While that works well, the
-repository used is laid out for maximum reusability, so it can be hard to follow what's
+repository used is laid out for maximum reusability, so it can be hard to follow what is
 actually going on in the template. For this tutorial, we've "de-normalized" the bootstrap
 template to more easily explain the different sections and what they do.
 
-Before we dive in, also note that there isn't anything special about this template. Heat
-allows for and encourages template composition so that you can abstract and re-use parts
-of your application architecture. Having said that, we won't talk at all about basic
-things like descriptions or versions but rather go over the resources and how they
+Before we dive in, also note that there is nothing special about this template. Heat
+allows for and encourages template composition so that you can abstract and reuse parts
+of your application architecture. Having said that, we will not talk at all about basic
+things like descriptions or versions, but rather go over the resources and how they
 prepare the instance for use with Heat Software Config.
 
 Install the basics
 ++++++++++++++++++
 
 The first resource is the most complex and uses cloud-init to lay down the needed
-software, scripts, and configuration needed. Since this there is a lot going on here,
-we'll break down the actual cloud-config rather than the resource wrapping it.
+software, scripts, and configuration needed. Since there is a lot going on here,
+we will break down the actual cloud-config rather than the resource wrapping it.
 
 First, we install the supporting software packages:
 
@@ -193,32 +195,32 @@ First, we install the supporting software packages:
         - salt-minion
 
 The next section writes several files. The first four are fairly generic and are to
-configure the base OpenStack agents `os-collect-config`, `os-apply-config`, and
-`os-refresh-config`. Note that these agents are actually installed in a separate section
+configure the base OpenStack agents ``os-collect-config``, ``os-apply-config``, and
+``os-refresh-config``. Note that these agents are actually installed in a separate section
 described later. You can read more about these agents in the reference sections. Their job
 is to coordinate the reading, running, and updating of the software configuration that
 will be sent via Heat.
 
-Following few files tell the generic OpenStack agents how to handle configurations
+Following are a few files that tell the generic OpenStack agents how to handle configurations
 received from Heat. The script written to
-`/opt/stack/os-config-refresh/configure.d/55-heat-config` is executed when a config is to
+``/opt/stack/os-config-refresh/configure.d/55-heat-config`` is executed when a config is to
 be applied or refreshed. It is this script that decides which config handler agent to call
-to apply the configuration (shell script, Ansible, Puppet, Salt, etc).
+to apply the configuration (shell script, Ansible, Puppet, Salt, and so forth).
 
-The script written to `/var/lib/heat-config/hooks/script` is the default config handler
-agent that executes configuration in the `default` group and assumes the configuration is
+The script written to ``/var/lib/heat-config/hooks/script`` is the default config handler
+agent that executes the configuration in the ``default`` group and assumes the configuration is
 a shell script.
 
 The other available agent handlers are written similarly using the same root hooks
-directory (`/var/lib/heat-config/hooks`) and using the name of the config group handled as
-the file name. In our example, we've included handlers for using configurations in the
+directory (``/var/lib/heat-config/hooks``) and using the name of the config group handled as
+the file name. In our example, we have included handlers for using configurations in the
 default, Ansible, Salt, and Puppet config groups. You can customize this for your needs by
-removing handlers you don't want or adding additional ones from
+removing handlers you do not want or adding additional ones from
 `<https://github.com/openstack/heat-templates/tree/master/hot/software-config/elements>`_.
-Note that you may also need to add required packages to the `packages` or `runcmd`
+Note that you may also need to add required packages to the ``packages`` or ``runcmd``
 sections of the cloud-config if you add additional handlers.
 
-The final section installs puppet for the puppet group handler and the runs the commands
+The final section installs puppet for the puppet group handler and then runs the commands
 that bootstrap the generic OpenStack agents.
 
 .. code:: yaml
@@ -337,7 +339,7 @@ can be output as a single file for use in user-data:
 The environment file
 --------------------
 
-The environment file that we'll send as part of our `stack-create` call is quite simple:
+The environment file that we will send as part of our ``stack-create`` call is quite simple:
 
 .. code:: yaml
 
@@ -349,28 +351,29 @@ The environment file that we'll send as part of our `stack-create` call is quite
   resource_registry:
     "Heat::InstallConfigAgent": bootconfig_all.yaml
 
-This sets the `image` parameter value to "Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)" and maps
-the resource namespace `Heat::InstallConfigAgent` to the template resource we created in
-the previous section. If you've used another file name or want to use the one included in
+This sets the ``image`` parameter value to "Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)" and maps
+the resource namespace ``Heat::InstallConfigAgent`` to the template resource we created in
+the previous section. If you have used another file name or want to use the one included in
 this repository, be sure to change this mapping to point to the appropriate location.
 
 Deploy the bootstrapped instance
 ================================
 
-All that's left to do is deploy the template:
+All that is left to do is to deploy the template:
 
 .. code::
 
   heat stack-create -f templates/software_config_custom_image.yaml -e templates/bootconfig.all.env.yaml sw_config_base
 
-Wait for the stack to be `CREATE_COMPLETE` an you have a basic vm configured for use
+Wait for the stack to be ``CREATE_COMPLETE`` and you have a basic vm configured for use
 with Heat software config. You can stop here and modify this template to actually deploy
-software configurations to your server using `OS::Heat::SoftwareConfig` and
-`OS::Heat::SoftwareDeployment` using "clean" images. However, the next section explains
+software configurations to your server using OS::Heat::SoftwareConfig and
+OS::Heat::SoftwareDeployment using "clean" images. However you may prefer to continue 
+directly to the next section, since it explains
 how you can use this bootstrapped instance to create your own image pre-configured for use
-with Heat software config. However, future advanced tutorials such as using Heat with
-Ansible will make use of this pre-bootstrapped image so you  may want to continue with
-the next section anyway.
+with Heat software config. Also, future advanced tutorials, such as :ref:`Using Ansible with
+Heat <using_Ansible_w_heat>` later in this guide, will make use of this pre-bootstrapped image, so that is 
+another reason you may want to continue directly to the next section.
 
 Custom Image
 ============
@@ -378,8 +381,8 @@ Custom Image
 Remove cloud-init artifacts
 ---------------------------
 
-In order for cloud-init to run on machines booted from our new image, we'll need to
-remove some artifacts from the current vm left over from our initial bootstrapping. First,
+In order for cloud-init to run on machines booted from the new image, we will need to
+remove some artifacts from the current vm left over from the initial bootstrapping. First,
 retrieve the root password from the stack:
 
 .. code::
@@ -407,20 +410,20 @@ cloud-init when it bootstrapped this server:
 Snapshot your bootstrapped server
 ---------------------------------
 
-Now we can create an image of our server. First, log into the Reach control panel and
+Now we can create an image of our server. First, log into the Rackspace Cloud control panel and
 under Orchestration, find the ``sw_config_base`` stack. Viewing the details, you should see
-the server listed in the `Infrastructure` section. Select that server to view its details.
-Under the `Actions` button, select `Create an Image` and name it "Ubuntu 14.04 LTS (HEAT)".
+the server listed in the **Infrastructure** section. Select that server to view its details.
+Under the **Actions** button, select **Create an Image** and name it "Ubuntu 14.04 LTS (HEAT)".
 
-Once this process is complete, you're all done!
+Once this process is complete, you are all done!
 
 Using your new image
 --------------------
 
 We will make use of this new image in our future tutorials on using Heat software config,
-but in short, you can omit using the `Heat::InstallConfigAgent` resource once you have
-this image. Instead, set the `image` property of any servers you want to configure this way
-to "Ubuntu 14.04 LTS (HEAT)" and the `user_data_format` property to "SOFTWARE_CONFIG" and
+but in summary, you can omit using the Heat::InstallConfigAgent resource once you have
+this image. Instead, set the ``image`` property of any servers you want to configure this way
+to "Ubuntu 14.04 LTS (HEAT)" and the ``user_data_format`` property to "SOFTWARE_CONFIG" and
 it should just work!
 
 Reference documentation

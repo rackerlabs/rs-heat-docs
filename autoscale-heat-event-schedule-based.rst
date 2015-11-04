@@ -1,5 +1,5 @@
 ================================================================
- Event and schedule-based auto-scaling with Cloud Orchestration
+ Event and schedule-based auto scaling with Heat
 ================================================================
 
 Brief summary
@@ -10,7 +10,7 @@ scaling. Schedule-based auto scaling can be used to scale your
 application up or down at a specific time of the day, whereas
 event-based auto scaling can be used to automatically scale your
 application up or down according to load. In this tutorial, we will use
-Rackspace Orchestration to automate the configuration of both event- and
+Rackspace Orchestration to automate the configuration of both event-based and
 schedule-based auto scaling.
 
 Pre-reading
@@ -38,9 +38,9 @@ Cloud Monitoring
 -  `Getting Started Guide: About the monitoring
    agent <http://docs.rackspace.com/cm/api/v1.0/cm-getting-started/content/how-agent-works-gsg.html>`__
 -  `Developer Guide: Available check types and
-   fields <http://docs.rackspace.com/cm/api/v1.0/cm-devguide/content/appendix-check-types.html>`__
+   fields <https://developer.rackspace.com/docs/cloud-monitoring/v1/developer-guide/#document-appendices/available-check-types-and-fields>`__
 -  `Developer Guide: Server-Side agent configuration YAML file
-   examples <http://docs.rackspace.com/cm/api/v1.0/cm-devguide/content/yaml-files.html>`__
+   examples <https://developer.rackspace.com/docs/cloud-monitoring/v1/developer-guide/#document-appendices/server-side-agent-config-yaml>`__
 
 Cloud Orchestration
 -------------------
@@ -50,10 +50,11 @@ Cloud Orchestration
 -  `Templates Developer Guide: Introduction to
    templates <http://docs.rackspace.com/orchestration/api/v1/orchestration-templates-devguide/content/Intro_to_Templates-d1e633.html>`__
 
--  Schedule-based auto scaling
+Schedule-based auto scaling
+=================================
 
 Schedule-based auto scaling can be useful if there is a particular time
-which your application experiences a higher load. By scheduling a
+when your application experiences a higher load. By scheduling a
 scaling event, you will be able to proactively scale your application.
 
 In this example, we will create a scaling group that scales up by one
@@ -176,7 +177,7 @@ Finally, add a Rackspace::AutoScale::ScalingPolicy for scaling down:
           cooldown: 600
           type: schedule
 
-Likewise, this resource will scale the auto scaling group down by one
+Similarly, this resource will scale the auto scaling group down by one
 server every Saturday at 1:00 AM.
 
 Outputs section
@@ -293,7 +294,7 @@ scaling group and makes calls to the Auto Scale API when it is time to
 scale up or down.
 
 In the following example template, we will set up a web application with
-a loadbalancer and a scaling group that contains between 2 and 10 web
+a load balancer and a scaling group that contains between 2 and 10 web
 servers. For the sake of simplicity, we will not use template parameters
 in this example.
 
@@ -344,7 +345,7 @@ between web servers.
 Autoscale resources
 ~~~~~~~~~~~~~~~~~~~
 
-Add the Rackspace::AutoScale::Group resource which will contain at least
+Add the Rackspace::AutoScale::Group resource, which will contain at least
 2 servers and not more than 10 servers:
 
 .. code:: yaml
@@ -534,7 +535,7 @@ service:
               params:
                 stack: { get_param: "OS::stack_name" }
 
-Add a Rackspace::CloudMonitoring::Notification resource which will call
+Add a Rackspace::CloudMonitoring::Notification resource that will call
 the scale-up webhook created above:
 
 .. code:: yaml
@@ -554,7 +555,7 @@ the scale-up webhook created above:
 Below, the notification resource will be associated with an alarm state
 using a notification plan.
 
-Add another Rackspace::CloudMonitoring::Notification resource which will
+Add another Rackspace::CloudMonitoring::Notification resource that will
 call the scale-down webhook:
 
 .. code:: yaml
@@ -987,11 +988,11 @@ Reference documentation
 =======================
 
 -  `Cloud Monitoring API Developer
-   Guide <http://docs.rackspace.com/cm/api/v1.0/cm-devguide/content/overview.html>`__
+   Guide <https://developer.rackspace.com/docs/cloud-monitoring/v1/developer-guide/>`__
 -  `Auto Scale API Developer
-   Guide <http://docs.rackspace.com/cas/api/v1.0/autoscale-devguide/content/Overview.html>`__
+   Guide <https://developer.rackspace.com/docs/autoscale/v1/developer-guide/>`__
 -  `Cloud Orchestration API Developer
-   Guide <http://docs.rackspace.com/orchestration/api/v1/orchestration-devguide/content/overview.html>`__
+   Guide <https://developer.rackspace.com/docs/cloud-orchestration/v1/developer-guide/>`__
 -  `Heat Orchestration Template (HOT)
    Specification <http://docs.openstack.org/developer/heat/template_guide/hot_spec.html>`__
 -  `Cloud-init format

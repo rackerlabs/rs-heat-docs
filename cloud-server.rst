@@ -1,15 +1,15 @@
 ========================
- Rackspace cloud server
+ Rackspace Cloud Server
 ========================
 
 Note: This document assumes that the reader is familiar with HOT
-specification. If that is not the case, please go to 'References'
-section given at the end of this document for HOT specification link.
+specification. If that is not the case, please go to the References
+section listed at the end of this tutorial for the HOT specification link.
 
 Brief summary
 =============
 
-Rackspace cloud servers can be created, updated and deleted using Cloud
+Rackspace Cloud Servers can be created, updated, and deleted using Cloud
 Orchestration.
 
 A basic template to create a server is shown below
@@ -28,8 +28,8 @@ A basic template to create a server is shown below
 OS::Nova::Server properties
 ===========================
 
-Below given is the complete list of properties that can be provided to a
-Server resource.
+The complete list of properties that can be provided to a
+server resource follows below:
 
 .. code:: yaml
 
@@ -108,24 +108,24 @@ Server resource.
 Known behaviors/issues
 ======================
 
-#. Rackconnected customer must provide Rackconnected network ID in
-   networks property to create a server in Rackconnected region
-#. Rackconnected managed operations customer must provide ServiceNet id
-   in networks property if server is created in Rackconnected region
-   `(Rackconnect compatibility
+#. A rackconnected customer must provide the rackconnected network ID in the
+   ``networks`` property to create a server in a rackconnected region
+#. A rackconnected managed operations customer must provide the ServiceNet id
+   in ``networks`` property if the server is created in a rackconnected region
+   `(RackConnect compatibility
    information) <http://www.rackspace.com/knowledge_center/article/rackconnect-v30-compatibility>`__
-#. If shell script is provided in user_data property, user_data_format
-   property must be set to 'RAW'
+#. If a shell script is provided in ``user_data`` property, ``user_data_format``
+   property must be set to ``RAW``.
 #. To inject data into the file system of the cloud server instance,
-   provide file name and contents in personality property
-#. Provide key_name to authenticate via key based authentication
-   instead of password based authentication
+   provide file name and contents in ``personality`` property.
+#. Provide key_name to authenticate via key-based authentication
+   instead of password-based authentication.
 
 Example template-1
 ==================
 
 In the following example template, we will create a single Linux server
-using orchestration service. For the sake of simplicity, we will not use
+using the Orchestration service. For the sake of simplicity, we will not use
 template parameters in this example.
 
 .. code:: yaml
@@ -151,7 +151,7 @@ Example template-2
 ==================
 
 In the following example template, we will create a single Linux server
-and provide user_data that can be used by server when booting an
+and provide ``user_data`` that can be used by a server when booting an
 image.
 
 .. code:: yaml
@@ -179,18 +179,18 @@ image.
           get_attr: [test_server, accessIPv4]
 
 This template creates a server in the Rackspace cloud and during the
-server boot time the script provided in the user_data property will be
+server boot time, the script provided in the ``user_data`` property will be
 executed. Here the user_data script is creating a hello-world.txt file
 with 'hello world' as contents. You can login to the cloud server
-using admin_pass and verify that 'hello-world.txt' file does exist or
+using admin_pass and verify whether the 'hello-world.txt' file exists or
 not.
 
 Please note that if there was any error during execution of the script
-that was provided as user_data, then it will be silently ignored
+that was provided as ``user_data``, then it will be silently ignored
 and the stack-creation will continue. To handle error scenarios, please
-take a look at
-`SwiftSignal <https://github.com/rackerlabs/rs-heat-docs/blob/master/swift-signal-handle.org>`__
-resource documentation
+take a look at 
+`SwiftSignal <http://orchestration.rackspace.com/raxdox/openstack.html#OS::Heat::SwiftSignal>`__
+resource documentation.
 
 Example template-3
 ==================
@@ -228,12 +228,12 @@ providing private key for SSH access.
           get_attr: [ssh_key, private_key]
 
 This template first creates a Nova server key pair. Instead of using
-username/password, private_key can be used to access the server.
+username/password, ``private_key`` can be used to access the server.
 
 Example template-4
 ==================
 
-This template creates a single Linux server and installs the wordpress
+This template creates a single Linux server and installs the WordPress
 application on the server.
 
 .. code:: yaml
@@ -291,14 +291,14 @@ application on the server.
               "%ip%": { get_attr: [ wordpress_server, accessIPv4 ] }
         description: URL for Wordpress wiki      
 
-Please note that, to keep the template simple all the values were hard
+Please note that to keep the template simple, all the values were hard
 coded in the above template.
 
 Reference
 =========
 
 -  `Cloud Orchestration API Developer
-   Guide <http://docs.rackspace.com/orchestration/api/v1/orchestration-devguide/content/overview.html>`__
+   Guide <https://developer.rackspace.com/docs/cloud-orchestration/v1/developer-guide/>`__
 -  `Heat Orchestration Template (HOT)
    Specification <http://docs.openstack.org/developer/heat/template_guide/hot_spec.html>`__
 -  `Cloud-init format
@@ -306,7 +306,7 @@ Reference
 -  `Cloud servers getting started
    guide <http://docs.rackspace.com/servers/api/v2/cs-gettingstarted/content/overview.html>`__
 -  `Cloud servers API developer
-   guide <http://docs.rackspace.com/servers/api/v2/cs-devguide/content/ch_preface.html>`__
+   guide <https://developer.rackspace.com/docs/cloud-servers/v2/developer-guide/>`__
 -  `Cloud servers
    FAQs <http://www.rackspace.com/knowledge_center/product-faq/cloud-servers>`__
 -  `Cloud servers How to articles and other

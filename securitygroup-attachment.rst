@@ -7,12 +7,12 @@ Brief summary
 
 SecurityGroupAttachment is used to attach a security group to a port.
 
-SecurityGroupAttachment resource is used in following cases;
+SecurityGroupAttachment resource is used in the following cases;
 
-(1)If the user wanted to attach a security group to an operator created port
+(1) If the user wanted to attach a security group to an operator-created port.
 
-(2)User created a port out side of a template and wanted to attach a
-security group to port as part of a template
+(2) The user created a port outside of a template and wanted to attach a
+    security group to the port as part of a template.
 
 
 Limitations / Known Issues
@@ -31,8 +31,8 @@ Limitations / Known Issues
 Example template
 ================
 
-In the following example template, we will create linux server and
-attach a security group to public network port of the server.
+In the following example template, we will create a Linux server and
+attach a security group to the public network port of the server.
 
 Start by adding the top-level template sections:
 
@@ -53,7 +53,7 @@ Resources section
 Add a Server resource
 ~~~~~~~~~~~~~~~~~~~~~
 
-Add a linux server to the template.
+Add a Linux server to the template.
 
 .. code:: yaml
 
@@ -63,8 +63,8 @@ Add a linux server to the template.
           image: 4b14a92e-84c8-4770-9245-91ecb8501cc2
           flavor: 1 GB Performance
 
-This creates a server with given image and flavor and also by default attaches public and
-service net to the server instance created.
+This creates a server with the given image and flavor and also by default attaches public and
+ServiceNet to the server instance created.
 
 Add SecurityGroup resource
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -90,12 +90,12 @@ a Cloud server instance.
             port_range_min: 5000
             port_range_max: 5000
 
-Here adding a rule for SSH traffic to the security group.
+Here we added a rule for SSH traffic to the security group.
 
 Add SecurityGroupAttachment resource
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Now attach security group to public network port of the server instance.
+Now attach security group to the public network port of the server instance.
 
 .. code:: yaml
 
@@ -105,7 +105,7 @@ Now attach security group to public network port of the server instance.
           port: { get_attr: [ server, addresses, public, 0, port ] }
           security_group: {get_resource: security_group}
 
-Here adding a security group to public port of the server instance created.
+Here we added a security group to public port of the server instance created.
 
 
 Full Example Template
@@ -149,10 +149,10 @@ Reference
 =========
 
 -  `Cloud Orchestration API Developer
-   Guide <http://docs.rackspace.com/orchestration/api/v1/orchestration-devguide/content/overview.html>`__
+   Guide <https://developer.rackspace.com/docs/cloud-orchestration/v1/developer-guide/>`__
 -  `Heat Orchestration Template (HOT)
    Specification <http://docs.openstack.org/developer/heat/template_guide/hot_spec.html>`__
 -  `Cloud networks getting started
    documentation <http://docs.rackspace.com/networks/api/v2/cn-gettingstarted/content/ch_preface.html>`__
 -  `Cloud networks API 
-   documentation <http://docs.rackspace.com/networks/api/v2/cn-devguide/content/ch_preface.html>`__
+   documentation <https://developer.rackspace.com/docs/cloud-networks/v1/developer-guide/>`__

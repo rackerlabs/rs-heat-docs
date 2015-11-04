@@ -1,6 +1,8 @@
-=======================
+.. _using_Ansible_w_heat:
+
+==================================
 Using Ansible with Heat
-=======================
+==================================
 
 Brief summary
 =============
@@ -11,17 +13,18 @@ bootstrap an instance with a fully configured Nginx server.
 Pre-reading
 ===========
 
-- You should prepare a bootstrapped image according to the `Bootstrapping Software Config <../boostrapping_software_config.rst>`_ tutorial as we will be making use of the image
-  pre-configured with all the required agents for software config
+- You should prepare a bootstrapped image according to the :ref:`Bootstrapping Software Config <bootstrapping_sw_config>` 
+  tutorial as we will be making use of the image
+  pre-configured with all the required agents for software config.
 - This tutorial borrows heavily from `An Ansible Tutorial <https://serversforhackers.com/an-ansible-tutorial>`_.
-  Reading this guide will give you a good idea of what we'll be installing/configuring so
-  you can focus on how we use Heat to integrate with Ansible rather than using Ansible
+  Reading this guide will give you a good idea of what we will be installing/configuring so
+  you can focus on how we use Orchestration to integrate with Ansible rather than using Ansible
   itself.
 
 Following along
 ===============
 
-You will probably want to clone this repository in order to easily follow along. Once
+You will probably want to clone this repository (https://github.com/rackerlabs/rs-heat-docs/) in order to easily follow along. Once
 cloned, change to the ``ansible`` directory of the repository.
 
 Otherwise, you may need to modify some of the commands to point to the correct locations
@@ -40,7 +43,7 @@ As with all Heat templates, we start with the basic version and description sect
   description: |
     Deploy Nginx server with Ansible
 
-For the parameters section, we'll define a single parameter that will tell Heat which
+For the parameters section, we will define a single parameter that will tell Orchestration which
 image to use for our server. This allows us some flexibility should the image name change
 or we have several to choose from:
 
@@ -54,14 +57,14 @@ or we have several to choose from:
 Resources
 ---------
 
-Now for the working bits. First, we create a random password for accessing the server:
+Now for the details. First we create a random password for accessing the server:
 
 .. code:: yaml
 
   server_pw:
     type: OS::Heat::RandomString
 
-Next, we specify the playbook that will install Nginx:
+Next we specify the playbook that will install Nginx:
 
 .. code:: yaml
 
@@ -83,8 +86,8 @@ Next, we specify the playbook that will install Nginx:
            - name: Start Nginx
              service: name=nginx state=started
 
-We then use an ``OS::Heat::SoftwareDeployment`` to tell Heat we want to run the playbook
-on our server (which we will define in a bit):
+We then use an ``OS::Heat::SoftwareDeployment`` to tell Orchestration we want to run the playbook
+on our server (which we will define in awhile):
 
 .. code:: yaml
 
@@ -97,7 +100,7 @@ on our server (which we will define in a bit):
       server:
         get_resource: server
 
-Finally, we'll define the server the playbook will run on:
+Finally we will define the server the playbook will run on:
 
 .. code:: yaml
 
@@ -110,9 +113,9 @@ Finally, we'll define the server the playbook will run on:
       software_config_transport: POLL_TEMP_URL
       user_data_format: SOFTWARE_CONFIG
 
-Notice that we have to specify the ``user_data_format`` as "SOFTWARE_CONFIG" so that Heat
-knows to set up the proper signal handling between it and the server. Its a good practice
-to specify ``software_config_transport`` and while "POLL_TEMP_URL" is the only value
+Notice that we have to specify the ``user_data_format`` as "SOFTWARE_CONFIG" so that Orchestration
+knows to set up the proper signal handling between it and the server. It is good practice
+to specify ``software_config_transport``, and while "POLL_TEMP_URL" is the only value
 supported on the Rackspace Cloud, it should also be the default for Cloud Orchestration
 and can be safely omitted.
 
@@ -123,7 +126,7 @@ The outputs defined in this template give us ready access to the results of the 
 and show off how software config makes it easier to see the state of your configuration,
 the results, and any errors or output it may have generated without having to remotely
 log into your servers and search through logs. The ``description`` property of these
-outputs tell you what each represents.
+outputs tells you what each represents.
 
 .. code:: yaml
 
@@ -152,10 +155,10 @@ outputs tell you what each represents.
 Deploy the basic template
 =========================
 
-Before you deploy, you'll need to have created an image that already has the needed
-agents for software config. The `Bootstrapping Software Config
-<../bootstrapping_software_config.rst>`_ walks you through it. Alternatively, you can use
-the information in that an previous tutorials to add the appropriate bootstrapping to this
+Before you deploy, you will need to have created an image that already has the needed
+agents for software config. The :ref:`Bootstrapping Software Config <bootstrapping_sw_config>` 
+walks you through it. Alternatively, you can use
+the information in that and previous tutorials to add the appropriate bootstrapping to this
 template.
 
 To deploy this template, simply issue the standard command:
@@ -182,17 +185,17 @@ You can also check the results of the playbook by checking the other outputs:
 Advanced Template with Roles
 ============================
 
-While the basic template gives a good idea of how Heat integrates with Ansible, lets look
-at a slightly more advanced usage leveraging Ansible roles. We'll tweak the previous
-template a bit, so lets make a copy and call it "software_config_ansible_role.yaml
+While the basic template gives a good idea of how Orchestration integrates with Ansible, we will look
+at a slightly more advanced usage leveraging Ansible roles. We will tweak the previous
+template a small amount, so make a copy and call it "software_config_ansible_role.yaml".
 
-The role and its components can be found in this repository under the ``roles`` directory.
+The role and its components can be found in this repository (https://github.com/rackerlabs/rs-heat-docs/) under the ``roles`` directory.
 
 New resources
 -------------
 
-We'll add two new resources to pull down the role we want to use and put it in a place
-Ansible can get to it:
+We will add two new resources to pull down the role we want to use and put it in a place
+Ansible can access it:
 
 .. code:: yaml
 
@@ -226,7 +229,7 @@ We'll also deploy that script to the server:
 Modify playbook
 ---------------
 
-Since we're using roles to do all of the heavy lifting, we'll modify our ``nginx_config``
+Since we're using roles to do all of the heavy lifting, we will modify our ``nginx_config``
 resource to simply apply the role:
 
 .. code:: yaml
@@ -243,8 +246,8 @@ resource to simply apply the role:
           roles:
           - nginx
 
-We'll also need to modify the deployment of the playbook to depend on the ``deploy_role``
-resource since we'll need the role installed before we can apply it:
+We will also need to modify the deployment of the playbook to depend on the ``deploy_role``
+resource, since we will need the role installed before we can apply it:
 
 .. code:: yaml
 
@@ -261,8 +264,8 @@ resource since we'll need the role installed before we can apply it:
 Modify outputs
 --------------
 
-Our script for pulling the role definition isn't terribly sophisticated. We aren't
-capturing or writing any output, but we can examine the exit code of our script. We'll add
+Our script for pulling the role definition is not very sophisticated. We are not
+capturing or writing any output, but we can examine the exit code of our script. We will add
 that to the ``outputs`` section so we can check it if we need to:
 
 .. code:: yaml
@@ -281,7 +284,7 @@ Deploying the new template is the same as above, we just change the template nam
 
   heat stack-create -f templates/software_config_ansible_role.yaml -P "image=Ubuntu 14.04 LTS (HEAT)" my_nginx_role
 
-We can also check outputs the same way by simply changing the stack name:
+We can also check outputs the same way, by simply changing the stack name:
 
 .. code::
 
@@ -293,5 +296,5 @@ We can also check outputs the same way by simply changing the stack name:
 Reference documentation
 =======================
 
-- `Ansible Tutorial (much of this guide is cribbed from here) <https://serversforhackers.com/an-ansible-tutorial>`_
+- `Ansible Tutorial (much of this guide is borrowed from here) <https://serversforhackers.com/an-ansible-tutorial>`_
 - `Ansible Homepage <http://www.ansible.com/home>`_

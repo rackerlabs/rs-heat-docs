@@ -9,22 +9,25 @@ Rackspace shared IP resource (SharedIP) and AssociateSharedIP resources
 enable you to create a shared IP address and assoicate the shared IP
 address with two or more virtual server instances.
 
-Steps Involved
+Steps involved
 ---------------
-Below given are steps involved in using the shared IP address.
+The following steps are involved in using the shared IP address.
 
-step-1: Create (two or more) servers in the same publicIPzoneId and note
-down the public IP address ports.
-For more information take a look at
-http://docs-beta.rackspace.com/drafts/catlook/webhelp/cn-gettingstarted-external/content/share_ip.html
+#. Create (two or more) servers in the same publicIPzoneId and write
+   down the public IP address ports.
+   For more information see
+   http://docs-beta.rackspace.com/drafts/catlook/webhelp/cn-gettingstarted-external/content/share_ip.html.
 
-step-2: Create a shared IP address with the given network ID and port IDs
+#. Create a shared IP address with the given network ID and port IDs.
 
-step-3: Associate shared IPs with the servers
+#. Associate shared IPs with the servers.
 
 In the following example template we create a shared IP address and associate
 it with two server instances. For the sake of simplicity, we will
-assume that two servers were already created in same publicIPzoneId.
+assume that two servers were already created in the same publicIPzoneId.
+
+Example template
+=================
 
 Start by adding the top-level template sections:
 
@@ -56,19 +59,19 @@ Add a Rackspace::Cloud::SharedIP resource to create a shared IP address.
         type: Rackspace::Cloud::SharedIP
 
 
-Here public network ID 00000000-0000-0000-0000-000000000000 is
-provided as network_id property value and and public IP port IDs
-55xxfxx6-cxx7-4xxb-8xx3-3cxxd12xxe0d, 17xxfxxca-exx2-4xxe-bxx7-91xxf6xxbb2 are
-provided as as list to ports property.
+Here the public network ID 00000000-0000-0000-0000-000000000000 is
+provided as the ``network_id`` property value, and public IP port IDs
+55xxfxx6-cxx7-4xxb-8xx3-3cxxd12xxe0d and 17xxfxxca-exx2-4xxe-bxx7-91xxf6xxbb2 are
+provided as a list to the ``ports`` property.
 
-Please refer to 'Steps Involved' section given above for creating
+Please refer to the 'Steps Involved' section listed above for creating
 servers and getting the port IDs.
 
 AssociateSharedIP resource
 ----------------------------
 
 Add a Rackspace::Cloud::AssociateSharedIP resource to associate a
-shared Ip address with the given server instances.
+shared IP address with the given server instances.
 
 .. code:: yaml
 
@@ -78,9 +81,9 @@ shared Ip address with the given server instances.
             servers: [62cxx03b-axx7-4xxb-bxxb-f1axx14370b4, 6exx610f-1xx2-4xx9-9xx5c-bxx2c735e463]
         type: Rackspace::Cloud::AssociateSharedIP
 
-Here 62cxx03b-axx7-4xxb-bxxb-f1axx14370b4, 6exx610f-1xx2-4xx9-9xx5c-bxx2c735e463
-are the server instance IDs (please note these are not port IDs) and passed as a
-list to servers property.
+Here 62cxx03b-axx7-4xxb-bxxb-f1axx14370b4 and 6exx610f-1xx2-4xx9-9xx5c-bxx2c735e463
+are the server instance IDs (please note these are not port IDs) and they are passed as a
+list to the ``servers`` property.
 
 Outputs section
 ---------------
@@ -138,10 +141,12 @@ Reference
 =========
 
 -  `Cloud Orchestration API Developer
-   Guide <http://docs.rackspace.com/orchestration/api/v1/orchestration-devguide/content/overview.html>`__
+   Guide <https://developer.rackspace.com/docs/cloud-orchestration/v1/developer-guide/>`__
 -  `Heat Orchestration Template (HOT)
    Specification <http://docs.openstack.org/developer/heat/template_guide/hot_spec.html>`__
 -  `Share IP address between
    servers <http://docs-beta.rackspace.com/drafts/catlook/webhelp/cn-gettingstarted-external/content/share_ip.html>`__
 -  `IP addresses
    extension <http://docs-beta.rackspace.com/drafts/catlook/webhelp/cn-devguide-external/content/api_ext_sharedip_neutron.html>`__
+
+.. comment: Writer: need to update links for previous 2 bullets in late Nov. 2015 to point to correct sections in public Network Guide.

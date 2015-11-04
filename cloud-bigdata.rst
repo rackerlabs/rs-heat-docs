@@ -5,7 +5,7 @@
 Overview
 ========
 
-This project defines the `Rackspace Cloud Big Data <http://www.rackspace.com/en-us/cloud/big-data>`__ (CBD) team's `Cloud Orchestration <http://www.rackspace.com/en-us/cloud/orchestration>`__ (`OpenStack Heat <https://wiki.openstack.org/wiki/Heat>`__) Resource Plugin. The CBD plugin enables accessing Rackspace Cloud Big Data services through `Heat Orchestration Templates <http://docs.openstack.org/developer/heat/template_guide/hot_guide.html>`__ (HOTs) by editing a YAML file or through the `Rackspace Control Panel <https://mycloud.rackspace.com/>`__ Orchestration management interface. The Rackspace Cloud Big Data Heat resource plugin identifier is:
+This tutorial uses the `Rackspace Cloud Big Data <http://www.rackspace.com/en-us/cloud/big-data>`__ (CBD) team's `Cloud Orchestration <http://www.rackspace.com/en-us/cloud/orchestration>`__ (`OpenStack Heat <https://wiki.openstack.org/wiki/Heat>`__) Resource Plugin. The CBD plugin enables accessing Rackspace Cloud Big Data services through `Heat Orchestration Templates <http://docs.openstack.org/developer/heat/template_guide/hot_guide.html>`__ (HOTs) by editing a YAML file or through the `Rackspace Control Panel <https://mycloud.rackspace.com/>`__ Orchestration management interface. The Rackspace Cloud Big Data Heat resource plugin identifier is:
 
 **Rackspace::Cloud::BigData**
 
@@ -29,10 +29,11 @@ Start by adding the top-level template sections:
 
 Resources Section
 -----------------
-This section defines Rackspace::Cloud::BigData required property configuration values. For a full description of each property field, please see the Cloud Big Data Developer Guide linked at the bottom of this page but this is a quick overview:
+
+This section defines Rackspace::Cloud::BigData required property configuration values. For a full description of each property field, please see the *Cloud Big Data Developer Guide* linked at the bottom of this page. The following presents a quick overview of the required property values:
 
 - **stackId**: Stack IDs define the type of CBD cluster to create. The example below creates an `Apache Hadoop <https://hadoop.apache.org/>`__-based `Hortonworks Data Platform <http://hortonworks.com/hdp/>`__ cluster (HADOOP_HDP2_2). Stack IDs are being added fairly quickly so it is always best to query the CBD REST API for the current list of supported Rackspace stacks (see Reference Documentation below for details).
-- **clusterName**: A descriptive name of the cluster; useful when there are multiple clusters to track
+- **clusterName**: A descriptive name of the cluster; useful when there are multiple clusters to track.
 - **clusterLogin**: This will be the account created on the cluster to enable SSH access. Example: ssh clusterLogin@<your cluster IP>.
 - **flavor**: The flavor defines the resources (like disk space and RAM) available on the individual systems making up the cluster. Flavors are updated when new cloud hardware is available so it is always best to check the CBD REST API for the current list (see Reference Documentation below for details).
 - **numSlaveNodes**: numSlaveNodes defines the replication factor (how many copies of your data are stored for fault tolerance). 3 tends to be a pretty standard value. Higher replication will mean less total disk space available in the cluster and lower values may increase risk of data loss in rare catastrophic failure conditions.
@@ -58,7 +59,7 @@ The following YAML shows what a filled in example resource section might look li
 Outputs Section
 ---------------
 
-The output fields provide information about the cluster creation process. cbd_version is the version of the CBD system used to generate the cluster. This is just an informative field. cluster_id is the important value to retain about the cluster. It is the unique identifier of the cluster within the CBD system and is used in CBD REST API calls (for more information on the CBD REST API, see the Cloud Big Data Developer Guide at the bottom of this document). cluster_id is usually in a `UUID <https://en.wikipedia.org/wiki/Universally_unique_identifier>`__ format.
+The output fields provide information about the cluster creation process. cbd_version is the version of the CBD system used to generate the cluster. This is just an informative field. cluster_id is the important value to retain about the cluster. It is the unique identifier of the cluster within the CBD system and is used in CBD REST API calls (for more information on the CBD REST API, see the *Cloud Big Data Developer Guide* at the bottom of this document). cluster_id is usually in a `UUID <https://en.wikipedia.org/wiki/Universally_unique_identifier>`__ format.
 
 Outputs section example:
 
@@ -107,7 +108,7 @@ Full Template
 Reference Documentation
 =======================
 
-- `Rackspace Cloud Big Data Developer Guide, v2 <http://docs.rackspace.com/cbd/api/v1.0/cbd-devguide-2/cbd-devguide-2-20150630.pdf>`__
+- `Rackspace Cloud Big Data Developer Guide, v2 <https://developer.rackspace.com/docs/cloud-big-data/v2/developer-guide/>`__
 - `Example CBD Flavor Names <http://docs.rackspace.com/cbd/api/v1.0/cbd-getting-started-2/content/client_listFlavor.html>`__
    - The "Name" column shows example flavor names but please always consult the CBD API for up to date flavor information
 - `Example Cloud Big Data Stack IDs <http://docs.cloudbigdataplatform.com/v1_v2.html#supported-operations>`__

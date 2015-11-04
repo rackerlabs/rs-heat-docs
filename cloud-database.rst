@@ -1,13 +1,13 @@
 ==========================
- Rackspace Cloud Database
+ Rackspace Cloud Databases
 ==========================
 
 Brief summary
 =============
 
-Rackspace Cloud Databases can be created, updated and deleted using
-the OS::Trove::Instance resource.  Cloud Database instances can also
-be created as replicas of other Cloud Database instances.
+Rackspace Cloud Databases can be created, updated, and deleted using
+the OS::Trove::Instance resource.  Cloud Databases instances can also
+be created as replicas of other Cloud Databases instances.
 
 Example template
 ================
@@ -46,10 +46,10 @@ users:
             password: secrete
             databases: [ my_data ]
 
-This resource will create your Cloud Database instance.
+This resource will create your Cloud Databases instance.
 
 Add another OS::Trove::Instance, but this time leave out the databases
-and users and specify a replica_of property:
+and users and specify a ``replica_of`` property:
 
 .. code:: yaml
 
@@ -61,7 +61,7 @@ and users and specify a replica_of property:
           size: 10
           replica_of: { get_resource: db }
 
-This will create a replica of your first Cloud Database instance.
+This will create a replica of your first Cloud Databases instance.
 Alternatively, you can add a template parameter for the UUID of the
 database instance that you want a replica of and pass in the UUID upon
 stack creation.
@@ -159,4 +159,4 @@ Reference documentation
 =======================
 
 - `OS::Trove::Instance <http://docs.openstack.org/hot-reference/content/OS__Trove__Instance.html>`__
-- `Rackspace Cloud Databases Developer Guide <http://docs.rackspace.com/cdb/api/v1.0/cdb-devguide/content/overview.html>`__
+- `Rackspace Cloud Databases Developer Guide <https://developer.rackspace.com/docs/cloud-databases/v1/developer-guide/>`__

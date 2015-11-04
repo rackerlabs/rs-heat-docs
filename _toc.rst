@@ -1,9 +1,10 @@
 .. toctree::
    :includehidden:
    :maxdepth: 99
-
-   bootstrapping-software-config
+  
    generic-software-config
+   bootstrapping-software-config
+   customizing-template-for-rackconnectv3
    cloud-files-cdn
    swift-signal-handle
    cloud-server
@@ -11,6 +12,7 @@
    cloud-loadbalancer
    cloud-monitoring
    cloud-backup
+   cloud-bigdata
    cloud-database
    autoscale-heat-event-schedule-based
    ansible/using-ansible-with-heat

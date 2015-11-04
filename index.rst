@@ -3,25 +3,27 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to the Rackspace Cloud Orchestration User Guide
-=======================================================
+Rackspace Cloud Orchestration Templates User Guide
+==================================================================
 
-This guide provides examples of writing Orchstration
+*Last updated:* |today|
+
+This guide provides tutorials for writing Orchestration
 templates for the Rackspace Cloud Orchestration service,
-built on OpenStack's heat project.
+built on OpenStack's Heat project.
 
-Read more about bootstrapping software configuration,
+Topics covered include bootstrapping software configuration,
 such as using Ansible, as well as information about
 interacting with Rackspace Cloud services that have
-resources provided through Orchstration templates.
+resources provided through Orchestration templates.
 
-Contents:
+.. Contents:
 
 .. toctree:: :hidden:
    :maxdepth: 2
 
-   bootstrapping-software-config
    generic-software-config
+   bootstrapping-software-config
    customizing-template-for-rackconnectv3
    cloud-files-cdn
    swift-signal-handle

@@ -1,5 +1,5 @@
 =================
- Updating Stacks
+ Updating stacks
 =================
 
 Overview
@@ -7,10 +7,10 @@ Overview
 
 Rackspace Orchestration has the ability to modify running stacks using
 the `update stack operation
-<http://docs.rackspace.com/orchestration/api/v1/orchestration-devguide/content/PUT_stack_update__v1__tenant_id__stacks__stack_name___stack_id__Stack_Operations.html>`__.
+<https://developer.rackspace.com/docs/cloud-orchestration/v1/developer-guide/#update-stack>`__.
 This gives you the ability to add, edit, or delete resources in a
-stack.  In the python-heatclient CLI, this operation is called `heat
-stack-update`.
+stack.  In the python-heatclient CLI, this operation is called ``heat
+stack-update``.
 
 Create a stack
 ==============
@@ -37,17 +37,17 @@ For this tutorial, we will create a simple stack with one server:
         value: { get_attr: [ hello_world, accessIPv4 ] }
         description: The public ip address of the server
 
-Save this template as `stack-update-example.yaml` and create a stack
+Save this template as ``stack-update-example.yaml`` and create a stack
 using the following heatclient command:
 
-.. code:: example
+.. code:: bash
 
     heat stack-create -f stack-update-example.yaml stack-update-example
 
 Update the stack without replacement
 ====================================
 
-Next, edit the template file and change the server flavor to "2 GB
+Next, edit the template file and change the server flavor to "2GB
 Standard Instance":
 
 .. code:: yaml
@@ -83,16 +83,16 @@ replacement".
 Alternatively, you can preview what will happen with the stack is
 updated by adding a "-y" option to the "heat stack-update" command:
 
-.. code:: example
+.. code:: bash
 
     heat stack-update -y -f stack-update-example.yaml stack-update-example
 
-The `hello_world` resource should show up in the "updated" section,
+The ``hello_world`` resource should show up in the "updated" section,
 since resizing can be done without replacement.
 
 To actually update the stack, resubmit the modified template:
 
-.. code:: example
+.. code:: bash
 
     heat stack-update -f stack-update-example.yaml stack-update-example
 
@@ -129,15 +129,15 @@ server to be rebuilt.  Change "hello world" to "foo" in the
         description: The public ip address of the server
 
 The stack-update preview output with this template should result in
-the `hello_world` resource being in the "replaced" section:
+the ``hello_world`` resource being in the "replaced" section:
 
-.. code:: example
+.. code:: bash
 
     heat stack-update -y -f stack-update-example.yaml stack-update-example
 
 Issue the update as before:
 
-.. code:: example
+.. code:: bash
 
     heat stack-update -f stack-update-example.yaml stack-update-example
 
@@ -183,16 +183,16 @@ server to the template:
         description: The public ip address of the server
 
 The stack-update preview output with this template should result in
-the `hello_world2` resource being in the "added" section, and the
-`hello_world` resource being in the "unchanged" section:
+the ``hello_world2`` resource being in the "added" section, and the
+``hello_world`` resource being in the "unchanged" section:
 
-.. code:: example
+.. code:: bash
 
     heat stack-update -y -f stack-update-example.yaml stack-update-example
 
 Issue the update to create the other server:
 
-.. code:: example
+.. code:: bash
 
     heat stack-update -f stack-update-example.yaml stack-update-example
 

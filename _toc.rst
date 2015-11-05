@@ -1,7 +1,8 @@
 .. toctree::
    :includehidden:
    :maxdepth: 2
-  
+
+   Orchestration Templates User Guide <self>
    generic-software-config
    bootstrapping-software-config
    customizing-template-for-rackconnectv3

@@ -1,6 +1,6 @@
 .. toctree::
    :includehidden:
-   :maxdepth: 99
+   :maxdepth: 2
   
    generic-software-config
    bootstrapping-software-config

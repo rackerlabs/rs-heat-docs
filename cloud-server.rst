@@ -120,6 +120,8 @@ Known behaviors/issues
    provide file name and contents in ``personality`` property.
 #. Provide key_name to authenticate via key-based authentication
    instead of password-based authentication.
+#. Rackspace::Cloud::WinServer is very similar to OS::Nova::Server, but it does not
+   work with Rackconnected accounts(both Rackconnect v2 and v3).
 
 Example template-1
 ==================

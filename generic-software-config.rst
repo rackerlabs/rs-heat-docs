@@ -28,9 +28,6 @@ Pre-reading
 The following introductory material should give you enough background to
 proceed with this tutorial.
 
--  `Heat SoftwareConfig resources -
-   primer/overview <http://hardysteven.blogspot.com/2015/05/heat-softwareconfig-resources.html>`__
-   by `Steven Hardy <http://hardysteven.blogspot.com/>`__ (licensed under `CC SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/legalcode>`__)
 -  `Application software configuration using
    Heat <https://www.openstack.org/assets/presentation-media/heat-software-config.pdf>`__
 -  `HOT guide - Software

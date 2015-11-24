@@ -1,6 +1,6 @@
 .. toctree::
    :includehidden:
-   :maxdepth: 2
+   :maxdepth: 1
 
    Orchestration Templates User Guide <self>
    generic-software-config

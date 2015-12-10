@@ -1,0 +1,115 @@
+heat_template_version: 2015-10-15
+
+description: |
+  Template for testing Rackspace CDN resource
+
+resources:
+
+  wait_on_content:
+    type: OS::Heat::SwiftSignal
+    properties:
+      handle: { get_resource: wait_handle }
+      timeout: 600
+
+  wait_handle:
+    type: OS::Heat::SwiftSignalHandle
+
+  random_domain:
+    type: OS::Heat::RandomString
+    properties:
+      length: 13
+      character_classes:
+      - class: letters
+
+  content_config:
+    type: OS::Heat::CloudConfig
+    properties:
+      cloud_config:
+        packages:
+        - apache2
+        write_files:
+        - path: /root/phonehome.sh
+          permissions: "0700"
+          content:
+            str_replace:
+              template: |
+                #!/bin/bash
+                wc_notify --data-binary '{"status": "SUCCESS"}'
+              params:
+                wc_notify: { get_attr: [ 'wait_handle', 'curl_cli' ] }
+        runcmd:
+        - /root/phonehome.sh
+
+  content:
+    type: OS::Nova::Server
+    properties:
+      name:
+        str_replace:
+          template: stack-content
+          params:
+            stack: { get_param: "OS::stack_name" }
+      metadata:
+        rax-heat: { get_param: "OS::stack_id" }
+      image: Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
+      flavor: 1 GB Performance
+      user_data_format: RAW
+      user_data: { get_attr: [ content_config, config ] }
+
+  domain:
+    type: Rackspace::Cloud::DNS
+    properties:
+      name:
+        str_replace:
+          template: domain.com
+          params:
+            domain: { get_param: "OS::stack_name" }
+      emailAddress: heat@lists.rackspace.com
+      records:
+      - name:
+          str_replace:
+            template: www.domain.com
+            params:
+              domain: { get_param: "OS::stack_name" }
+        type: CNAME
+        data: { get_attr: [ cdn, access_url ] }
+
+  cdn:
+    type: Rackspace::Cloud::CDN
+    depends_on: wait_on_content
+    properties:
+      name:
+        str_replace:
+          template: stack-cdn
+          params:
+            stack: { get_param: "OS::stack_name" }
+      domains:
+      - domain:
+          str_replace:
+            template: www.domain.com
+            params:
+              domain: { get_param: "OS::stack_name" }
+      origins:
+      - origin: { get_attr: [content, accessIPv4] }
+      caching:
+      - name: default
+        ttl: 360
+      flavor_id: cdn
+
+outputs:
+
+  server_ip:
+    description: IP address of the content server
+    value: { get_attr: [content, accessIPv4] }
+
+  cdn_id:
+    description: ID of the CDN service
+    value: { get_resource: cdn }
+
+  cdn_access_url:
+    description: Access URL for cdn resources
+    value: { get_attr: [ cdn, access_url ] }
+
+  cdn_log_url:
+    description: Log URL for cdn resource (should be empty!)
+    value: { get_attr: [ cdn, log_url ] }
+    

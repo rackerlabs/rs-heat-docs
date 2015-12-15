@@ -22,7 +22,12 @@ Prerequisite(s):
 ================
 
 You should be familiar with general Heat template authoring and resource usage. You should
-also be familiar with Rackspace CDN and its configuration.
+also be familiar with Rackspace CDN and its configuration:
+
+- `Rackspace Cloud Orchestration Templates Developer Guide 
+  <http://docs.rackspace.com/orchestration/api/v1/orchestration-templates-devguide/content/overview.html>`_
+- `Rackspace CDN Getting Started Guide
+  <https://developer.rackspace.com/docs/cdn/getting-started>`_
 
 Example Template
 ================
@@ -224,7 +229,7 @@ You can see the full template at `<https://github.com/rackerlabs/rs-heat-docs/bl
 Reference
 =========
 
-- `Rackspace CDN Documentation
-  <https://developer.rackspace.com/docs/cdn/getting-started>`_
+- `Rackspace CDN Developer Guide
+  <https://developer.rackspace.com/docs/cdn/v1/developer-guide/>`_
 - `Rackspace::Cloud::CloudFilesCDN Resource Documentation
   <http://orchestration.rackspace.com/raxdox/rackspace.html#Rackspace::Cloud::CDN>`_

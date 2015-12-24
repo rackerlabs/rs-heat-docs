@@ -37,10 +37,10 @@ Start by adding the top-level template sections:
 
 .. code:: yaml
 
-    heat_template_version: 2014-10-16
+    heat_template_version: 2014-10-16 
 
     description: |
-      Test template for Trove resource capabilities
+      Mounting/unmounting volumes with software config
 
     resources:
 

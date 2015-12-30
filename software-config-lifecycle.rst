@@ -14,6 +14,12 @@ to run scripts and other configurations only during specific actions like `DELET
 ``OS::Heat::SoftwareDeployment`` to apply specific configurations only during the listed
 stack lifecycle actions.
 
+One of the trickier things about using servers with attached Cloud Block Storage volumes
+is that in order to detatch the volume from the server, the volume must be unmounted.
+Usually, this means having to manually unmount the volume before detatching and deleting
+the other resources. Using software config during specific stack actions allows us to
+easily automate this process.
+
 You can find the full template for this example at `this repository's
 templates directory <https://github.com/rackerlabs/rs-heat-docs/blob/master/templates/volume_management.yaml>`_.
 

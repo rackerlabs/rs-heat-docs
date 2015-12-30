@@ -47,6 +47,11 @@ Start by adding the top-level template sections:
 
     description: |
       Mounting/unmounting volumes with software config
+  
+      1. Create a server and a volume and attach the volume to the server
+      2. Once the volume is attached, configure and mount the volume
+      3. On delete, unmount the volume so that it can be detatched without
+         error
 
     resources:
 

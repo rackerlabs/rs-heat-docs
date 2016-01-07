@@ -1,0 +1,97 @@
+heat_template_version: 2014-10-16 
+
+description: |
+  Mounting/unmounting volumes with software config
+  
+  1. Create a server and a volume and attach the volume to the server
+  2. Once the volume is attached, configure and mount the volume
+  3. On delete, unmount the volume so that it can be detatched without
+     error
+
+resources:
+
+  # server to attach a volume to
+  server:
+    type: OS::Nova::Server
+    properties:
+      name:
+        str_replace:
+          template: stack-test-server
+          params:
+            stack: { get_param: "OS::stack_name" } 
+      metadata:
+        rax-heat: { get_param: "OS::stack_id" }
+      # use a public image that already has all the agents set up for software
+      # deployments; could also use a custom image or bootstrap a "clean" one
+      image: f4bbbce2-50b0-4b07-bf09-96c175a45f4b # Ubuntu 14.04 with agents
+      flavor: 2 GB Performance
+      config_drive: true
+      software_config_transport: POLL_TEMP_URL
+      user_data_format: SOFTWARE_CONFIG
+
+  # volume to attach to the server
+  volume:
+    type: OS::Cinder::Volume
+    properties:
+      name:
+        str_replace:
+          template: stack-test-volume
+          params:
+            stack: { get_param: "OS::stack_name" } 
+      metadata:
+        rax-heat: { get_param: "OS::stack_id" }
+      size: 100
+      description: Volume for testing management via software config
+
+  # attach the volume to the server
+  attach_vol:
+    type: OS::Cinder::VolumeAttachment
+    properties:
+      instance_uuid: { get_resource: server }
+      volume_id: { get_resource: volume }
+      mountpoint: "/dev/xvdb"
+
+  # script to configure and mount the volume
+  config_volume:
+    type: OS::Heat::SoftwareConfig
+    properties:
+      group: script
+      config: |
+        #!/bin/bash
+        (echo n; echo p; echo 1; echo; echo; echo w;) | fdisk /dev/xvdb
+        mkfs -t ext4 /dev/xvdb1
+        mkdir -p /myvol
+        mount /dev/xvdb1 /myvol
+        echo "/dev/xvdb1 /myvol ext4 defaults,noatime,_netdev,nofail 0 2" >> /etc/fstab
+
+  # script to unmount the volume
+  unmount_vol:
+    type: OS::Heat::SoftwareConfig
+    properties:
+      group: script
+      config: |
+        #!/bin/bash
+        umount -l /myvol
+
+  # run the script to setup and mount the volume once the server is up and the volume
+  # is attached
+  prep_volume:
+    type: OS::Heat::SoftwareDeployment
+    depends_on: attach_vol # make sure this runs after attach
+    properties:
+      signal_transport: TEMP_URL_SIGNAL
+      config: { get_resource: config_volume }
+      server: { get_resource: server }
+      actions:
+      - CREATE # only run on stack-create
+
+  # before detaching the volume, run the script that unmounts it
+  pre_delete:
+    type: OS::Heat::SoftwareDeployment
+    depends_on: attach_vol # make sure this runs before detach
+    properties:
+      signal_transport: TEMP_URL_SIGNAL
+      config: { get_resource: unmount_vol }
+      server: { get_resource: server }
+      actions:
+      - DELETE # only run on stack-delete

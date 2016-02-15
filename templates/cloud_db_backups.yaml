@@ -1,0 +1,43 @@
+heat_template_version: 2015-10-15
+
+description: |
+  Simple template to illustrate creating a scheduled backup
+  for a Cloud Database instance
+
+resources:
+
+  # generate a password for our db user
+  db_pass:
+    type: OS::Heat::RandomString
+
+  service_db:
+    type: OS::Trove::Instance
+    properties:
+      name: trove_test_db
+      datastore_type: mariadb
+      datastore_version: 10
+      flavor: 1GB Instance
+      size: 10
+      databases:
+      - name: test_data
+      users:
+      - name: dbuser
+        password: { get_attr: [ db_pass, value ] } # use generated password
+        databases: [ test_data ]
+
+  backup:
+    type: Rackspace::CloudDatabase::ScheduledBackup
+    properties:
+      source:
+        id: { get_resource: service_db }
+        type: instance
+      day_of_week: 1  # Monday (0-6 Sunday to Saturday)
+      hour: 17        # 5pm (24hr clock with 0 being midnight)
+      minute: 45      # 5:45pm
+      full_backup_retention: 15
+
+outputs:
+
+  "Database Password":
+    value: { get_attr: [ db_pass, value ] }
+    description: Database password for "dbuser"

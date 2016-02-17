@@ -33,6 +33,7 @@ Contents:
    cloud-bigdata
    cloud-database
    autoscale-heat-event-schedule-based
+   autoscale-stack-launch-type
    ansible/using-ansible-with-heat
    shared-ip
    stack-update

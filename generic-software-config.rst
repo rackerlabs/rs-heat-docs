@@ -161,6 +161,7 @@ boot_config resource in the user_data section:
           software_config_transport: POLL_TEMP_URL
           user_data_format: SOFTWARE_CONFIG
           user_data: {get_attr: [boot_config, config]}
+          config_drive: True
 
 Outputs section
 ---------------
@@ -258,6 +259,7 @@ Full template
           software_config_transport: POLL_TEMP_URL
           user_data_format: SOFTWARE_CONFIG
           user_data: {get_attr: [boot_config, config]}
+          config_drive: True
 
     outputs:
       result:

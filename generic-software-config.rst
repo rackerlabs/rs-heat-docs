@@ -117,7 +117,7 @@ server to which it will be deployed.
             foo: fooooo
             bar: baaaaa
 
-It is advisable to specify a "signal_transport" of "TEMP_URLSIGNAL",
+It is advisable to specify a "signal_transport" of "TEMP_URL_SIGNAL",
 because Rackspace's deployment of Heat does not support the other
 transports at this time. However, since this is the default
 transport on the Rackspace Cloud, it should be safe to omit.

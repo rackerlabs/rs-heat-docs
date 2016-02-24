@@ -15,6 +15,7 @@
    cloud-backup
    cloud-bigdata
    cloud-database
+   cloud-db-scheduled-backups
    autoscale-heat-event-schedule-based
    ansible/using-ansible-with-heat
    shared-ip

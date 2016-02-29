@@ -1,0 +1,98 @@
+heat_template_version: 2015-10-15
+
+description: This is a Heat template
+
+parameters:
+  key_name:
+    type: string
+    description : Name of a key pair to enable SSH access to instances.
+    default: my_key
+
+  flavor:
+    type: string
+    description: Flavor to use for the WordPress server.
+    constraints:
+      - custom_constraint: nova.flavor
+    default: 4 GB Performance
+
+  image:
+    type: string
+    description: >
+      Name or ID of the image to use for the WordPress server.
+    default: f4bbbce2-50b0-4b07-bf09-96c175a45f4b
+
+resources:
+  lamp_asg:
+    type: Rackspace::AutoScale::Group
+    properties:
+      groupConfiguration:
+        name: { get_param: "OS::stack_name" }
+        metadata:
+          rax-heat: { get_param: "OS::stack_id" }
+        maxEntities: 3
+        minEntities: 1
+        cooldown: 120
+      launchConfiguration:
+        type: launch_stack
+        args:
+          stack:
+            template_url: https://raw.githubusercontent.com/rackerlabs/rs-heat-docs/master/templates/launch_stack_template.yaml
+            disable_rollback: False
+            parameters:
+              flavor: {get_param: flavor}
+              image: {get_param: image}
+              key_name: {get_param: key_name}
+            timeout_mins: 30
+
+  scale_up_policy:
+    type: Rackspace::AutoScale::ScalingPolicy
+    properties:
+      group: { get_resource: lamp_asg }
+      name:
+        str_replace:
+          template: stack scale up policy
+          params:
+            stack: { get_param: "OS::stack_name" }
+      change: 1
+      cooldown: 600
+      type: webhook
+
+  scale_up_webhook:
+    type: Rackspace::AutoScale::WebHook
+    properties:
+      name:
+        str_replace:
+          template: stack scale up hook
+          params:
+            stack: { get_param: "OS::stack_name" }
+      policy: { get_resource: scale_up_policy }
+  
+  scale_down_policy:
+    type: Rackspace::AutoScale::ScalingPolicy
+    properties:
+      group: { get_resource: lamp_asg }
+      name:
+        str_replace:
+          template: stack scale down policy
+          params:
+            stack: { get_param: "OS::stack_name" }
+      change: -1
+      cooldown: 600
+      type: webhook
+
+  scale_down_webhook:
+    type: Rackspace::AutoScale::WebHook
+    properties:
+      name:
+        str_replace:
+          template: stack scale down hook
+          params:
+            stack: { get_param: "OS::stack_name" }
+      policy: { get_resource: scale_down_policy }
+
+outputs:
+  "Scale UP webhook":
+    value: { get_attr: [ scale_up_webhook, executeUrl ] }
+  
+  "Scale DOWN webhook":
+    value: { get_attr: [ scale_down_webhook, executeUrl ] }

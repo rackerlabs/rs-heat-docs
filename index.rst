@@ -36,6 +36,7 @@ resources provided through Orchestration templates.
    cloud-database
    cloud-db-scheduled-backups
    autoscale-heat-event-schedule-based
+   autoscale-stack-launch-type
    ansible/using-ansible-with-heat
    shared-ip
    stack-update

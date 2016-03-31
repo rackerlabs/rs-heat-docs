@@ -2,7 +2,7 @@
    :includehidden:
    :maxdepth: 1
 
-   Orchestration Templates User Guide <self>
+   Rackspace Cloud Orchestration Templates User Guide <https://developer.rackspace.com/docs/user-guides/orchestration/>
    generic-software-config
    bootstrapping-software-config
    customizing-template-for-rackconnectv3

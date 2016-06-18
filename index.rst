@@ -20,8 +20,9 @@ resources provided through Orchestration templates.
 .. Contents:
 
 .. toctree:: :hidden:
-   :maxdepth: 2
+   :maxdepth: 3
 
+   Orchestration Templates User Guide <self>
    generic-software-config
    bootstrapping-software-config
    customizing-template-for-rackconnectv3

@@ -47,6 +47,10 @@ source_suffix = '.rst'
 # The master toctree document.
 master_doc = 'index'
 
+# The builder to use when running via the deconst preparer
+builder = 'deconst-serial'
+#builder = 'deconst-single'
+
 # General information about the project.
 project = u'Rackspace Cloud Orchestration Guide'
 copyright = u'2015, Rackspace'
@@ -70,7 +74,7 @@ language = None
 
 # There are two options for replacing |today|: either, you set today to some
 # non-false value, then it is used:
-today = 'October 28, 2015'
+#today= ' '
 # Else, today_fmt is used as the format for a strftime call.
 #today_fmt = '%B %d, %Y'
 

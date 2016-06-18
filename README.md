@@ -1,4 +1,4 @@
 rs-heat-docs
 ---
 
-[![Build Status](https://travis-ci.org/rackerlabs/rs-heat-docs.svg?branch=master)](https://travis-ci.org/rackerlabs/rs-heat-docs)
+[![build badge](https://build.developer.rackspace.com/rackerlabs/rs-heat-docs/badge?branch=master)](https://build.developer.rackspace.com/rackerlabs/rs-heat-docs/)

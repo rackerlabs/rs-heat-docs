@@ -39,6 +39,7 @@ resources provided through Orchestration templates.
    autoscale-heat-event-schedule-based
    autoscale-stack-launch-type
    ansible/using-ansible-with-heat
+   chef/using-chef-with-heat
    shared-ip
    stack-update
    cfn-templates

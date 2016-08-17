@@ -6,8 +6,10 @@ Brief summary
 =============
 
 You can use the Rackspace shared IP resource (SharedIP) and AssociateSharedIP resources
-to create a shared IP address and assoicate the shared IP address with two or more
+to create a shared IP address and associate the shared IP address with two or more
 virtual server instances.
+
+.. _setup-process:
 
 Setup process
 -------------
@@ -47,8 +49,11 @@ Start by adding the top-level template sections:
 
     outputs:
 
-Resources section
-=================
+Resources
+=========
+
+The following sections provide information about the resources, outputs, and an example of the full template to set up
+a shared IP address between servers.
 
 SharedIP resource
 -----------------
@@ -64,18 +69,16 @@ Add a Rackspace::Cloud::SharedIP resource to create a shared IP address.
         type: Rackspace::Cloud::SharedIP
 
 
-Here the public network ID 00000000-0000-0000-0000-000000000000 is
-provided as the ``network_id`` property value, and public IP port IDs
-55xxfxx6-cxx7-4xxb-8xx3-3cxxd12xxe0d and 17xxfxxca-exx2-4xxe-bxx7-91xxf6xxbb2 are
-provided as a list to the ``ports`` property.
+The ``network_id`` property provides the value for the public network ID,``00000000-0000-0000-0000-000000000000``.
+The ``ports`` property specifies a list of public port IDs, ``55xxfxx6-cxx7-4xxb-8xx3-3cxxd12xxe0d`` and ``17xxfxxca-exx2-4xxe-bxx7-91xxf6xxbb2``.
 
-Please refer to the 'Steps Involved' section listed above for creating
-servers and getting the port IDs.
+
+For information about creating a server and getting port IDs, see the :ref:`Setup process <setup-process>`.
 
 AssociateSharedIP resource
 ----------------------------
 
-Add a Rackspace::Cloud::AssociateSharedIP resource to associate a
+Add a ``Rackspace::Cloud::AssociateSharedIP`` resource to associate a
 shared IP address with the given server instances.
 
 .. code:: yaml
@@ -86,9 +89,9 @@ shared IP address with the given server instances.
             servers: [62cxx03b-axx7-4xxb-bxxb-f1axx14370b4, 6exx610f-1xx2-4xx9-9xx5c-bxx2c735e463]
         type: Rackspace::Cloud::AssociateSharedIP
 
-Here 62cxx03b-axx7-4xxb-bxxb-f1axx14370b4 and 6exx610f-1xx2-4xx9-9xx5c-bxx2c735e463
-are the server instance IDs (please note these are not port IDs) and they are passed as a
-list to the ``servers`` property.
+The ``servers`` property specifies a list of the server instance IDs:
+``62cxx03b-axx7-4xxb-bxxb-f1axx14370b4`` and ``6exx610f-1xx2-4xx9-9xx5c-bxx2c735e463``.
+Note that these values are not port IDs.
 
 Outputs section
 ---------------

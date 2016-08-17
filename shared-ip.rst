@@ -69,7 +69,7 @@ Add a Rackspace::Cloud::SharedIP resource to create a shared IP address.
         type: Rackspace::Cloud::SharedIP
 
 
-The ``network_id`` property provides the value for the public network ID,``00000000-0000-0000-0000-000000000000``.
+The ``network_id`` property provides the value for the public network ID, ``00000000-0000-0000-0000-000000000000``.
 The ``ports`` property specifies a list of public port IDs, ``55xxfxx6-cxx7-4xxb-8xx3-3cxxd12xxe0d`` and ``17xxfxxca-exx2-4xxe-bxx7-91xxf6xxbb2``.
 
 

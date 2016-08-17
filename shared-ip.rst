@@ -5,26 +5,31 @@
 Brief summary
 =============
 
-Rackspace shared IP resource (SharedIP) and AssociateSharedIP resources
-enable you to create a shared IP address and assoicate the shared IP
-address with two or more virtual server instances.
+You can use the Rackspace shared IP resource (SharedIP) and AssociateSharedIP resources
+to create a shared IP address and assoicate the shared IP address with two or more
+virtual server instances.
 
-Steps involved
----------------
-The following steps are involved in using the shared IP address.
+Setup process
+-------------
 
-#. Create (two or more) servers in the same publicIPzoneId and write
+The following steps describe the process to set up and use a shared IP
+address between servers.
+
+.. note:: 
+
+   For additional information, see `Share IP address between servers`_ in the Rackspace 
+   Cloud Networks documentation.
+
+#. Create (two or more) servers in the same ``publicIPzoneId`` and write
    down the public IP address ports.
-   For more information see
-   http://docs-beta.rackspace.com/drafts/catlook/webhelp/cn-gettingstarted-external/content/share_ip.html.
-
+   
 #. Create a shared IP address with the given network ID and port IDs.
 
 #. Associate shared IPs with the servers.
 
-In the following example template we create a shared IP address and associate
-it with two server instances. For the sake of simplicity, we will
-assume that two servers were already created in the same publicIPzoneId.
+The following example template provides the code to create a shared IP address and associate
+it with two server instances. For the sake of simplicity, assume that 
+two servers were already created in the same ``publicIPzoneId``.
 
 Example template
 =================
@@ -140,13 +145,22 @@ Full Example Template
 Reference
 =========
 
--  `Cloud Orchestration API Developer
-   Guide <https://developer.rackspace.com/docs/cloud-orchestration/v1/developer-guide/>`__
--  `Heat Orchestration Template (HOT)
-   Specification <http://docs.openstack.org/developer/heat/template_guide/hot_spec.html>`__
--  `Share IP address between
-   servers <http://docs-beta.rackspace.com/drafts/catlook/webhelp/cn-gettingstarted-external/content/share_ip.html>`__
--  `IP addresses
-   extension <http://docs-beta.rackspace.com/drafts/catlook/webhelp/cn-devguide-external/content/api_ext_sharedip_neutron.html>`__
-
-.. comment: Writer: need to update links for previous 2 bullets in late Nov. 2015 to point to correct sections in public Network Guide.
+-  `Cloud Orchestration API Developer Guide`_
+-  `Heat Orchestration Template (HOT)`_
+-  `Share IP address between servers`_
+-  `Shared IP address operations`_
+   
+   
+   .. comment Following are reference definitions for links in above text.
+   
+   .. _Cloud Orchestration API Developer Guide:
+      https://developer.rackspace.com/docs/cloud-orchestration/v1/developer-guide
+      
+   .. _Shared IP address operations:
+      https://developer.rackspace.com/docs/cloud-networks/v2/developer-guide/#shared-ip-address-operations
+      
+   .. _Share IP address between servers:
+      https://developer.rackspace.com/docs/cloud-networks/v2/developer-guide/#sharing-ip-address-between-servers
+      
+   .. _Heat Orchestration Template (HOT): 
+      http://docs.openstack.org/developer/heat/template_guide/hot_spec.html

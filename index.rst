@@ -33,7 +33,6 @@ resources provided through Orchestration templates.
    cloud-loadbalancer
    cloud-monitoring
    cloud-backup
-   cloud-bigdata
    cloud-database
    cloud-db-scheduled-backups
    autoscale-heat-event-schedule-based

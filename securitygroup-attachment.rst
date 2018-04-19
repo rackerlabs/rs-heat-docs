@@ -22,11 +22,11 @@ Limitations / Known Issues
 
 (2) Security groups can be applied to Rackspace Cloud Servers on Public and ServiceNet Neutron ports. They are not supported for Isolated Networks.
 
-(3) Can only contain rules for the inbound traffic, also known as ingress direction. Outbound traffic, or egress direction, rules are not supported at this time.
+(3) Applying Security Groups to outbound traffic, or egress direction, is supported via the API only (via curl or neutron client).
 
 (4) Limited to no more than 5 security groups per Neutron port. When a Neutron port has multiple security groups applied, the rules from each security group are effectively aggregated to dictate the rules for access on that port.
 
-(5) The Security Groups API is currently in Limited Availability. It is available only to Managed Infrastructure customers and not to RackConnect or Managed Operations customers. To use this feature, contact Rackspace Support.
+(5) RackConnect v3 customers are able to use Security Groups if you plan on using Cloud Load Balancers as part of your RackConnected environment. To enable Security Groups on RackConnect v3, please contact Rackspace Support.
 
 Example template
 ================

@@ -35,7 +35,7 @@ Cloud Monitoring
 
 -  `How Rackspace Cloud Monitoring
    works <https://developer.rackspace.com/docs/rackspace-monitoring/v1/getting-started/concepts/#how-rackspace-monitoring-works>`__
--  `How the monitoring agentg works <https://developer.rackspace.com/docs/rackspace-monitoring/v1/getting-started/concepts/#how-the-monitoring-agent-works>`__
+-  `How the monitoring agent works <https://developer.rackspace.com/docs/rackspace-monitoring/v1/getting-started/concepts/#how-the-monitoring-agent-works>`__
 -  `Developer Guide: Available check types and
    fields <https://developer.rackspace.com/docs/cloud-monitoring/v1/developer-guide/#document-appendices/available-check-types-and-fields>`__
 -  `Developer Guide: Server-Side agent configuration YAML file

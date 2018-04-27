@@ -238,9 +238,9 @@ Reference
 -  `Cloud-init format
    documentation <http://cloudinit.readthedocs.org/en/latest/topics/format.html>`__
 -  `Cloud backup getting started
-   guide <http://docs.rackspace.com/rcbu/api/v1.0/rcbu-getting-started/content/Overview-d1e01.html>`__
+   guide <https://developer.rackspace.com/docs/cloud-backup/v1/getting-started/>`__
 -  `Cloud backup API developer
-   guide <https://developer.rackspace.com/docs/cloud-backup/v1/developer-guide/>`__
+   guide <https://developer.rackspace.com/docs/cloud-backup/v1/api-reference/>`__
 -  `Install cloud backup agent on Linux
    server <http://www.rackspace.com/knowledge_center/article/rackspace-cloud-backup-install-the-agent-on-linux>`__
 -  `Install cloud backup agent on Windows

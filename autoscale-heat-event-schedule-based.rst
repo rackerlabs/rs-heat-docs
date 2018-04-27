@@ -27,8 +27,8 @@ Auto Scale
    Scale <http://www.rackspace.com/blog/easily-scale-your-cloud-with-rackspace-auto-scale/>`__
    gives a brief overview of the different types of scaling policies for
    Auto Scale.
--  `Getting Started Guide: Auto Scale
-   concepts <http://docs.rackspace.com/cas/api/v1.0/autoscale-gettingstarted/content/Auto_Scale_Core_Concepts.html>`__
+-  `Auto Scale
+   concepts <https://developer.rackspace.com/docs/autoscale/v1/developer-guide/#document-concepts>`__
 
 Cloud Monitoring
 ----------------

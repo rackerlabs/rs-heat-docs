@@ -33,10 +33,9 @@ Auto Scale
 Cloud Monitoring
 ----------------
 
--  `Getting Started Guide: How Rackspace Cloud Monitoring
-   works <http://docs.rackspace.com/cm/api/v1.0/cm-getting-started/content/how-it-works-gsg.html>`__
--  `Getting Started Guide: About the monitoring
-   agent <http://docs.rackspace.com/cm/api/v1.0/cm-getting-started/content/how-agent-works-gsg.html>`__
+-  `How Rackspace Cloud Monitoring
+   works <https://developer.rackspace.com/docs/rackspace-monitoring/v1/getting-started/concepts/#how-rackspace-monitoring-works>`__
+-  `How the monitoring agentg works <https://developer.rackspace.com/docs/rackspace-monitoring/v1/getting-started/concepts/#how-the-monitoring-agent-works>`__
 -  `Developer Guide: Available check types and
    fields <https://developer.rackspace.com/docs/cloud-monitoring/v1/developer-guide/#document-appendices/available-check-types-and-fields>`__
 -  `Developer Guide: Server-Side agent configuration YAML file

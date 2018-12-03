@@ -102,7 +102,7 @@ Add the shared IP address to the outputs section.
 
     shared_ip_address:
         value:
-            get_attr: [shared_ip, shared_ip_address]
+            get_attr: [shared_ip, shared_ip_address, ip_address, address]
 
 
 
@@ -119,19 +119,19 @@ Full Example Template
     outputs:
         shared_ip_address:
             value:
-                get_attr: [shared_ip, shared_ip_address]
+                get_attr: [shared_ip, shared_ip_address, ip_address, address ]
     resources:
         server1:
             type: OS::Nova::Server
             properties:
-                image: Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
-                flavor: 2 GB Performance
+                image: Ubuntu 18.04 LTS (Bionic Beaver) (PVHVM)
+                flavor: 2 GB General Purpose v1
     
         server2:
             type: OS::Nova::Server
             properties:
-                image: Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
-                flavor: 2 GB Performance
+                image: Ubuntu 18.04 LTS (Bionic Beaver) (PVHVM)
+                flavor: 2 GB General Purpose v1
     
         shared_ip:
             properties:

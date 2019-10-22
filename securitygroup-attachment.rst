@@ -153,6 +153,6 @@ Reference
 -  `Heat Orchestration Template (HOT)
    Specification <http://docs.openstack.org/developer/heat/template_guide/hot_spec.html>`__
 -  `Cloud networks getting started
-   documentation <http://docs.rackspace.com/networks/api/v2/cn-gettingstarted/content/ch_preface.html>`__
+   documentation <https://docs.rackspace.com/networks/api/v2/cn-gettingstarted/content/ch_preface.html>`__
 -  `Cloud networks API 
    documentation <https://developer.rackspace.com/docs/cloud-networks/v1/developer-guide/>`__

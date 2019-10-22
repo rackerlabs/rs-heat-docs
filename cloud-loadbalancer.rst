@@ -313,7 +313,7 @@ Reference
 -  `Heat Orchestration Template (HOT)
    Specification <http://docs.openstack.org/developer/heat/template_guide/hot_spec.html>`__
 -  `Cloud Load Balancer Getting Started
-   guide <http://docs.rackspace.com/loadbalancers/api/v1.0/clb-getting-started/content/LB_Overview.html>`__
+   guide <https://docs.rackspace.com/loadbalancers/api/v1.0/clb-getting-started/content/LB_Overview.html>`__
 -  `Cloud Load Balancer API Developer
    Guide <https://developer.rackspace.com/docs/cloud-load-balancers/v1/developer-guide/>`__
 

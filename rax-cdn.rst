@@ -25,7 +25,7 @@ You should be familiar with general Heat template authoring and resource usage. 
 also be familiar with Rackspace CDN and its configuration:
 
 - `Rackspace Cloud Orchestration Templates Developer Guide 
-  <http://docs.rackspace.com/orchestration/api/v1/orchestration-templates-devguide/content/overview.html>`_
+  <https://docs.rackspace.com/orchestration/api/v1/orchestration-templates-devguide/content/overview.html>`_
 - `Rackspace CDN Getting Started Guide
   <https://developer.rackspace.com/docs/cdn/getting-started>`_
 

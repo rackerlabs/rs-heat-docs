@@ -45,9 +45,9 @@ Cloud Orchestration
 -------------------
 
 -  `Getting Started Guide:
-   Overview <http://docs.rackspace.com/orchestration/api/v1/orchestration-getting-started/content/Orch_Overview.html>`__
+   Overview <https://docs.rackspace.com/orchestration/api/v1/orchestration-getting-started/content/Orch_Overview.html>`__
 -  `Templates Developer Guide: Introduction to
-   templates <http://docs.rackspace.com/orchestration/api/v1/orchestration-templates-devguide/content/Intro_to_Templates-d1e633.html>`__
+   templates <https://docs.rackspace.com/orchestration/api/v1/orchestration-templates-devguide/content/Intro_to_Templates-d1e633.html>`__
 
 Schedule-based auto scaling
 =================================

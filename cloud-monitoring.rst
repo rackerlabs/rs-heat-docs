@@ -17,7 +17,7 @@ The following introductory material should give you enough background to
 proceed with this tutorial.
 
 -  `Rackspace Cloud Monitoring Getting Started
-   Guide <http://docs.rackspace.com/cm/api/v1.0/cm-getting-started/content/how-it-works-gsg.html>`__
+   Guide <https://docs.rackspace.com/cm/api/v1.0/cm-getting-started/content/how-it-works-gsg.html>`__
    (especially "How Rackspace Cloud Monitoring works")
 -  `Getting Started With Rackspace Monitoring
    CLI <http://www.rackspace.com/knowledge_center/article/getting-started-with-rackspace-monitoring-cli>`__

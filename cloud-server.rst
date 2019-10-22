@@ -306,7 +306,7 @@ Reference
 -  `Cloud-init format
    documentation <http://cloudinit.readthedocs.org/en/latest/topics/format.html>`__
 -  `Cloud servers getting started
-   guide <http://docs.rackspace.com/servers/api/v2/cs-gettingstarted/content/overview.html>`__
+   guide <https://docs.rackspace.com/servers/api/v2/cs-gettingstarted/content/overview.html>`__
 -  `Cloud servers API developer
    guide <https://developer.rackspace.com/docs/cloud-servers/v2/developer-guide/>`__
 -  `Cloud servers

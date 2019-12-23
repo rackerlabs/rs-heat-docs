@@ -10,12 +10,12 @@ Bootstrapping software config
 Brief summary
 =============
 
-In the *Generic software config* tutorial, you learned how to use Heat's generic software
-configuration mechanism to treat the configuration of compute instances the same way you
-treat any other resource in your template. This tutorial will go into more detail about
-bootstrapping a pristine image for use with software config as well as show how you can
-then create your own image with the necessary tools pre-installed for easier use in
-future stacks.
+In the *Generic software config* tutorial, you learned how to use Heat's
+generic software configuration mechanism to treat the configuration of compute
+instances the same way you treat any other resource in your template. This
+tutorial goes into more detail about bootstrapping a pristine image for use
+with software config as well as show how you can then create your own image
+with the necessary tools pre-installed for easier use in future stacks.
 
 Pre-reading
 ===========

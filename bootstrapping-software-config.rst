@@ -55,11 +55,11 @@ credentials (we will explain a little more in the next section):
 .. code:: yaml
 
     outputs:
-    
+
       server_ip:
         value: { get_attr: [ server, addresses, public, 0, addr ] }
         description: IP address of the server
-    
+
       admin_password:
         value: { get_attr: [ admin_password, value ] }
         description: Root password to the server
@@ -238,7 +238,7 @@ Install the generic agents
 ++++++++++++++++++++++++++
 
 The actual generic OpenStack agents are installed using Python pip since there aren't any
-reliable packages for them on Ubuntu.
+reliable packages for them on the Ubuntu operating system.
 
 .. code:: yaml
 
@@ -317,7 +317,7 @@ systemd) that will start the collection agent and ensure that it runs on boot:
 Combine and expose the configs
 ++++++++++++++++++++++++++++++
 
-Finally, the configurations are all combined into a single multi-part-mime so that they 
+Finally, the configurations are all combined into a single multi-part-mime so that they
 can be output as a single file for use in user-data:
 
 .. code:: yaml
@@ -343,7 +343,7 @@ The environment file that we will send as part of our ``stack-create`` call is q
 
 .. code:: yaml
 
-  # Installs software-config agents for ubuntu with pip install
+  # Installs software-config agents for the Ubuntu operating system with pip install
 
   parameters:
     image: Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
@@ -368,11 +368,11 @@ All that is left to do is to deploy the template:
 Wait for the stack to be ``CREATE_COMPLETE`` and you have a basic vm configured for use
 with Heat software config. You can stop here and modify this template to actually deploy
 software configurations to your server using OS::Heat::SoftwareConfig and
-OS::Heat::SoftwareDeployment using "clean" images. However you may prefer to continue 
+OS::Heat::SoftwareDeployment using "clean" images. However you may prefer to continue
 directly to the next section, since it explains
 how you can use this bootstrapped instance to create your own image pre-configured for use
 with Heat software config. Also, future advanced tutorials, such as :ref:`Using Ansible with
-Heat <using_Ansible_w_heat>` later in this guide, will make use of this pre-bootstrapped image, so that is 
+Heat <using_Ansible_w_heat>` later in this guide, will make use of this pre-bootstrapped image, so that is
 another reason you may want to continue directly to the next section.
 
 Custom Image

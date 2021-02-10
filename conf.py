@@ -16,6 +16,11 @@ import sys
 import os
 import shlex
 
+try:
+    import sphinx_rtd_theme
+except ImportError:
+    sphinx_rtd_theme = None
+
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
@@ -46,10 +51,6 @@ source_suffix = '.rst'
 
 # The master toctree document.
 master_doc = 'index'
-
-# The builder to use when running via the deconst preparer
-builder = 'deconst-serial'
-#builder = 'deconst-single'
 
 # General information about the project.
 project = u'Rackspace Cloud Orchestration Guide'
